@@ -22,6 +22,7 @@ interface LinkItem {
 interface CategoryItem {
     id: string;
     name: string;
+    position?: number;
     chosen?: boolean;
     selected?: boolean;
 }
@@ -30,17 +31,22 @@ export default function LinksPage() {
     const [links, setLinks] = useState<LinkItem[]>([]);
     const [categoriesList, setCategoriesList] = useState<CategoryItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isSavingLink, setIsSavingLink] = useState(false);
     
-    const [isPanelOpen, setIsPanelOpen] = useState(false); 
     const [isEditMode, setIsEditMode] = useState(false); 
-    const [isDragMode, setIsDragMode] = useState(false);
     
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState('');
     const [editingCategoryName, setEditingCategoryName] = useState<string | null>(null);
     const [newCategoryName, setNewCategoryName] = useState('');
+
+    const [isInternalDomain, setIsInternalDomain] = useState(false);
+    const [rawUrlInput, setRawUrlInput] = useState('');
+    const [currentDomain, setCurrentDomain] = useState('');
     
+    const [toastMessage, setToastMessage] = useState<string | null>(null);
+
     const [formData, setFormData] = useState<LinkItem>({
         id: '', title: '', url: '', category: 'Разное',
         is_hidden: false, hide_url: false, open_in_new_tab: false, custom_favicon: ''
@@ -48,18 +54,26 @@ export default function LinksPage() {
 
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const saveCatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const pendingUpdatesRef = useRef<Record<string, LinkItem[]>>({});
+    const applyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+    const isInitialLoadRef = useRef(true);
 
-    // ===== ЗАГРУЗКА ДАННЫХ ИЗ БД =====
-    const fetchLinks = async () => {
+    const showToast = (msg: string) => {
+        setToastMessage(msg);
+        setTimeout(() => setToastMessage(null), 3000);
+    };
+
+    useEffect(() => {
+        if (typeof window !== 'undefined') {
+            setCurrentDomain(window.location.host);
+        }
+    }, []);
+
+    const fetchLinks = async (isBackground = false, skipCategories = false) => {
+        if (!isBackground) setIsLoading(true);
         try {
-            setIsLoading(true);
-
-            const [linksRes, catsRes] = await Promise.all([
-                fetch('/api/links').then(r => r.json()).catch(() => []),
-                fetch('/api/categories').then(r => r.json()).catch(() => [])
-            ]);
-
-            // Вспомогательная функция распарсить имя, если пришел JSON {"NAME":"..."}
+            const res = await fetch('/api/links').then(r => r.json());
+            
             const cleanCategoryName = (val: any): string => {
                 if (!val) return 'Разное';
                 let str = String(val).trim();
@@ -67,56 +81,61 @@ export default function LinksPage() {
                     try {
                         const parsed = JSON.parse(str);
                         return parsed.NAME || parsed.name || str;
-                    } catch {
-                        return str;
-                    }
+                    } catch { return str; }
                 }
                 return str;
             };
 
-            const cleanLinks = Array.isArray(linksRes) 
-                ? linksRes.map(({ chosen, selected, ...rest }: any) => ({
+            const rawLinks = res.links || [];
+            const cleanLinks = rawLinks
+                .filter((link: any) => link !== null && link !== undefined)
+                .map((rest: any) => ({
                     ...rest,
+                    is_hidden: Boolean(Number(rest.is_hidden) === 1 || rest.is_hidden === true || rest.is_hidden === 'true'),
+                    hide_url: Boolean(Number(rest.hide_url) === 1 || rest.hide_url === true || rest.hide_url === 'true'),
+                    open_in_new_tab: Boolean(Number(rest.open_in_new_tab) === 1 || rest.open_in_new_tab === true || rest.open_in_new_tab === 'true'),
                     category: cleanCategoryName(rest.category)
-                }))
-                : [];
+                }));
             
             setLinks(cleanLinks);
 
-            const categoriesFromLinks = new Set<string>();
-            cleanLinks.forEach((link: LinkItem) => {
-                if (link.category) categoriesFromLinks.add(link.category);
-            });
-
-            // Нормализуем полученные категории
-            let rawCatsFromApi: string[] = [];
-            if (Array.isArray(catsRes)) {
-                rawCatsFromApi = catsRes
-                    .map((item: any) => cleanCategoryName(typeof item === 'object' && item !== null ? (item.name || item.NAME) : item))
-                    .filter((name: any) => typeof name === 'string' && name.trim() !== '');
+            if (!skipCategories) {
+                const rawCats = res.categories || [];
+                
+                if (rawCats.length > 0) {
+                    const sortedCats = [...rawCats].sort((a: any, b: any) => (a.position || 0) - (b.position || 0));
+                    setCategoriesList(
+                        sortedCats.map((cat: any) => ({ 
+                            id: `cat_${encodeURIComponent(cat.name)}`, 
+                            name: cat.name,
+                            position: cat.position || 0
+                        }))
+                    );
+                } else {
+                    const categoriesFromLinks = new Set<string>();
+                    cleanLinks.forEach((link: LinkItem) => {
+                        if (link.category) categoriesFromLinks.add(link.category);
+                    });
+                    
+                    const finalOrder = Array.from(categoriesFromLinks).sort();
+                    setCategoriesList(
+                        finalOrder.map((cat, idx) => ({ 
+                            id: `cat_${encodeURIComponent(cat)}`, 
+                            name: cat,
+                            position: idx
+                        }))
+                    );
+                    
+                    if (isInitialLoadRef.current && finalOrder.length > 0) {
+                        isInitialLoadRef.current = false;
+                        await saveCategoriesOrder(finalOrder);
+                    }
+                }
             }
-
-            let finalOrder: string[] = [];
-            if (rawCatsFromApi.length > 0) {
-                finalOrder = [...rawCatsFromApi];
-                categoriesFromLinks.forEach(cat => {
-                    if (!finalOrder.includes(cat)) finalOrder.push(cat);
-                });
-            } else {
-                finalOrder = Array.from(categoriesFromLinks).sort();
-            }
-
-            // Формируем список категорий
-            setCategoriesList(
-                finalOrder.map((cat, idx) => ({ 
-                    id: `cat_${idx}_${encodeURIComponent(cat)}`, 
-                    name: cat 
-                }))
-            );
         } catch (error) {
             console.error('❌ Ошибка загрузки:', error);
         } finally {
-            setIsLoading(false);
+            if (!isBackground) setIsLoading(false);
         }
     };
 
@@ -124,76 +143,72 @@ export default function LinksPage() {
         fetchLinks();
     }, []);
 
-    // ===== ГРУППИРОВКА =====
     const getGroupedLinks = useCallback(() => {
         const grouped: Record<string, LinkItem[]> = {};
         categoriesList.forEach(cat => { grouped[cat.name] = []; });
-        links.forEach(link => {
-            const catName = link.category || 'Разное';
-            if (!grouped[catName]) grouped[catName] = [];
-            grouped[catName].push(link);
-        });
+        links
+            .filter(link => link !== null && link !== undefined)
+            .forEach(link => {
+                const catName = link.category || 'Разное';
+                if (!grouped[catName]) grouped[catName] = [];
+                if (isEditMode || !link.is_hidden) {
+                    grouped[catName].push(link);
+                }
+            });
         return grouped;
-    }, [links, categoriesList]);
+    }, [links, categoriesList, isEditMode]);
 
-    // ===== СОХРАНЕНИЕ КАТЕГОРИЙ В БД =====
     const saveCategoriesOrder = useCallback(async (newOrder: string[]) => {
         try {
-            const cleanOrder = newOrder.map(c => String(c));
-            const res = await fetch('/api/categories', {
+            const categoriesWithPosition = newOrder.map((name, index) => ({
+                name,
+                position: index
+            }));
+            
+            const res = await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ categories: cleanOrder })
+                body: JSON.stringify({ 
+                    action: 'save_categories', 
+                    payload: { categories: categoriesWithPosition } 
+                })
             });
-            const data = await res.json();
-            if (!data.success) {
-                console.error('❌ Сервер вернул ошибку при сохранении категорий:', data);
+            
+            if (!res.ok) {
+                console.error('❌ Ошибка сохранения порядка категорий:', await res.text());
             }
         } catch (error) {
             console.error('❌ Ошибка сети при сохранении категорий:', error);
         }
     }, []);
 
-    const saveLinks = useCallback(async (newLinks: LinkItem[]) => {
+    const saveLinksOrder = useCallback(async (newLinks: LinkItem[]) => {
         const clean = newLinks.map(({ chosen, selected, ...rest }) => rest);
         try {
             await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    action: 'save_links', 
-                    payload: { links: clean }
-                })
+                body: JSON.stringify({ action: 'save_links', payload: { links: clean } })
             });
         } catch (error) {
-            console.error('❌ Ошибка сохранения ссылок:', error);
+            console.error('❌ Ошибка сохранения порядка ссылок:', error);
         }
     }, []);
 
-    // ===== РЕЖИМЫ =====
     useEffect(() => {
-        if (isEditMode) document.body.classList.add('admin-panel-active');
-        else document.body.classList.remove('admin-panel-active');
-        if (isDragMode) document.body.classList.add('drag-mode-active');
-        else document.body.classList.remove('drag-mode-active');
-    }, [isEditMode, isDragMode]);
-
-    const handleTogglePanel = () => {
-        if (isPanelOpen || isEditMode || isDragMode) {
-            setIsPanelOpen(false);
-            setIsEditMode(false);
-            setIsDragMode(false);
+        if (isEditMode) {
+            document.body.classList.add('admin-panel-active');
+            document.body.classList.add('drag-mode-active');
         } else {
-            setIsPanelOpen(true);
-            setIsEditMode(true);
+            document.body.classList.remove('admin-panel-active');
+            document.body.classList.remove('drag-mode-active');
         }
+    }, [isEditMode]);
+
+    const handleToggleEditMode = () => {
+        setIsEditMode(!isEditMode);
     };
 
-    const handleToggleDragMode = () => {
-        setIsDragMode(!isDragMode);
-    };
-
-    // ===== ОБРАБОТЧИКИ ПЕРЕТАСКИВАНИЯ =====
     const handleCategoriesSort = (newList: CategoryItem[]) => {
         setCategoriesList(newList);
 
@@ -206,53 +221,107 @@ export default function LinksPage() {
     };
 
     const handleTilesSort = (newList: LinkItem[], categoryName: string) => {
-        const updated = newList.map(link => ({ ...link, category: categoryName }));
-        setLinks(prev => {
-            const others = prev.filter(l => l.category !== categoryName);
-            const result = [...others, ...updated];
-            if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
-            saveTimeoutRef.current = setTimeout(() => {
-                saveLinks(result);
-                saveTimeoutRef.current = null;
-            }, 500);
-            return result;
-        });
+        const filteredList = newList.filter(link => link !== null && link !== undefined);
+        
+        pendingUpdatesRef.current[categoryName] = filteredList.map(link => ({
+            ...link,
+            category: categoryName
+        }));
+
+        if (applyTimeoutRef.current) clearTimeout(applyTimeoutRef.current);
+
+        applyTimeoutRef.current = setTimeout(() => {
+            const updates = pendingUpdatesRef.current;
+            pendingUpdatesRef.current = {};
+
+            setLinks(prev => {
+                let newLinks = [...prev];
+                for (const [cat, items] of Object.entries(updates)) {
+                    newLinks = newLinks.filter(l => l.category !== cat);
+                    newLinks = [...newLinks, ...items];
+                }
+                saveLinksOrder(newLinks);
+                return newLinks;
+            });
+
+            applyTimeoutRef.current = null;
+        }, 100);
     };
 
-    // ===== CRUD =====
     const handleSaveLink = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsSavingLink(true);
+
+        let finalUrl = rawUrlInput.trim();
+        const host = currentDomain || 'ntmbase.ru';
+
+        if (isInternalDomain) {
+            const cleanPath = finalUrl.replace(/^https?:\/\/[^\/]+\/?/, '').replace(/^\//, '');
+            finalUrl = `https://${host}/${cleanPath}`;
+        } else {
+            if (!/^https?:\/\//i.test(finalUrl)) {
+                finalUrl = `https://${finalUrl}`;
+            }
+        }
+
+        const payloadToSave: LinkItem = {
+            id: formData.id || `b_${Date.now()}`,
+            title: formData.title,
+            url: finalUrl,
+            category: formData.category || 'Разное',
+            is_hidden: Boolean(formData.is_hidden),
+            hide_url: Boolean(formData.hide_url),
+            open_in_new_tab: Boolean(formData.open_in_new_tab),
+            custom_favicon: formData.custom_favicon || ''
+        };
+
+        setLinks(prev => {
+            const exists = prev.some(l => l.id === payloadToSave.id);
+            if (exists) return prev.map(l => l.id === payloadToSave.id ? payloadToSave : l);
+            return [...prev, payloadToSave];
+        });
+
+        setIsModalOpen(false);
+
         try {
-            await fetch('/api/links', {
+            const res = await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    action: 'save_link', 
-                    payload: { ...formData, category: formData.category || 'Разное' }
-                })
+                body: JSON.stringify({ action: 'save_link', payload: payloadToSave })
             });
-            setIsModalOpen(false);
-            await fetchLinks();
+
+            if (res.ok) {
+                showToast('✅ Плитка успешно сохранена');
+                await fetchLinks(true, true);
+            } else {
+                showToast('⚠️ Ошибка сохранения');
+            }
         } catch (error) {
             console.error('Error saving link:', error);
+            showToast('❌ Ошибка сети');
+        } finally {
+            setIsSavingLink(false);
         }
     };
 
     const deleteLink = async (id: string) => {
         if (!confirm('Удалить эту ссылку?')) return;
+        setLinks(prev => prev.filter(l => l.id !== id));
         try {
             await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'delete_link', payload: { id } })
             });
-            await fetchLinks();
+            showToast('🗑️ Ссылка удалена');
+            await fetchLinks(true, true);
         } catch (error) {
             console.error('Error deleting link:', error);
         }
     };
 
     const deleteCategory = async (category: string) => {
+        if (!isEditMode) return;
         try {
             await fetch('/api/links', {
                 method: 'POST',
@@ -265,13 +334,15 @@ export default function LinksPage() {
             await saveCategoriesOrder(updatedList.map(c => c.name));
 
             setIsConfirmDeleteOpen(false);
-            await fetchLinks();
+            showToast('🗑️ Раздел удален');
+            await fetchLinks(true, true);
         } catch (error) {
             console.error('Error deleting category:', error);
         }
     };
 
     const addCategory = async () => {
+        if (!isEditMode) return;
         const catName = prompt('Введите название нового раздела:');
         if (!catName || !catName.trim()) return;
         const cleanCatName = catName.trim();
@@ -294,18 +365,20 @@ export default function LinksPage() {
             });
 
             if (!categoriesList.find(c => c.name === cleanCatName)) {
-                const newList = [...categoriesList, { id: `cat_${Date.now()}_${cleanCatName}`, name: cleanCatName }];
+                const newList = [...categoriesList, { id: `cat_${encodeURIComponent(cleanCatName)}`, name: cleanCatName }];
                 setCategoriesList(newList);
                 await saveCategoriesOrder(newList.map(c => c.name));
             }
 
-            await fetchLinks();
+            showToast('📁 Раздел создан');
+            await fetchLinks(true, true);
         } catch (error) {
             console.error('Error adding category:', error);
         }
     };
 
     const renameCategory = async (oldName: string, newName: string) => {
+        if (!isEditMode) return;
         if (!newName || newName === oldName) {
             setEditingCategoryName(null);
             return;
@@ -314,10 +387,7 @@ export default function LinksPage() {
             await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    action: 'edit_category', 
-                    payload: { old_category: oldName, new_category: newName }
-                })
+                body: JSON.stringify({ action: 'edit_category', payload: { old_category: oldName, new_category: newName } })
             });
 
             const newList = categoriesList.map(c => c.name === oldName ? { ...c, name: newName } : c);
@@ -325,25 +395,48 @@ export default function LinksPage() {
             await saveCategoriesOrder(newList.map(c => c.name));
 
             setEditingCategoryName(null);
-            await fetchLinks();
+            showToast('✏️ Раздел переименован');
+            await fetchLinks(true, true);
         } catch (error) {
             console.error('Error renaming category:', error);
         }
     };
 
-    // ===== МОДАЛКИ =====
     const openAddLinkModal = (preselectedCategory = 'Разное') => {
+        if (!isEditMode) return;
         setFormData({
             id: `b_${Date.now()}`, title: '', url: '', category: preselectedCategory,
             is_hidden: false, hide_url: false, open_in_new_tab: false, custom_favicon: ''
         });
+        setRawUrlInput('');
+        setIsInternalDomain(false);
         setIsModalOpen(true);
     };
 
     const openEditLinkModal = (link: LinkItem, e: React.MouseEvent) => {
         e.preventDefault();
         e.stopPropagation();
-        setFormData(link);
+        if (!isEditMode) return;
+
+        const normalizedLink: LinkItem = {
+            ...link,
+            is_hidden: Boolean(Number(link.is_hidden) === 1 || link.is_hidden === true || (link.is_hidden as any) === 'true'),
+            hide_url: Boolean(Number(link.hide_url) === 1 || link.hide_url === true || (link.hide_url as any) === 'true'),
+            open_in_new_tab: Boolean(Number(link.open_in_new_tab) === 1 || link.open_in_new_tab === true || (link.open_in_new_tab as any) === 'true'),
+        };
+        
+        setFormData(normalizedLink);
+        
+        const host = currentDomain || (typeof window !== 'undefined' ? window.location.host : 'ntmbase.ru');
+        if (link.url && (link.url.includes(host) || link.url.startsWith('/') || !link.url.startsWith('http'))) {
+            setIsInternalDomain(true);
+            const path = link.url.replace(/^https?:\/\/[^\/]+\/?/, '').replace(/^\//, '');
+            setRawUrlInput(path);
+        } else {
+            setIsInternalDomain(false);
+            setRawUrlInput(link.url ? link.url.replace(/^https?:\/\//i, '') : '');
+        }
+
         setIsModalOpen(true);
     };
 
@@ -358,19 +451,218 @@ export default function LinksPage() {
 
     if (isLoading) {
         return (
-            <div className="flex flex-col min-h-screen">
+            <div className="flex flex-col min-h-screen bg-[#f8fafc]">
                 <Header isAdmin={true} username="Администратор" />
                 <div className="max-w-[1400px] w-full mx-auto px-6 py-12 flex-grow">
-                    <div className="text-center py-12 text-slate-400">⏳ Загрузка...</div>
+                    <div className="text-center py-12 text-slate-400">⏳ Загрузка плиток...</div>
                 </div>
                 <Footer />
             </div>
         );
     }
 
+    // Рендерим категории
+    const renderCategories = () => {
+        if (categoriesList.length === 0) {
+            return (
+                <div className="text-center py-12 text-slate-400 bg-white rounded-[24px] border border-slate-200/80 shadow-sm p-6">
+                    <i className="bi bi-folder-open text-4xl mx-auto mb-3 opacity-30 block"></i>
+                    <p className="text-sm font-medium">Нет категорий. Добавьте первую ссылку.</p>
+                </div>
+            );
+        }
+
+        if (!isEditMode) {
+            return categoriesList.map((catItem) => {
+                const catName = catItem.name;
+                const catLinks = (groupedLinks[catName] || []).filter(link => link !== null && link !== undefined);
+                
+                if (catLinks.length === 0) return null;
+                
+                return (
+                    <div key={catItem.id} className="category-section p-6" data-category={catName}>
+                        <div className="category-title cursor-default">
+                            <div className="flex items-center gap-2 flex-1">
+                                <i className="bi bi-folder2-open category-title-icon"></i>
+                                <span className="cat-display-text">{catName}</span>
+                            </div>
+                        </div>
+                        <div className="grid tiles-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-4">
+                            {catLinks.map((link) => (
+                                <a
+                                    key={link.id}
+                                    href={link.url || '#'}
+                                    target={link.open_in_new_tab ? "_blank" : "_self"}
+                                    className={`tile group block ${link.is_hidden ? 'tile-hidden' : ''}`}
+                                    rel="noopener noreferrer"
+                                >
+                                    <div className="flex items-center gap-3">
+                                        <div className="tile-icon bg-indigo-50 text-indigo-500 flex items-center justify-center">
+                                            {getFaviconHtml(link)}
+                                        </div>
+                                        <div className="overflow-hidden flex-1 pr-14">
+                                            <div className="tile-title flex items-center gap-1">
+                                                <span>{link.title || 'Без названия'}</span>
+                                            </div>
+                                            <div className={`tile-desc ${link.hide_url ? 'url-text-hidden' : ''}`}>
+                                                {link.url ? link.url.replace(/^https?:\/\/(www\.)?/, '') : 'Без URL'}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            ))}
+                        </div>
+                    </div>
+                );
+            }).filter(Boolean);
+        }
+
+        // Режим редактирования - с Sortable
+        return (
+            <ReactSortable
+                list={categoriesList}
+                setList={handleCategoriesSort}
+                animation={250}
+                ghostClass="sortable-ghost"
+                chosenClass="sortable-chosen"
+                dragClass="sortable-drag"
+                filter=".no-drag, .delete-cat-btn-new, .inline-cat-input, .inline-cat-save, .inline-cat-cancel"
+                disabled={!isEditMode}
+                className="space-y-8"
+            >
+                {categoriesList.map((catItem) => {
+                    const catName = catItem.name;
+                    const catLinks = (groupedLinks[catName] || []).filter(link => link !== null && link !== undefined);
+                    
+                    return (
+                        <div key={catItem.id} className="category-section p-6 category-section-edit" data-category={catName}>
+                            <div className="category-title cursor-grab">
+    <div className="flex items-center gap-2 flex-1">
+        {/* Ручка для drag */}
+        <div className="drag-handle">
+            <i className="bi bi-grip-vertical text-sm"></i>
+        </div>
+        
+        <i className="bi bi-folder2-open category-title-icon"></i>
+        
+        {editingCategoryName === catName ? (
+            <div className="flex items-center gap-2 flex-1 no-drag">
+                <input
+                    type="text"
+                    className="inline-cat-input"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                    onKeyDown={(e) => {
+                        if (e.key === 'Enter') renameCategory(catName, newCategoryName);
+                        if (e.key === 'Escape') setEditingCategoryName(null);
+                    }}
+                    autoFocus
+                    onClick={(e) => e.stopPropagation()}
+                />
+                <button className="inline-cat-save no-drag" onClick={(e) => { e.stopPropagation(); renameCategory(catName, newCategoryName); }}>
+                    <i className="bi bi-check-lg"></i>
+                </button>
+                <button className="inline-cat-cancel no-drag" onClick={(e) => { e.stopPropagation(); setEditingCategoryName(null); }}>
+                    <i className="bi bi-x-lg"></i>
+                </button>
+            </div>
+        ) : (
+            <span 
+                className="cat-display-text cat-clickable-zone"
+                onDoubleClick={() => {
+                    setEditingCategoryName(catName);
+                    setNewCategoryName(catName);
+                }}
+            >
+                {catName}
+            </span>
+        )}
+    </div>
+    {isEditMode && (
+        <div className="no-drag">
+            <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); setCategoryToDelete(catName); setIsConfirmDeleteOpen(true); }}
+                className="delete-cat-btn-new"
+                title="Удалить раздел"
+            >
+                <i className="bi bi-x-lg"></i>
+            </button>
+        </div>
+    )}
+</div>
+
+                            {catLinks.length > 0 && (
+                                <ReactSortable
+                                    list={catLinks}
+                                    setList={(newList) => handleTilesSort(newList, catName)}
+                                    group={{ name: 'shared_tiles', pull: true, put: true }}
+                                    disabled={!isEditMode}
+                                    animation={200}
+                                    ghostClass="sortable-ghost"
+                                    chosenClass="sortable-chosen"
+                                    filter=".delete-tile-btn, .edit-tile-pencil-btn, .tile-3d-plus"
+                                    className="grid tiles-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-4"
+                                >
+                                    {catLinks.map((link) => (
+                                        <a
+                                            key={link.id}
+                                            href={link.url || '#'}
+                                            target={link.open_in_new_tab ? "_blank" : "_self"}
+                                            className={`tile group block ${link.is_hidden ? 'hidden-tile' : ''}`}
+                                            onClick={(e) => { e.preventDefault(); }}
+                                            rel="noopener noreferrer"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className="tile-icon bg-indigo-50 text-indigo-500 flex items-center justify-center">
+                                                    {getFaviconHtml(link)}
+                                                </div>
+                                                <div className="overflow-hidden flex-1 pr-14">
+                                                    <div className="tile-title flex items-center gap-1">
+                                                        <span>{link.title || 'Без названия'}</span>
+                                                        {link.is_hidden && <i className="bi bi-eye-slash text-slate-400 text-xs" title="Скрытая плитка"></i>}
+                                                    </div>
+                                                    <div className={`tile-desc ${link.hide_url ? 'url-text-hidden' : ''}`}>
+                                                        {link.url ? link.url.replace(/^https?:\/\/(www\.)?/, '') : 'Без URL'}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <>
+                                                <span className="edit-tile-pencil-btn" onClick={(e) => openEditLinkModal(link, e)}><i className="bi bi-pencil"></i></span>
+                                                <span className="delete-tile-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteLink(link.id); }}><i className="bi bi-x-lg"></i></span>
+                                            </>
+                                        </a>
+                                    ))}
+                                    <div className="tile-3d-plus generic-no-drag" onClick={() => openAddLinkModal(catName)}>
+                                        <div className="tile-3d-plus-icon-circle"><i className="bi bi-plus-lg"></i></div>
+                                    </div>
+                                </ReactSortable>
+                            )}
+                            
+                            {catLinks.length === 0 && (
+                                <div className="tile-3d-plus generic-no-drag mt-4" onClick={() => openAddLinkModal(catName)}>
+                                    <div className="tile-3d-plus-icon-circle"><i className="bi bi-plus-lg"></i></div>
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+            </ReactSortable>
+        );
+    };
+
     return (
-        <div className="flex flex-col min-h-screen">
+        <div className="flex flex-col min-h-screen bg-[#f8fafc] relative">
+            
             <Header isAdmin={true} username="Администратор" />
+
+            {toastMessage && (
+                <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[9999] animate-bounce pointer-events-none">
+                    <div className="bg-slate-900/90 backdrop-blur-md text-white text-xs font-bold px-6 py-3.5 rounded-2xl shadow-2xl border border-slate-700/50 flex items-center gap-2">
+                        <span>{toastMessage}</span>
+                    </div>
+                </div>
+            )}
 
             <div className="max-w-[1400px] w-full mx-auto px-6 py-12 flex-grow">
                 <header className="flex flex-col md:flex-row md:items-center md:justify-between pb-6 gap-4">
@@ -383,209 +675,163 @@ export default function LinksPage() {
                 <hr className="header-divider" />
 
                 <div id="categories-container" className="space-y-8 mt-4">
-                    {categoriesList.length === 0 ? (
-                        <div className="text-center py-12 text-slate-400 bg-white rounded-[24px] border border-slate-200/80 shadow-sm p-6">
-                            <i className="bi bi-folder-open text-4xl mx-auto mb-3 opacity-30 block"></i>
-                            <p className="text-sm font-medium">Нет категорий. Добавьте первую ссылку.</p>
-                        </div>
-                    ) : (
-                        <ReactSortable
-                            list={categoriesList}
-                            setList={handleCategoriesSort}
-                            animation={250}
-                            ghostClass="sortable-ghost"
-                            chosenClass="sortable-chosen"
-                            filter=".no-drag, .delete-cat-btn-new, .inline-cat-input, .inline-cat-save, .inline-cat-cancel"
-                            disabled={!isDragMode}
-                            className="space-y-8"
-                        >
-                            {categoriesList.map((catItem) => {
-                                const catName = catItem.name;
-                                return (
-                                <div key={catItem.id} className="category-section p-6" data-category={catName}>
-                                    <div className="category-title cursor-grab">
-                                        <div className="flex items-center gap-2 flex-1">
-                                            <i className="bi bi-folder2-open category-title-icon"></i>
-                                            
-                                            {editingCategoryName === catName ? (
-                                                <div className="flex items-center gap-2 flex-1 no-drag">
-                                                    <input
-                                                        type="text"
-                                                        className="inline-cat-input"
-                                                        value={newCategoryName}
-                                                        onChange={(e) => setNewCategoryName(e.target.value)}
-                                                        onKeyDown={(e) => {
-                                                            if (e.key === 'Enter') renameCategory(catName, newCategoryName);
-                                                            if (e.key === 'Escape') setEditingCategoryName(null);
-                                                        }}
-                                                        autoFocus
-                                                        onClick={(e) => e.stopPropagation()}
-                                                    />
-                                                    <button className="inline-cat-save no-drag" onClick={(e) => { e.stopPropagation(); renameCategory(catName, newCategoryName); }}>
-                                                        <i className="bi bi-check-lg"></i>
-                                                    </button>
-                                                    <button className="inline-cat-cancel no-drag" onClick={(e) => { e.stopPropagation(); setEditingCategoryName(null); }}>
-                                                        <i className="bi bi-x-lg"></i>
-                                                    </button>
-                                                </div>
-                                            ) : (
-                                                <span 
-                                                    className="cat-display-text"
-                                                    onDoubleClick={() => {
-                                                        if (isEditMode) {
-                                                            setEditingCategoryName(catName);
-                                                            setNewCategoryName(catName);
-                                                        }
-                                                    }}
-                                                >
-                                                    {catName}
-                                                </span>
-                                            )}
-                                        </div>
-                                        <div className="no-drag">
-                                            <button
-                                                type="button"
-                                                onClick={(e) => { e.stopPropagation(); setCategoryToDelete(catName); setIsConfirmDeleteOpen(true); }}
-                                                className="delete-cat-btn-new"
-                                                title="Удалить раздел"
-                                            >
-                                                <i className="bi bi-x-lg"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-
-                                    <ReactSortable
-                                        list={groupedLinks[catName] || []}
-                                        setList={(newList) => handleTilesSort(newList, catName)}
-                                        group={{ name: 'shared_tiles', pull: true, put: true }}
-                                        disabled={!isDragMode}
-                                        animation={200}
-                                        ghostClass="sortable-ghost"
-                                        chosenClass="sortable-chosen"
-                                        filter=".delete-tile-btn, .edit-tile-pencil-btn, .tile-3d-plus"
-                                        className="grid tiles-grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 mt-4"
-                                    >
-                                        {(groupedLinks[catName] || []).map((link) => (
-                                            <a
-                                                key={link.id}
-                                                href={link.url || '#'}
-                                                target={link.open_in_new_tab ? "_blank" : "_self"}
-                                                className={`tile group block ${link.is_hidden ? 'hidden-tile' : ''}`}
-                                                onClick={(e) => { if (isEditMode || isDragMode) e.preventDefault(); }}
-                                                rel="noopener noreferrer"
-                                            >
-                                                <div className="flex items-center gap-3">
-                                                    <div className="tile-icon bg-indigo-50 text-indigo-500 flex items-center justify-center">
-                                                        {getFaviconHtml(link)}
-                                                    </div>
-                                                    <div className="overflow-hidden flex-1 pr-14">
-                                                        <div className="tile-title">
-                                                            {link.title || 'Без названия'}
-                                                            {link.is_hidden && <i className="bi bi-eye-slash text-slate-400 text-xs ml-1"></i>}
-                                                        </div>
-                                                        <div className={`tile-desc ${link.hide_url ? 'url-text-hidden' : ''}`}>
-                                                            {link.url ? link.url.replace(/^https?:\/\/(www\.)?/, '') : 'Без URL'}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <span className="edit-tile-pencil-btn" onClick={(e) => openEditLinkModal(link, e)}><i className="bi bi-pencil"></i></span>
-                                                <span className="delete-tile-btn" onClick={(e) => { e.preventDefault(); e.stopPropagation(); deleteLink(link.id); }}><i className="bi bi-x-lg"></i></span>
-                                            </a>
-                                        ))}
-                                        <div className={`tile-3d-plus generic-no-drag ${isDragMode ? '!hidden' : ''}`} onClick={() => openAddLinkModal(catName)}>
-                                            <div className="tile-3d-plus-icon-circle"><i className="bi bi-plus-lg"></i></div>
-                                        </div>
-                                    </ReactSortable>
-                                </div>
-                            )})}
-                        </ReactSortable>
-                    )}
+                    {renderCategories()}
                 </div>
 
-                <div className="add-cat-inline" onClick={addCategory}>
-                    <i className="bi bi-plus-circle opacity-50 text-xl"></i> Добавить новый раздел
-                </div>
+                {isEditMode && (
+                    <div className="add-cat-inline cursor-pointer" onClick={addCategory}>
+                        <i className="bi bi-plus-circle opacity-50 text-xl"></i> Добавить новый раздел
+                    </div>
+                )}
             </div>
 
             <Footer />
 
-            <div className="ap-trigger group" onClick={handleTogglePanel} title="Панель управления">
-                <i className="bi bi-sliders transition-transform duration-300 group-hover:rotate-90"></i>
+            <div className={`ap-trigger group ${isEditMode ? 'active' : ''}`} onClick={handleToggleEditMode} title="Режим редактирования">
+                <i className="bi bi-pencil-square transition-transform duration-300 group-hover:rotate-12"></i>
             </div>
 
-            <div className={`ap-panel ${isPanelOpen ? 'active' : ''}`}>
-                <div className="ap-header">
-                    <div className="ap-header-title"><div className="ap-pulse"></div>Управление</div>
-                    <span className="ap-badge">Admin</span>
-                </div>
-                <button onClick={() => openAddLinkModal()} className="ap-btn ap-btn-dark"><i className="bi bi-plus-lg"></i> Быстрая ссылка</button>
-                <button onClick={handleToggleDragMode} className="ap-btn ap-btn-primary">
-                    {isDragMode ? <><i className="bi bi-check-lg"></i> Завершить перетаскивание</> : <><i className="bi bi-arrows-move"></i> Управление плитками</>}
-                </button>
-            </div>
+            <div className={`ap-panel ${isEditMode ? 'active' : ''}`}>
+    <div className="ap-header">
+        <div className="ap-header-title">
+            <div className="ap-pulse"></div>
+            <span>Режим редактирования</span>
+        </div>
+        <span className="ap-badge">
+            {isEditMode ? 'ВКЛ' : 'ВЫКЛ'}
+        </span>
+    </div>
+</div>
 
-            <div className={`ap-modal-overlay ${isModalOpen ? 'active' : ''}`} onClick={() => setIsModalOpen(false)}>
-                <div className="ap-modal-box" onClick={e => e.stopPropagation()}>
-                    <div className="ap-modal-header">
-                        <h3 className="ap-modal-title">{formData.id ? 'Параметры ссылки' : 'Новая ссылка'}</h3>
-                        <button type="button" className="ap-modal-close" onClick={() => setIsModalOpen(false)}>&times;</button>
-                    </div>
-                    <form onSubmit={handleSaveLink}>
-                        <div className="ap-modal-grid">
-                            <div>
-                                <div className="ap-form-group">
-                                    <label className="ap-form-label">URL Адрес</label>
-                                    <input required type="url" placeholder="https://..." className="ap-input-lg" value={formData.url} onChange={e => setFormData({...formData, url: e.target.value})} />
+            {isModalOpen && (
+                <div 
+                    className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 md:p-6 transition-all" 
+                    onClick={() => setIsModalOpen(false)}
+                >
+                    <div 
+                        className="bg-white/95 backdrop-blur-2xl w-full max-w-2xl rounded-[32px] p-8 md:p-10 shadow-2xl space-y-6 border border-slate-100 my-auto transform transition-all" 
+                        onClick={e => e.stopPropagation()}
+                    >
+                        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+                            <div className="flex items-center gap-3">
+                                <div className="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                                    <i className="bi bi-link-45deg text-2xl"></i>
                                 </div>
-                                <div className="ap-form-group">
-                                    <label className="ap-form-label">Название ссылки</label>
-                                    <input required type="text" placeholder="Например: Google Документы" className="ap-input-lg" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
-                                </div>
-                                <div className="ap-form-group">
-                                    <label className="ap-form-label">Раздел плиток</label>
-                                    <select className="ap-select" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
-                                        {categoriesList.map(cat => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
-                                    </select>
-                                </div>
-                                <div className="grid grid-cols-1 gap-2 mt-4">
-                                    <div className="grid grid-cols-2 gap-3">
-                                        <label className="flex items-center justify-between bg-slate-50 border border-slate-100 p-2.5 rounded-xl cursor-pointer">
-                                            <span className="text-[11px] font-bold text-slate-500 uppercase">Плитка видима</span>
-                                            <input type="checkbox" checked={!formData.is_hidden} onChange={e => setFormData({...formData, is_hidden: !e.target.checked})} className="w-4 h-4 accent-indigo-600" />
-                                        </label>
-                                        <label className="flex items-center justify-between bg-slate-50 border border-slate-100 p-2.5 rounded-xl cursor-pointer">
-                                            <span className="text-[11px] font-bold text-slate-500 uppercase">Адрес видим</span>
-                                            <input type="checkbox" checked={!formData.hide_url} onChange={e => setFormData({...formData, hide_url: !e.target.checked})} className="w-4 h-4 accent-indigo-600" />
-                                        </label>
-                                    </div>
-                                    <label className="flex items-center justify-between bg-slate-50 border border-slate-100 p-2.5 rounded-xl cursor-pointer mt-1">
-                                        <span className="text-[11px] font-bold text-slate-500 uppercase"><i className="bi bi-box-arrow-up-right mr-1"></i> В новой вкладке</span>
-                                        <input type="checkbox" checked={formData.open_in_new_tab} onChange={e => setFormData({...formData, open_in_new_tab: e.target.checked})} className="w-4 h-4 accent-indigo-600" />
-                                    </label>
-                                </div>
-                            </div>
-                            <div className="flex flex-col justify-between">
                                 <div>
-                                    <div className="flex items-center justify-between mb-1.5">
-                                        <label className="ap-form-label m-0"><i className="bi bi-image"></i> Картинка / Иконка</label>
+                                    <h3 className="text-lg font-black text-slate-800">
+                                        {formData.id ? 'Параметры ссылки' : 'Новая быстрая ссылка'}
+                                    </h3>
+                                    <p className="text-xs text-slate-400 font-medium">Редактирование адреса и флагов видимости</p>
+                                </div>
+                            </div>
+                            <button 
+                                type="button" 
+                                onClick={() => setIsModalOpen(false)} 
+                                className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold text-sm transition-all flex items-center justify-center"
+                            >
+                                ✕
+                            </button>
+                        </div>
+
+                        <form onSubmit={handleSaveLink} className="space-y-5">
+                            <div 
+                                onClick={() => {
+                                    setIsInternalDomain(!isInternalDomain);
+                                    setRawUrlInput('');
+                                }}
+                                className="flex items-center justify-between p-4 bg-slate-50 hover:bg-indigo-50/40 border border-slate-200/80 rounded-2xl cursor-pointer transition-all"
+                            >
+                                <div className="flex items-center gap-3">
+                                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm ${isInternalDomain ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-400'}`}>
+                                        <i className="bi bi-globe"></i>
                                     </div>
-                                    <div className="modal-fav-grid">
-                                        {formData.custom_favicon && (
-                                            <div className="modal-fav-item active">
-                                                <img src={`/${formData.custom_favicon}`} alt="favicon" />
-                                            </div>
-                                        )}
+                                    <div>
+                                        <span className="text-xs font-bold text-slate-800 block">Ссылка на этом домене</span>
+                                        <span className="text-[11px] text-slate-400 font-medium">Автоматически подставит {currentDomain || 'ntmbase.ru'}</span>
+                                    </div>
+                                </div>
+
+                                <div className={`w-11 h-6 rounded-full p-1 transition-colors duration-200 ease-in-out ${isInternalDomain ? 'bg-indigo-600' : 'bg-slate-300'}`}>
+                                    <div className={`w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-200 ease-in-out ${isInternalDomain ? 'translate-x-5' : 'translate-x-0'}`} />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5 block">URL Адрес</label>
+                                <div className="flex items-center bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden focus-within:border-indigo-500 focus-within:bg-white transition-all">
+                                    <span className="px-4 py-3 text-xs font-bold text-slate-400 bg-slate-100 border-r border-slate-200 select-none">
+                                        {isInternalDomain ? `https://${currentDomain || 'ntmbase.ru'}/` : 'https://'}
+                                    </span>
+                                    <input
+                                        required
+                                        type="text"
+                                        placeholder={isInternalDomain ? "voice" : "google.com"}
+                                        className="w-full px-4 py-3 text-xs font-semibold text-slate-800 bg-transparent focus:outline-none placeholder-slate-400"
+                                        value={rawUrlInput}
+                                        onChange={e => setRawUrlInput(e.target.value)}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5 block">Название ссылки</label>
+                                <input 
+                                    required 
+                                    type="text" 
+                                    placeholder="Например: Анализатор звонков" 
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" 
+                                    value={formData.title} 
+                                    onChange={e => setFormData({...formData, title: e.target.value})} 
+                                />
+                            </div>
+
+                            <div>
+                                <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5 block">Раздел плиток</label>
+                                <select 
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" 
+                                    value={formData.category} 
+                                    onChange={e => setFormData({...formData, category: e.target.value})}
+                                >
+                                    {categoriesList.map(cat => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
+                                </select>
+                            </div>
+
+                            <div className="p-4 bg-slate-50 border border-slate-200/80 rounded-2xl space-y-3 pt-3">
+                                <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Настройки отображения</h4>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <div onClick={() => setFormData(prev => ({ ...prev, is_hidden: !prev.is_hidden }))} className="flex items-center justify-between p-3 bg-white border border-slate-200/80 rounded-xl cursor-pointer hover:border-emerald-300 transition-all select-none">
+                                        <span className="text-xs font-bold text-slate-700">Плитка видима</span>
+                                        <div className={`w-10 h-5.5 rounded-full p-0.5 transition-colors duration-200 ${!formData.is_hidden ? 'bg-emerald-500' : 'bg-slate-300'}`}>
+                                            <div className={`w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-200 ${!formData.is_hidden ? 'translate-x-4.5' : 'translate-x-0'}`} />
+                                        </div>
+                                    </div>
+                                    <div onClick={() => setFormData(prev => ({ ...prev, hide_url: !prev.hide_url }))} className="flex items-center justify-between p-3 bg-white border border-slate-200/80 rounded-xl cursor-pointer hover:border-emerald-300 transition-all select-none">
+                                        <span className="text-xs font-bold text-slate-700">Адрес видим</span>
+                                        <div className={`w-10 h-5.5 rounded-full p-0.5 transition-colors duration-200 ${!formData.hide_url ? 'bg-emerald-500' : 'bg-slate-300'}`}>
+                                            <div className={`w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-200 ${!formData.hide_url ? 'translate-x-4.5' : 'translate-x-0'}`} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div onClick={() => setFormData(prev => ({ ...prev, open_in_new_tab: !prev.open_in_new_tab }))} className="flex items-center justify-between p-3 bg-white border border-slate-200/80 rounded-xl cursor-pointer hover:border-emerald-300 transition-all select-none">
+                                    <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5"><i className="bi bi-box-arrow-up-right text-slate-400"></i> Открывать в новой вкладке</span>
+                                    <div className={`w-10 h-5.5 rounded-full p-0.5 transition-colors duration-200 ${formData.open_in_new_tab ? 'bg-emerald-500' : 'bg-slate-300'}`}>
+                                        <div className={`w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-200 ${formData.open_in_new_tab ? 'translate-x-4.5' : 'translate-x-0'}`} />
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div className="ap-modal-footer">
-                            <button type="button" className="ap-btn-cancel" onClick={() => setIsModalOpen(false)}>Отмена</button>
-                            <button type="submit" className="ap-btn ap-btn-primary" style={{ width: 'auto', padding: '0 28px' }}>Сохранить</button>
-                        </div>
-                    </form>
+
+                            <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
+                                <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-3 rounded-xl bg-slate-100 text-slate-600 font-bold text-xs hover:bg-slate-200 transition-all">
+                                    Отмена
+                                </button>
+                                <button type="submit" disabled={isSavingLink} className="px-8 py-3 rounded-xl bg-slate-900 hover:bg-indigo-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all disabled:opacity-50 flex items-center gap-2">
+                                    {isSavingLink ? <><i className="bi bi-arrow-repeat animate-spin"></i> Сохранение...</> : 'Сохранить'}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-            </div>
+            )}
 
             <div className={`ap-modal-overlay ${isConfirmDeleteOpen ? 'active' : ''}`} onClick={() => setIsConfirmDeleteOpen(false)}>
                 <div className="ap-modal-box confirm-del-box" onClick={e => e.stopPropagation()}>

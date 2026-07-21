@@ -86,8 +86,17 @@ body.admin-panel-active .edit-tile-pencil-btn, body.admin-panel-active .delete-t
 body.admin-panel-active .add-cat-inline { display: flex !important; align-items: center !important; justify-content: center !important; gap: 10px !important; }
 body.admin-panel-active .delete-cat-btn-new { display: inline-flex !important; }
 
-body.drag-mode-active .category-title { cursor: grab !important; color: #4f46e5 !important; border-image: linear-gradient(90deg, #4f46e5, #818cf8, transparent) 1 !important; }
-body.drag-mode-active .tile { cursor: grab !important; border: 1px dashed #6366f1 !important; background: #eef2ff !important; }
+body.drag-mode-active .category-title { 
+    cursor: grab !important; 
+    color: #64748b !important; 
+    border-image: linear-gradient(90deg, #64748b, #94a3b8, transparent) 1 !important; 
+}
+
+body.drag-mode-active .tile { 
+    cursor: grab !important; 
+    border: 1px dashed #64748b !important; 
+    background: #f8fafc !important; 
+}
 
 .edit-tile-pencil-btn, .delete-tile-btn { width: 30px !important; height: 30px !important; border-radius: 9px !important; display: none !important; align-items: center !important; justify-content: center !important; transition: all 0.2s ease !important; cursor: pointer !important; z-index: 40 !important; position: absolute !important; top: 14px !important; border: 1px solid transparent; }
 .edit-tile-pencil-btn { right: 46px !important; background: rgba(99,102,241,0.06) !important; color: #6366f1 !important; border-color: rgba(99,102,241,0.1); }
@@ -111,12 +120,10 @@ body.drag-mode-active .tile { cursor: grab !important; border: 1px dashed #6366f
 .inline-cat-cancel:hover { background: #fee2e2; }
 
 /* --- REACT SORTABLE FIXES --- */
-.sortable-ghost { opacity: 0.2 !important; background: #e2e8f0 !important; border: 2px dashed #6366f1 !important; }
-.sortable-chosen { transform: rotate(1deg) scale(1.02) !important; }
 .generic-no-drag { cursor: default !important; }
 
 /* --- ADMIN PANEL --- */
-.ap-trigger { position: fixed; bottom: 24px; right: 24px; z-index: 9999; width: 52px; height: 52px; background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.3), 0 0 20px rgba(79, 70, 229, 0.2); border: 1px solid rgba(79, 70, 229, 0.3); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+.ap-trigger { position: fixed; bottom: 24px; right: 24px; z-index: 9999; width: 52px; height: 52px; background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.3); border: 1px solid rgba(255,255,255,0.08); transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
 .ap-trigger:hover { background: #4f46e5; transform: scale(1.08); border-color: #4f46e5; }
 .ap-trigger i { font-size: 20px; transition: transform 0.3s; }
 .ap-trigger:hover i { transform: rotate(90deg); }
@@ -165,3 +172,32 @@ body.drag-mode-active .tile { cursor: grab !important; border: 1px dashed #6366f
 
 @keyframes apFadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes apFadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+/* Ручка для перетаскивания категорий */
+.drag-handle {
+    display: none !important;
+    width: 24px;
+    height: 24px;
+    min-width: 24px;
+    cursor: grab;
+    color: #94a3b8;
+    font-size: 16px;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+    user-select: none;
+}
+
+body.admin-panel-active .drag-handle {
+    display: flex !important;
+}
+
+.drag-handle:hover {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+}

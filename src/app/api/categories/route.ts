@@ -1,67 +1,53 @@
-import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 
-// GET: Получение категорий
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
+const supabase = createClient(supabaseUrl, supabaseKey);
+
+// GET: Получить список категорий, отсортированных по позиции
 export async function GET() {
   try {
-    const { data, error } = await supabase.from('categories').select('*');
+    const { data, error } = await supabase
+      .from('categories')
+      .select('name')
+      .order('position', { ascending: true });
+
+    if (error) throw error;
     
-    if (error) {
-      console.error('Supabase categories error:', error);
-      return NextResponse.json({ success: false, error: error.message }, { status: 500 });
-    }
-
-    const categories = (data || []).map((row: any) => {
-      let val = row.name || row.NAME || row;
-      if (typeof val === 'string' && val.startsWith('{') && val.endsWith('}')) {
-        try {
-          const parsed = JSON.parse(val);
-          return parsed.NAME || parsed.name || val;
-        } catch {
-          return val;
-        }
-      }
-      return String(val);
-    });
-
-    return NextResponse.json(categories);
-  } catch (err: any) {
-    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+    // Возвращаем простой массив строк с именами категорий
+    const categoryNames = (data || []).map((c) => c.name);
+    return NextResponse.json(categoryNames);
+  } catch (e: any) {
+    return NextResponse.json({ error: e.message }, { status: 500 });
   }
 }
 
-// POST: Сохранение категорий
-export async function POST(req: Request) {
+// POST: Сохранить новый порядок категорий
+export async function POST(req: NextRequest) {
   try {
-    const { categories } = await req.json();
+    const body = await req.json();
+    const categories: string[] = body.categories || [];
 
-    if (Array.isArray(categories)) {
-      // 1. Безопасно очищаем таблицу категорий без привязки к типу ID
-      const { error: deleteError } = await supabase
-        .from('categories')
-        .delete()
-        .filter('name', 'neq', '___NON_EXISTENT_VALUE___');
-
-      if (deleteError) {
-        console.error('Ошибка при очистке категорий:', deleteError);
-        return NextResponse.json({ success: false, error: deleteError.message }, { status: 500 });
-      }
-
-      // 2. Вставляем новые категории
-      if (categories.length > 0) {
-        const rows = categories.map((name: string) => ({ name: String(name) }));
-        const { error: insertError } = await supabase.from('categories').insert(rows);
-
-        if (insertError) {
-          console.error('Ошибка при вставке категорий:', insertError);
-          return NextResponse.json({ success: false, error: insertError.message }, { status: 500 });
-        }
-      }
+    if (!Array.isArray(categories) || categories.length === 0) {
+      return NextResponse.json({ success: true });
     }
 
+    // Готовим объекты с позициями для перезаписи
+    const payload = categories.map((name, index) => ({
+      name,
+      position: index,
+    }));
+
+    // Перезаписываем позиции в таблице categories
+    const { error } = await supabase
+      .from('categories')
+      .upsert(payload, { onConflict: 'name' });
+
+    if (error) throw error;
+
     return NextResponse.json({ success: true });
-  } catch (err: any) {
-    console.error('Server POST error:', err);
-    return NextResponse.json({ success: false, error: err?.message || String(err) }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
   }
 }
