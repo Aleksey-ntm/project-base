@@ -9,6 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.7",
     "bootstrap-icons": "^1.13.1",
     "lucide-react": "^1.25.0",
     "next": "16.2.10",

@@ -49,7 +49,7 @@ export default function LinksPage() {
     const saveTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const saveCatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-    // ===== ЗАГРУЗКА ДАННЫХ =====
+    // ===== ЗАГРУЗКА ДАННЫХ ИЗ БД =====
     const fetchLinks = async () => {
         try {
             setIsLoading(true);
@@ -59,8 +59,26 @@ export default function LinksPage() {
                 fetch('/api/categories').then(r => r.json()).catch(() => [])
             ]);
 
+            // Вспомогательная функция распарсить имя, если пришел JSON {"NAME":"..."}
+            const cleanCategoryName = (val: any): string => {
+                if (!val) return 'Разное';
+                let str = String(val).trim();
+                if (str.startsWith('{') && str.endsWith('}')) {
+                    try {
+                        const parsed = JSON.parse(str);
+                        return parsed.NAME || parsed.name || str;
+                    } catch {
+                        return str;
+                    }
+                }
+                return str;
+            };
+
             const cleanLinks = Array.isArray(linksRes) 
-                ? linksRes.map(({ chosen, selected, ...rest }: any) => rest)
+                ? linksRes.map(({ chosen, selected, ...rest }: any) => ({
+                    ...rest,
+                    category: cleanCategoryName(rest.category)
+                }))
                 : [];
             
             setLinks(cleanLinks);
@@ -70,9 +88,17 @@ export default function LinksPage() {
                 if (link.category) categoriesFromLinks.add(link.category);
             });
 
+            // Нормализуем полученные категории
+            let rawCatsFromApi: string[] = [];
+            if (Array.isArray(catsRes)) {
+                rawCatsFromApi = catsRes
+                    .map((item: any) => cleanCategoryName(typeof item === 'object' && item !== null ? (item.name || item.NAME) : item))
+                    .filter((name: any) => typeof name === 'string' && name.trim() !== '');
+            }
+
             let finalOrder: string[] = [];
-            if (Array.isArray(catsRes) && catsRes.length > 0) {
-                finalOrder = [...catsRes];
+            if (rawCatsFromApi.length > 0) {
+                finalOrder = [...rawCatsFromApi];
                 categoriesFromLinks.forEach(cat => {
                     if (!finalOrder.includes(cat)) finalOrder.push(cat);
                 });
@@ -80,7 +106,13 @@ export default function LinksPage() {
                 finalOrder = Array.from(categoriesFromLinks).sort();
             }
 
-            setCategoriesList(finalOrder.map(cat => ({ id: `cat_${cat}`, name: cat })));
+            // Формируем список категорий
+            setCategoriesList(
+                finalOrder.map((cat, idx) => ({ 
+                    id: `cat_${idx}_${encodeURIComponent(cat)}`, 
+                    name: cat 
+                }))
+            );
         } catch (error) {
             console.error('❌ Ошибка загрузки:', error);
         } finally {
@@ -104,13 +136,14 @@ export default function LinksPage() {
         return grouped;
     }, [links, categoriesList]);
 
-    // ===== СОХРАНЕНИЕ КАТЕГОРИЙ =====
+    // ===== СОХРАНЕНИЕ КАТЕГОРИЙ В БД =====
     const saveCategoriesOrder = useCallback(async (newOrder: string[]) => {
         try {
+            const cleanOrder = newOrder.map(c => String(c));
             const res = await fetch('/api/categories', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ categories: newOrder })
+                body: JSON.stringify({ categories: cleanOrder })
             });
             const data = await res.json();
             if (!data.success) {
@@ -261,7 +294,7 @@ export default function LinksPage() {
             });
 
             if (!categoriesList.find(c => c.name === cleanCatName)) {
-                const newList = [...categoriesList, { id: `cat_${cleanCatName}`, name: cleanCatName }];
+                const newList = [...categoriesList, { id: `cat_${Date.now()}_${cleanCatName}`, name: cleanCatName }];
                 setCategoriesList(newList);
                 await saveCategoriesOrder(newList.map(c => c.name));
             }
@@ -301,7 +334,7 @@ export default function LinksPage() {
     // ===== МОДАЛКИ =====
     const openAddLinkModal = (preselectedCategory = 'Разное') => {
         setFormData({
-            id: '', title: '', url: '', category: preselectedCategory,
+            id: `b_${Date.now()}`, title: '', url: '', category: preselectedCategory,
             is_hidden: false, hide_url: false, open_in_new_tab: false, custom_favicon: ''
         });
         setIsModalOpen(true);
@@ -370,7 +403,6 @@ export default function LinksPage() {
                                 const catName = catItem.name;
                                 return (
                                 <div key={catItem.id} className="category-section p-6" data-category={catName}>
-                                    {/* 👇 ВОТ ТУТ ПРИМЕНЕН КЛАСС category-title */}
                                     <div className="category-title cursor-grab">
                                         <div className="flex items-center gap-2 flex-1">
                                             <i className="bi bi-folder2-open category-title-icon"></i>
