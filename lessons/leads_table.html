@@ -1,0 +1,204 @@
+<div class="edu-glossary-native" style="width: 100%; font-family: system-ui, -apple-system, sans-serif;">
+
+    <!-- Плашка с информацией и кнопкой разворачивания -->
+    <div style="
+        margin: 0 0 1rem 0; 
+        padding: 0.85rem 1.15rem; 
+        background-color: #ffffff; 
+        border: 1px solid #e2e8f0; 
+        border-radius: 12px; 
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between;
+        gap: 1rem;
+        width: 100%;
+        box-sizing: border-box;
+    ">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+            <span style="font-size: 18px; color: #0284c7; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V9H11V15ZM11 7H9V5H11V7Z" fill="currentColor"/>
+                </svg>
+            </span>
+            <div style="font-size: 13.5px; color: #475569; line-height: 1.4;">
+                <strong style="color: #0f172a;">Таблица «Лиды ТМ»:</strong>
+            </div>
+        </div>
+
+        <!-- Кнопка «На весь экран» -->
+        <button 
+            onclick="
+                var modal = document.getElementById('sheet-modal-overlay');
+                if (modal) {
+                    modal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                }
+            " 
+            style="
+                display: inline-flex; 
+                align-items: center; 
+                gap: 8px; 
+                background: #0f172a; 
+                color: #ffffff; 
+                border: none; 
+                padding: 8px 16px; 
+                border-radius: 8px; 
+                font-size: 13px; 
+                font-weight: 700; 
+                cursor: pointer; 
+                white-space: nowrap;
+                flex-shrink: 0;
+                transition: all 0.2s ease;
+            "
+            onmouseover="this.style.background='#0284c7';"
+            onmouseout="this.style.background='#0f172a';"
+        >
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="15 3 21 3 21 9"></polyline>
+                <polyline points="9 21 3 21 3 15"></polyline>
+                <line x1="21" y1="3" x2="14" y2="10"></line>
+                <line x1="3" y1="21" x2="10" y2="14"></line>
+            </svg>
+            <span>На весь экран</span>
+        </button>
+    </div>
+
+    <!-- Предпросмотр таблицы с полной блокировкой внешнего скролла -->
+    <div 
+        id="sheet-inline-container"
+        style="
+            width: 100%; 
+            position: relative;
+            border-radius: 12px; 
+            border: 1px solid #cbd5e1; 
+            background: #ffffff;
+            box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.05);
+            overflow: hidden;
+            overscroll-behavior: none;
+        "
+        onmouseenter="document.body.style.overflow='hidden';"
+        onmouseleave="document.body.style.overflow='';"
+    >
+        <iframe 
+            src="https://docs.google.com/spreadsheets/d/1o93LpqPEFIthBB_rDjOSO9tJyyKGih6s5QREo8JNNhE/edit?gid=217406824&rm=minimal" 
+            style="width: 100%; height: 600px; border: none; display: block; overscroll-behavior: none;"
+            loading="eager">
+        </iframe>
+
+        <!-- Нижняя панель с кнопкой разворачивания -->
+        <div style="
+            padding: 8px 16px; 
+            background: #f8fafc; 
+            border-top: 1px solid #e2e8f0; 
+            display: flex; 
+            justify-content: flex-end;
+        ">
+            <button 
+                onclick="
+                    var modal = document.getElementById('sheet-modal-overlay');
+                    if (modal) {
+                        modal.style.display = 'flex';
+                        document.body.style.overflow = 'hidden';
+                    }
+                " 
+                style="
+                    background: transparent; 
+                    border: 1px solid #cbd5e1; 
+                    color: #0f172a; 
+                    padding: 5px 12px; 
+                    border-radius: 6px; 
+                    font-size: 12px; 
+                    font-weight: 700; 
+                    cursor: pointer;
+                    display: inline-flex;
+                    align-items: center;
+                    gap: 6px;
+                "
+                onmouseover="this.style.background='#0f172a'; this.style.color='#ffffff';"
+                onmouseout="this.style.background='transparent'; this.style.color='#0f172a';"
+            >
+                 Развернуть на весь экран ↗
+            </button>
+        </div>
+    </div>
+
+    <!-- Полноэкранный режим -->
+    <div id="sheet-modal-overlay" style="
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100vw; 
+        height: 100vh; 
+        background: rgba(15, 23, 42, 0.85); 
+        backdrop-filter: blur(8px); 
+        -webkit-backdrop-filter: blur(8px);
+        z-index: 999999; 
+        display: none; 
+        align-items: center; 
+        justify-content: center; 
+        padding: 16px; 
+        box-sizing: border-box;
+        overscroll-behavior: none;
+    ">
+        <div style="
+            position: relative; 
+            width: 100%; 
+            height: 100%; 
+            background: #ffffff; 
+            border-radius: 14px; 
+            overflow: hidden; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            display: flex;
+            flex-direction: column;
+        ">
+            <!-- Шапка -->
+            <div style="
+                display: flex; 
+                align-items: center; 
+                justify-content: space-between; 
+                padding: 10px 18px; 
+                background: #0f172a; 
+                color: #ffffff;
+                flex-shrink: 0;
+            ">
+                <div style="display: flex; align-items: center; gap: 8px; font-size: 13.5px; font-weight: 700;">
+                    <span style="color: #38bdf8;">●</span> Таблица «Лиды ТМ» (Полноэкранный режим)
+                </div>
+                
+                <button 
+                    onclick="
+                        var modal = document.getElementById('sheet-modal-overlay');
+                        if (modal) {
+                            modal.style.display = 'none';
+                            document.body.style.overflow = '';
+                        }
+                    " 
+                    style="
+                        background: rgba(255, 255, 255, 0.12); 
+                        border: none; 
+                        color: #ffffff; 
+                        padding: 5px 12px; 
+                        border-radius: 6px; 
+                        font-size: 12.5px; 
+                        font-weight: 600; 
+                        cursor: pointer;
+                        transition: background 0.2s ease;
+                    "
+                    onmouseover="this.style.background='rgba(239, 68, 68, 0.8)';"
+                    onmouseout="this.style.background='rgba(255, 255, 255, 0.12)';"
+                >
+                    ✕ Свернуть окно
+                </button>
+            </div>
+
+            <!-- Ифрейм таблицы -->
+            <iframe 
+                src="https://docs.google.com/spreadsheets/d/1o93LpqPEFIthBB_rDjOSO9tJyyKGih6s5QREo8JNNhE/edit?gid=217406824&rm=minimal" 
+                style="width: 100%; height: 100%; border: none; display: block; overscroll-behavior: none;"
+                loading="eager">
+            </iframe>
+        </div>
+    </div>
+
+</div>

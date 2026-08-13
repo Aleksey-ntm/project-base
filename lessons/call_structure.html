@@ -1,0 +1,691 @@
+<div class="edu-glossary-native">
+
+    <!-- Шапка -->
+    <div class="edu-header" style="width: 100% !important; display: flex !important; justify-content: center !important; margin-bottom: 2.5rem !important; padding-bottom: 0 !important; border-bottom: none !important;">
+        <div class="edu-header-top" style="display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 8px !important; width: 100% !important; max-width: 750px !important; margin: 0 auto !important;">
+            <h1 class="edu-title editable-node" data-global="title">Структура скрипта звонка</h1>
+            <p class="edu-intro editable-node" data-global="intro" style="max-width: 620px !important; margin: 0 0 12px 0 !important; font-size: 15px !important; color: #475569 !important; line-height: 1.6 !important; text-align: center !important;">
+                Пошаговая карта квалификации: логика шагов, цели, ключевая фактура и условия перехода.
+            </p>
+        </div>
+    </div>
+
+    <!-- БЛОК 1: Предисловие -->
+    <div class="intro-section-clean">
+        <h2 class="section-title">Что такое структура звонка и зачем она нужна?</h2>
+        <p class="intro-text">
+            <b>Структура звонка</b> — это проверенный пошаговый алгоритм диалога, который ведет менеджера от первого приветствия до фиксирования целевого действия (договоренности, продажи, следующего шага).
+        </p>
+        
+        <div class="intro-grid">
+            <div class="intro-card">
+                <div class="card-header-inline">
+                    <span class="card-icon">🎯</span>
+                    <span class="card-title">Зачем нужна структура?</span>
+                </div>
+                <div class="card-desc">
+                    Она даёт предсказуемый и управляемый результат. Вместо хаотичного разговора менеджер удерживает инициативу, экономит время клиента и последовательно ведет его к сделке.
+                </div>
+            </div>
+            <div class="intro-card">
+                <div class="card-header-inline">
+                    <span class="card-icon">⚡</span>
+                    <span class="card-title">Почему важно идти именно по ней?</span>
+                </div>
+                <div class="card-desc">
+                    Каждый этап логически готовит клиента к следующему. Попытка продать (этап 5), не выявив потребности и бюджет (этап 4), вызывает сопротивление и срывает сделку.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 2: Визуальная схема (ИДЕАЛЬНЫЕ ПРЯМЫЕ СТРЕЛКИ) -->
+    <div class="timeline-section-clean">
+        <h2 class="section-title">Визуальная схема: Прямая линия звонка и «уводы» клиента</h2>
+        <p class="intro-text" style="margin-bottom: 28px;">
+            В идеальном мире звонок идет прямо по стрелке. Но на практике клиент часто перебивает, задает вопросы не вовремя и пытается увести диалог вниз. Задача менеджера — мягко возвращать разговор на нужную точку.
+        </p>
+
+        <div class="timeline-wrapper">
+            
+            <!-- Точка 1 -->
+            <div class="timeline-step">
+                <div class="point-node">
+                    <span class="node-number">1</span>
+                    <div class="node-tooltip">
+                        <strong>Этап 1: Приветствие</strong>
+                        <span>Выход на ЛПР, знакомство, причина звонка.</span>
+                    </div>
+                </div>
+                <div class="point-label">Приветствие</div>
+                <div class="pull-down-wrapper">
+                    <div class="down-line"></div>
+                    <div class="down-arrow-head"></div>
+                    <div class="pull-reason">«Кто это?», «Нам ничего не надо»</div>
+                </div>
+            </div>
+
+            <!-- Стрелка 1 -> 2 -->
+            <div class="timeline-arrow-connector">
+                <div class="arrow-line"></div>
+                <div class="arrow-head"></div>
+            </div>
+
+            <!-- Точка 2 -->
+            <div class="timeline-step">
+                <div class="point-node">
+                    <span class="node-number">2</span>
+                    <div class="node-tooltip">
+                        <strong>Этап 2: Цель звонка</strong>
+                        <span>Суть предложения, зацепить внимание.</span>
+                    </div>
+                </div>
+                <div class="point-label">Цель звонка</div>
+                <div class="pull-down-wrapper">
+                    <div class="down-line"></div>
+                    <div class="down-arrow-head"></div>
+                    <div class="pull-reason">«Сколько стоит?», «Пришлите КП»</div>
+                </div>
+            </div>
+
+            <!-- Стрелка 2 -> 3 -->
+            <div class="timeline-arrow-connector">
+                <div class="arrow-line"></div>
+                <div class="arrow-head"></div>
+            </div>
+
+            <!-- Точка 3 -->
+            <div class="timeline-step">
+                <div class="point-node">
+                    <span class="node-number">3</span>
+                    <div class="node-tooltip">
+                        <strong>Этап 3: Переход</strong>
+                        <span>Согласование регламента разговора (2-3 мин).</span>
+                    </div>
+                </div>
+                <div class="point-label">Переход</div>
+                <div class="pull-down-wrapper">
+                    <div class="down-line"></div>
+                    <div class="down-arrow-head"></div>
+                    <div class="pull-reason">«Нет времени», «Занят»</div>
+                </div>
+            </div>
+
+            <!-- Стрелка 3 -> 4 -->
+            <div class="timeline-arrow-connector">
+                <div class="arrow-line"></div>
+                <div class="arrow-head"></div>
+            </div>
+
+            <!-- Точка 4 -->
+            <div class="timeline-step">
+                <div class="point-node">
+                    <span class="node-number">4</span>
+                    <div class="node-tooltip">
+                        <strong>Этап 4: Бриф</strong>
+                        <span>Выявление потребностей, бюджета и сроков.</span>
+                    </div>
+                </div>
+                <div class="point-label">Бриф</div>
+                <div class="pull-down-wrapper">
+                    <div class="down-line"></div>
+                    <div class="down-arrow-head"></div>
+                    <div class="pull-reason">«Зачем вам наш бюджет?», Уход от ответов</div>
+                </div>
+            </div>
+
+            <!-- Стрелка 4 -> 5 -->
+            <div class="timeline-arrow-connector">
+                <div class="arrow-line"></div>
+                <div class="arrow-head"></div>
+            </div>
+
+            <!-- Точка 5 -->
+            <div class="timeline-step">
+                <div class="point-node">
+                    <span class="node-number">5</span>
+                    <div class="node-tooltip">
+                        <strong>Этап 5: Закрытие</strong>
+                        <span>Фиксация следующий даты/звонка.</span>
+                    </div>
+                </div>
+                <div class="point-label">Закрытие</div>
+                <div class="pull-down-wrapper">
+                    <div class="down-line"></div>
+                    <div class="down-arrow-head"></div>
+                    <div class="pull-reason">«Я подумаю», «Я сам наберу»</div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Предупреждение -->
+        <div style="
+          margin: 1.5rem 0 1.5rem 0; 
+          padding: 14px 18px; 
+          border: 1px dashed #cbd5e1; 
+          border-radius: 10px; 
+          background: #fafafa;
+          font-family: system-ui, -apple-system, sans-serif;
+        ">
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px;">
+            ДИСЦИПЛИНА ЗВОНКА
+          </div>
+          <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 6px;">
+            Не перепрыгивайте через этапы в звонке!
+          </div>
+          <div style="font-size: 13.5px; line-height: 1.55; color: #475569;">
+            Если клиент уводит диалог на <strong style="color: #0f172a;">Этапе 2</strong> — надо возвращаться строго в <strong style="color: #0284c7;">Этап 3 (Переход)</strong>. Не пытайтесь БРИФИТЬ человека, не зафиксировав как будет идти разговор дальше, иначе это вызовет сопротивление.
+          </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 3: Пояснение перед таблицей -->
+    <div class="table-intro-note">
+        <h2 class="section-title" style="margin-bottom: 8px;">Детальная таблица квалификации</h2>
+        <p class="intro-text">
+            Ниже представлена наглядная таблица, в которой подробно расписано: за чем нужен каждый этап, какова его ключевая цель, какие именно блоки/данные требуется узнать у клиента и при соблюдении каких условий мы переходим к следующей точке.
+        </p>
+    </div>
+
+    <!-- Заголовки колонок -->
+    <div class="script-grid-header">
+        <div style="width: 15%;">Этап</div>
+        <div style="width: 20%;">Зачем нужен этап?</div>
+        <div style="width: 20%;">Цель этапа</div>
+        <div style="width: 25%;">Что нужно узнать</div>
+        <div style="width: 20%;">Когда переходим далее</div>
+    </div>
+
+    <!-- Список интерактивных карточек-строк -->
+    <div class="script-grid-container">
+
+        <!-- ЭТАП 1 -->
+        <div class="script-row-card">
+            <div class="col-item" style="width: 15%;">
+                <span class="step-num">01</span>
+                <div class="step-title">Приветствие</div>
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Рассказать причину звонка, попасть на человека который принимает решения по сайту, познакомиться с ним.
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Выйти на ЛПР/ЛВПР по сайту и познакомиться с ним.
+            </div>
+            <div class="col-item" style="width: 25%;">
+                Нам нужен человек, который отвечает за сайт, выбор подряда.
+            </div>
+            <div class="col-item last-col" style="width: 20%;">
+                <div class="success-badge">
+                    <span>✓ Знаем "с кем" общаться</span>
+                    <span>✓ Узнали имя ЛПР/ЛВПР</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        </div>
+
+        <!-- ЭТАП 2 -->
+        <div class="script-row-card">
+            <div class="col-item" style="width: 15%;">
+                <span class="step-num">02</span>
+                <div class="step-title">Цель звонка</div>
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Не ходим вокруг да около, если понимаем, что перед нами ЛПР/ЛВПР - предлагаем в лицо.
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Постараться максимально заинтересовать, зацепить человека, чтобы продолжить разговор.
+            </div>
+            <div class="col-item" style="width: 25%;">
+                Надо вообще?
+            </div>
+            <div class="col-item last-col" style="width: 20%;">
+                <div class="success-badge">
+                    <span>✓ Получено согласие на рассмотрение предложения</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        </div>
+
+        <!-- ЭТАП 3 -->
+        <div class="script-row-card">
+            <div class="col-item" style="width: 15%;">
+                <span class="step-num">03</span>
+                <div class="step-title">Переход</div>
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Чтобы не потерять заявку в середине разговора. Чтобы не получить дополнительных возражений.
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Выстроить путь в голове клиента: что происходит сейчас и что будет дальше.
+            </div>
+            <div class="col-item" style="width: 25%;">
+                Если клиент согласен разговаривать - уже пол дела сделано!
+            </div>
+            <div class="col-item last-col" style="width: 20%;">
+                <div class="success-badge">
+                    <span>✓ Есть свободные 2–3 минуты</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        </div>
+
+        <!-- ЭТАП 4 -->
+        <div class="script-row-card">
+            <div class="col-item" style="width: 15%;">
+                <span class="step-num">04</span>
+                <div class="step-title">Бриф</div>
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Собрать информацию и квалифицировать лид.
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Подтвердить потребность и актуальность в наших услугах.
+            </div>
+            <div class="col-item" style="width: 25%;">
+                <div class="brieff-list">
+                    <div><span>1.</span> Потребность</div>
+                    <div class="important-item"><span>2.</span> Бюджет <b>(ОК)</b></div>
+                    <div><span>3.</span> Почта</div>
+                    <div><span>4.</span> Телефон</div>
+                    <div><span>5.</span> Должность</div>
+                    <div class="important-item"><span>6.</span> Сроки <b>(ОК)</b></div>
+                </div>
+            </div>
+            <div class="col-item last-col" style="width: 20%;">
+                <div class="success-badge">
+                    <span>✓ Все вопросы заданы</span>
+                    <span class="warn">Бюджет и срок подтвержден</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="step-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><polyline points="19 12 12 19 5 12"></polyline></svg>
+        </div>
+
+        <!-- ЭТАП 5 -->
+        <div class="script-row-card">
+            <div class="col-item" style="width: 15%;">
+                <span class="step-num">05</span>
+                <div class="step-title">Закрытие</div>
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Чтобы получить $$$ за заявку?
+            </div>
+            <div class="col-item" style="width: 20%;">
+                Зафиксировать следующую точку контакта.
+            </div>
+            <div class="col-item" style="width: 25%;">
+                Когда клиент готов продолжить общение.
+            </div>
+            <div class="col-item last-col" style="width: 20%;">
+                <div class="success-badge">
+                    <span>✓ Назначена дата, клиент ждет звонок.</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+.edu-glossary-native {
+    width: 100%;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #334155;
+}
+
+.edu-glossary-native h1 {
+    margin: 0 0 12px 0 !important;
+    font-size: 32px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    text-align: center !important;
+}
+
+.section-title {
+    font-size: 20px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 12px 0;
+}
+
+.intro-text {
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: #475569;
+    margin: 0 0 16px 0;
+}
+
+.intro-section-clean {
+    margin-bottom: 2.5rem;
+}
+
+.intro-grid {
+    display: flex;
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.intro-card {
+    flex: 1;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 16px;
+}
+
+.card-header-inline {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.card-icon {
+    font-size: 18px;
+    line-height: 1;
+}
+
+.card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.card-desc {
+    font-size: 13.5px;
+    color: #475569;
+    line-height: 1.5;
+}
+
+.timeline-section-clean {
+    margin-bottom: 2.5rem;
+}
+
+/* ИДЕАЛЬНАЯ СЕТКА ТАЙМЛАЙНА */
+.timeline-wrapper {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 20px 0 10px 0;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.timeline-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 16%;
+    position: relative;
+    z-index: 2;
+}
+
+/* Кружочки с цифрами */
+.point-node {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #0284c7;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    box-shadow: 0 0 0 4px #ffffff, 0 2px 8px rgba(2, 132, 199, 0.25);
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.point-node:hover {
+    transform: scale(1.12);
+    background: #0369a1;
+}
+
+.node-number {
+    font-weight: 800;
+    font-size: 13px;
+}
+
+/* Тултипы */
+.node-tooltip {
+    position: absolute;
+    bottom: 42px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 160px;
+    background: #0f172a;
+    color: #ffffff;
+    padding: 10px 12px;
+    border-radius: 8px;
+    font-size: 12px;
+    line-height: 1.4;
+    text-align: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+    pointer-events: none;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    z-index: 20;
+}
+
+.node-tooltip strong {
+    display: block;
+    color: #38bdf8;
+    margin-bottom: 4px;
+}
+
+.node-tooltip::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+}
+
+.point-node:hover .node-tooltip {
+    opacity: 1;
+    visibility: visible;
+}
+
+.point-label {
+    margin-top: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    text-align: center;
+}
+
+/* Горизонтальные ровные соединители с наконечником */
+.timeline-arrow-connector {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    margin-top: 15px; /* Идеальная центровка по оси 32px ноды */
+    padding: 0 4px;
+}
+
+.arrow-line {
+    flex: 1;
+    height: 2px;
+    background: #0284c7;
+}
+
+.arrow-head {
+    width: 0;
+    height: 0;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    border-left: 7px solid #0284c7;
+}
+
+/* Уводы вниз */
+.pull-down-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 8px;
+}
+
+.down-line {
+    width: 1px;
+    height: 22px;
+    border-left: 2px dashed #f87171;
+}
+
+.down-arrow-head {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 6px solid #f87171;
+    margin-top: -1px;
+}
+
+.pull-reason {
+    font-size: 11px;
+    color: #991b1b;
+    background: #fef2f2;
+    border: 1px dashed #fca5a5;
+    padding: 4px 6px;
+    border-radius: 6px;
+    margin-top: 6px;
+    text-align: center;
+    line-height: 1.3;
+    max-width: 110px;
+}
+
+.table-intro-note {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Шапка таблицы */
+.script-grid-header {
+    display: flex;
+    padding: 12px 20px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    font-size: 11px;
+    font-weight: 800;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    box-sizing: border-box;
+}
+
+/* Контейнер строк */
+.script-grid-container {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 2.5rem;
+}
+
+/* Каждая интерактивная строка */
+.script-row-card {
+    display: flex;
+    align-items: stretch;
+    padding: 18px 0;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.script-row-card:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+    box-shadow: 0 6px 16px -4px rgba(15, 23, 42, 0.06);
+}
+
+.col-item {
+    padding: 0 16px;
+    border-right: 1px solid #f1f5f9;
+    font-size: 13.5px;
+    color: #334155;
+    line-height: 1.55;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.col-item.last-col {
+    border-right: none;
+}
+
+.step-num {
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 800;
+    color: #64748b;
+}
+
+.step-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.brieff-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.brieff-list div {
+    font-size: 13px;
+    color: #334155;
+}
+
+.brieff-list div span {
+    color: #64748b;
+    font-weight: 700;
+}
+
+.brieff-list .important-item {
+    color: #0f172a;
+    font-weight: 700;
+}
+
+.success-badge {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 12.5px;
+    color: #166534;
+    font-weight: 600;
+}
+
+.success-badge .warn {
+    color: #0284c7;
+    font-weight: 700;
+}
+
+.step-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 0;
+    opacity: 0.7;
+}
+</style>

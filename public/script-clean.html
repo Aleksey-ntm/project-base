@@ -1,0 +1,1209 @@
+<div class="edu-glossary-native">
+
+    <!-- ============================================================ -->
+    <!--                    ЗАГОЛОВОК (ОБЩИЙ)                          -->
+    <!-- ============================================================ -->
+    <div class="edu-header" style="width: 100% !important; display: flex !important; justify-content: center !important; margin-bottom: 2rem !important; padding-bottom: 0 !important; border-bottom: none !important;">
+        <div class="edu-header-top" style="display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 8px !important; width: 100% !important; max-width: 700px !important; margin: 0 auto !important;">
+            <h1 class="edu-title editable-node" data-global="title" style="margin: 0 0 12px 0 !important; font-size: 32px !important; font-weight: 800 !important; color: #0f172a !important; text-align: center !important;">Скрипт продаж: SEO и Контекстная реклама</h1>
+            <p class="edu-intro editable-node" data-global="intro" style="max-width: 580px !important; margin: 0 0 12px 0 !important; font-size: 15px !important; color: #475569 !important; line-height: 1.6 !important; text-align: center !important;">
+                Пошаговый регламент и речевые модули первого контакта с клиентом, квалификации, презентации продуктов (SEO / КР) и закрытия на следующий шаг.
+            </p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 1. УСТАНОВЛЕНИЕ КОНТАКТА С КНОПКОЙ СПРАВА               -->
+    <!-- ============================================================ -->
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin: 0 0 1rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 3px 10px 3px 4px; border-radius: 20px; flex-shrink: 0;">
+            <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #ffffff; background: #0f172a; padding: 2px 7px; border-radius: 12px; line-height: 1;">01</span>
+            <span style="font-size: 12.5px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.03em;">Установление контакта, знакомство</span>
+        </div>
+        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+    </div>
+
+    <div style="margin: 0 0 2rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+            
+            <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.5rem; padding-left: 0.2rem;">
+                Ищем ЛПР/ЛВПР
+            </div>
+
+            <div class="step-box" style="position: relative; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem 1.1rem 1rem;">
+
+              <!-- Не знаем имя -->
+<div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; padding-bottom: 0.6rem; border-bottom: 1px solid #e2e8f0;">
+    <div style="width: 115px; min-width: 115px; height: 26px; background: #0f172a; color: #ffffff; border-radius: 4px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-align: center; flex-shrink: 0; box-sizing: border-box;">
+        Не знаем имя
+    </div>
+    <div style="display: flex; align-items: center; min-height: 26px; color: #334155; font-size: 14.5px; line-height: 1.4; font-weight: 400;">
+        Добрый день. Подскажите, по сайту «___» с кем я могу поговорить?
+    </div>
+</div>
+
+<!-- Знаем имя -->
+<div style="display: flex; align-items: center; gap: 0.75rem;">
+    <div style="width: 115px; min-width: 115px; height: 26px; background: #0f172a; color: #ffffff; border-radius: 4px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-align: center; flex-shrink: 0; box-sizing: border-box;">
+        Знаем имя
+    </div>
+    <div style="display: flex; align-items: center; min-height: 26px; color: #334155; font-size: 14.5px; line-height: 1.4; font-weight: 400;">
+        Добрый день. Как &lt;ИМЯ&gt; могу услышать?
+    </div>
+</div>
+
+                <button 
+                    type="button" 
+                    onclick="
+                        var c = this.closest('.step-box').nextElementSibling;
+                        var iconExpand = this.querySelector('.icon-expand');
+                        var iconCollapse = this.querySelector('.icon-collapse');
+                        var inner = c.querySelector('.acc-inner');
+                        
+                        c.style.transitionDuration = '0.7s';
+                        
+                        if (c.style.maxHeight && c.style.maxHeight !== '0px') {
+                            c.style.maxHeight = '0px';
+                            c.style.opacity = '0';
+                            
+                            iconExpand.style.opacity = '1';
+                            iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                            iconCollapse.style.opacity = '0';
+                            iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+                        } else {
+                            c.style.maxHeight = inner.scrollHeight + 'px';
+                            c.style.opacity = '1';
+                            
+                            iconExpand.style.opacity = '0';
+                            iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                            iconCollapse.style.opacity = '1';
+                            iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+                        }
+                    "
+                    style="position: absolute; bottom: -15px; right: 15px; height: 35px; width: 130px; box-sizing: border-box; font-family: inherit; font-size: 11.5px; font-weight: 600; color: #334155; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 3px 6px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 0 12px; cursor: pointer; user-select: none; display: inline-flex; justify-content: flex-start; align-items: center; gap: 6px; transition: all 0.2s ease; z-index: 2;"
+                >
+                    <span style="position: relative; width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                        <span class="icon-expand" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                        <span class="icon-collapse" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+                    </span>
+                    <span class="acc-text">ещё варианты</span>
+                </button>
+            </div>
+
+            <!-- Выпадающие варианты -->
+            <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; margin-top: 0px; padding: 0;">
+                <div class="acc-inner" style="display: flex; flex-direction: column; gap: 0.4rem; padding: 0.6rem 0 0 0;">
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; width: 95px; flex-shrink: 0;">Вариант #1</span>
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Здравствуйте! Сориентируйте, пожалуйста, кто у вас занимается вопросами рекламы и развития сайта?</p>
+                    </div>
+
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; width: 95px; flex-shrink: 0;">Вариант #2</span>
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Добрый день! Подскажите, с кем могу пообщаться по поводу интернет-продвижения вашего сайта?</p>
+                    </div>
+
+                    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem; display: flex; align-items: center; gap: 0.75rem;">
+                        <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; width: 95px; flex-shrink: 0;">Вариант #3</span>
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Приветствую! Подскажите, пожалуйста, руководителя или маркетолога к телефону можно попросить?</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Удлиненный переход -->
+            <div style="text-align: center; color: #0284c7; font-size: 18px; font-weight: 900; line-height: 1; margin: 0.8rem 0 0.4rem 0;">↓</div>
+
+            <!-- Шаг 2: Заголовок -->
+            <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.5rem; padding-left: 0.2rem;">
+                Нашли? Знакомимся!
+            </div>
+
+            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 0.85rem 1rem;">
+               <!-- Не знаем имя -->
+<div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.6rem; padding-bottom: 0.6rem; border-bottom: 1px solid #bae6fd;">
+    <div style="width: 115px; min-width: 115px; height: 26px; background: #0f172a; color: #ffffff; border-radius: 4px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-align: center; flex-shrink: 0; box-sizing: border-box;">
+        Не знаем имя
+    </div>
+    <div style="display: flex; align-items: center; min-height: 26px; color: #334155; font-size: 14.5px; line-height: 1.4; font-weight: 400;">
+        Замечательно, меня зовут ___, звоню из компании ЮниВеб, а Вас как зовут?
+    </div>
+</div>
+
+<!-- Знаем имя -->
+<div style="display: flex; align-items: center; gap: 0.75rem;">
+    <div style="width: 115px; min-width: 115px; height: 26px; background: #0f172a; color: #ffffff; border-radius: 4px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-align: center; flex-shrink: 0; box-sizing: border-box;">
+        Знаем имя
+    </div>
+    <div style="display: flex; align-items: center; min-height: 26px; color: #334155; font-size: 14.5px; line-height: 1.4; font-weight: 400;">
+        Замечательно, это ___, из ЮниВеб, есть у Вас минутка по сайту поговорить?
+    </div>
+</div>
+
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 2. ОФФЕР                                               -->
+    <!-- ============================================================ -->
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin: 2rem 0 1rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 3px 10px 3px 4px; border-radius: 20px; flex-shrink: 0;">
+            <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #ffffff; background: #0f172a; padding: 2px 7px; border-radius: 12px; line-height: 1;">02</span>
+            <span style="font-size: 12.5px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.03em;">Оффер</span>
+        </div>
+        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+    </div>
+
+    <div style="margin: 0 0 2rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            
+            <!-- ================= ОФФЕР SEO ================= -->
+            <div>
+                <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.5rem; padding-left: 0.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                    <span>Оффер SEO</span>
+                </div>
+
+                <div class="step-box" style="position: relative; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem 1.1rem 1rem;">
+                    <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Дело в том, что мы занимаемся продвижением сайтов в ТОП-10 и работаем строго на результат, который фиксируем в договоре. Можем вам конкретное коммерческое предложение под сайт подготовить: проанализируем, покажем точки роста, предложим решение от нас — как на это смотрите?</p>
+
+                    <button 
+                        type="button" 
+                        onclick="
+                            var c = this.closest('.step-box').nextElementSibling;
+                            var iconExpand = this.querySelector('.icon-expand');
+                            var iconCollapse = this.querySelector('.icon-collapse');
+                            var inner = c.querySelector('.acc-inner');
+                            
+                            c.style.transitionDuration = '0.7s';
+                            
+                            if (c.style.maxHeight && c.style.maxHeight !== '0px') {
+                                c.style.maxHeight = '0px';
+                                c.style.opacity = '0';
+                                
+                                iconExpand.style.opacity = '1';
+                                iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                                iconCollapse.style.opacity = '0';
+                                iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+                            } else {
+                                c.style.maxHeight = inner.scrollHeight + 'px';
+                                c.style.opacity = '1';
+                                
+                                iconExpand.style.opacity = '0';
+                                iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                                iconCollapse.style.opacity = '1';
+                                iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+                            }
+                        "
+                        style="position: absolute; bottom: -15px; right: 15px; height: 35px; width: 130px; box-sizing: border-box; font-family: inherit; font-size: 11.5px; font-weight: 600; color: #334155; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 3px 6px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 0 12px; cursor: pointer; user-select: none; display: inline-flex; justify-content: flex-start; align-items: center; gap: 6px; transition: all 0.2s ease; z-index: 2;"
+                    >
+                        <span style="position: relative; width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <span class="icon-expand" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                            <span class="icon-collapse" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+                        </span>
+                        <span class="acc-text">ещё варианты</span>
+                    </button>
+                </div>
+
+                <!-- Варианты SEO -->
+                <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; margin-top: 0px; padding: 0;">
+                    <div class="acc-inner" style="display: flex; flex-direction: column; gap: 0.4rem; padding: 0.6rem 0 0 0;">
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem; display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; width: 160px; flex-shrink: 0;">Вариант 1 (Замена)</span>
+                            <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Тестовый вариант SEO №1 — здесь напишешь свой текст речевого модуля.</p>
+                        </div>
+
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem; display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; width: 160px; flex-shrink: 0;">Вариант 2 (Замена)</span>
+                            <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Тестовый вариант SEO №2 — здесь напишешь свой текст речевого модуля.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- ================= ОФФЕР КОНТЕКСТ ================= -->
+            <div>
+                <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.5rem; padding-left: 0.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                    <span>Оффер Контекстная реклама (КР)</span>
+                </div>
+
+                <div class="step-box" style="position: relative; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem 1.1rem 1rem;">
+                    <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Дело в том, что мы занимаемся рекламой сайтов в Яндексе, имеем большой опыт. Можем вам предложение подготовить: покажем список запросов для рекламы, просчитаем вам сколько заявок и трафика можно с этого получить и в какой срок, посчитаем их стоимость — как на это смотрите?</p>
+
+                    <button 
+                        type="button" 
+                        onclick="
+                            var c = this.closest('.step-box').nextElementSibling;
+                            var iconExpand = this.querySelector('.icon-expand');
+                            var iconCollapse = this.querySelector('.icon-collapse');
+                            var inner = c.querySelector('.acc-inner');
+                            
+                            c.style.transitionDuration = '0.7s';
+                            
+                            if (c.style.maxHeight && c.style.maxHeight !== '0px') {
+                                c.style.maxHeight = '0px';
+                                c.style.opacity = '0';
+                                
+                                iconExpand.style.opacity = '1';
+                                iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                                iconCollapse.style.opacity = '0';
+                                iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+                            } else {
+                                c.style.maxHeight = inner.scrollHeight + 'px';
+                                c.style.opacity = '1';
+                                
+                                iconExpand.style.opacity = '0';
+                                iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                                iconCollapse.style.opacity = '1';
+                                iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+                            }
+                        "
+                        style="position: absolute; bottom: -15px; right: 15px; height: 35px; width: 130px; box-sizing: border-box; font-family: inherit; font-size: 11.5px; font-weight: 600; color: #334155; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 3px 6px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 0 12px; cursor: pointer; user-select: none; display: inline-flex; justify-content: flex-start; align-items: center; gap: 6px; transition: all 0.2s ease; z-index: 2;"
+                    >
+                        <span style="position: relative; width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                            <span class="icon-expand" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                            <span class="icon-collapse" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+                        </span>
+                        <span class="acc-text">ещё варианты</span>
+                    </button>
+                </div>
+
+                <!-- Варианты Контекста -->
+                <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; margin-top: 0px; padding: 0;">
+                    <div class="acc-inner" style="display: flex; flex-direction: column; gap: 0.4rem; padding: 0.6rem 0 0 0;">
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem; display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; width: 160px; flex-shrink: 0;">Вариант 1 (Замена)</span>
+                            <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Тестовый вариант КР №1 — здесь напишешь свой текст речевого модуля.</p>
+                        </div>
+
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem; display: flex; align-items: center; gap: 0.75rem;">
+                            <span style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; width: 160px; flex-shrink: 0;">Вариант 2 (Замена)</span>
+                            <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Тестовый вариант КР №2 — здесь напишешь свой текст речевого модуля.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 3. ПЕРЕХОД                                              -->
+    <!-- ============================================================ -->
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin: 2rem 0 1rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 3px 10px 3px 4px; border-radius: 20px; flex-shrink: 0;">
+            <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #ffffff; background: #0f172a; padding: 2px 7px; border-radius: 12px; line-height: 1;">03</span>
+            <span style="font-size: 12.5px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.03em;">Переход к вопросам</span>
+        </div>
+        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+    </div>
+
+    <div style="margin: 0 0 2rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Переходим к вопросам:
+        </div>
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+            <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                Хорошо, расчеты мы делаем индивидуально, поэтому мне несколько вопросов нужно уточнить. Скажите, а как сейчас вообще сайт продвигаете (рекламируете), работаете может быть с кем-то?
+            </p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 4. КВАЛИФИКАЦИЯ (ТРИ СИТУАЦИИ)                         -->
+    <!-- ============================================================ -->
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin: 2rem 0 1rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 3px 10px 3px 4px; border-radius: 20px; flex-shrink: 0;">
+            <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #ffffff; background: #0f172a; padding: 2px 7px; border-radius: 12px; line-height: 1;">04</span>
+            <span style="font-size: 12.5px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.03em;">Бриф и квалификация</span>
+        </div>
+        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin: 0 0 2rem 0; font-family: system-ui, -apple-system, sans-serif;">
+
+        <!-- ================= СЦЕНАРИЙ 01 ================= -->
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; overflow: hidden;">
+            
+            <div onclick="
+                var body = this.nextElementSibling;
+                var arrow = this.querySelector('.acc-arrow');
+                var inner = body.querySelector('.spoiler-inner');
+                
+                body.style.transitionDuration = '0.8s';
+                
+                if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+                    body.style.overflow = 'hidden';
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    void body.offsetHeight;
+                    body.style.maxHeight = '0px';
+                    body.style.opacity = '0';
+                    arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    body.style.opacity = '1';
+                    arrow.style.transform = 'rotate(180deg)';
+                    setTimeout(function() {
+                        if (body.style.maxHeight !== '0px') {
+                            body.style.overflow = 'visible';
+                        }
+                    }, 800);
+                }
+            " style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.75rem 1rem; background: #f8fafc; cursor: pointer; user-select: none; transition: background 0.2s ease; border-radius: 8px 8px 0 0;">
+                
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 2px 7px; border-radius: 12px; line-height: 1; flex-shrink: 0;">01</span>
+                    <span style="color: #0f172a; font-size: 13.5px; font-weight: 600;">Сценарий: Не продвигаются сейчас</span>
+                </div>
+                
+                <svg class="acc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.8s ease; flex-shrink: 0;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+
+            <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease-in-out; border-top: 1px solid #e2e8f0;">
+                <div class="spoiler-inner" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                            Поняла. А раньше пробовали заниматься или пока вообще не запускали?
+                        </p>
+                    </div>
+
+                    <!-- Дерево развилки -->
+                    <div style="position: relative; margin-left: 1.5rem; padding-top: 0.5rem;">
+                        <div style="position: absolute; left: 0; top: 0; bottom: 0.4rem; width: 2px; background: #cbd5e1;"></div>
+                        
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: -4px; bottom: -0.5rem;">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+
+                        <!-- Ветка 1 -->
+                        <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                            <div style="position: absolute; left: 0; top: 1.25rem; width: 1.2rem; height: 2px; background: #cbd5e1;"></div>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0.95rem; top: 1rem;">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                                <span style="display: inline-block; font-size: 12px; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: none;">Клиент: Пробовали</span>
+                                <p style="margin: 0 0 0.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                                    <i>Подскажите, почему перестали работать? <br><br> Что пошло не так?</i>
+                                </p>
+                                <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                    <b>Зачем спрашиваем:</b> Выявить негативный опыт, может быть слили бюджеты, недоверие подрядчикам или что-то другое.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ветка 2 -->
+                        <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                            <div style="position: absolute; left: 0; top: 1.25rem; width: 1.2rem; height: 2px; background: #cbd5e1;"></div>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0.95rem; top: 1rem;">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                                <span style="display: inline-block; font-size: 12px; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: none;">Клиент: Не пробовали</span>
+                                <p style="margin: 0 0 0.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                                    <i>Подскажите, а почему пока не запускали рекламу / продвижение?</i>
+                                </p>
+                                <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                    <b>Зачем спрашиваем:</b> Понять причину: нет бюджета, хватало сарафана, новый сайт.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки переходов -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; padding-left: 1.5rem;">
+                        <a href="#block-seo" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; background: #ffffff; border: 1px solid #bae6fd; border-radius: 6px; color: #0284c7; font-size: 12.5px; font-weight: 700; text-decoration: none; transition: all 0.2s ease;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                            <span>Нажми, если заявка на SEO</span>
+                        </a>
+                        <a href="#block-kr" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; background: #ffffff; border: 1px solid #bae6fd; border-radius: 6px; color: #0284c7; font-size: 12.5px; font-weight: 700; text-decoration: none; transition: all 0.2s ease;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                            <span>Нажми, если заявка на КР</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= СЦЕНАРИЙ 02 ================= -->
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; overflow: hidden;">
+            
+            <div onclick="
+                var body = this.nextElementSibling;
+                var arrow = this.querySelector('.acc-arrow');
+                var inner = body.querySelector('.spoiler-inner');
+                
+                body.style.transitionDuration = '0.8s';
+                
+                if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+                    body.style.overflow = 'hidden';
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    void body.offsetHeight;
+                    body.style.maxHeight = '0px';
+                    body.style.opacity = '0';
+                    arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    body.style.opacity = '1';
+                    arrow.style.transform = 'rotate(180deg)';
+                    setTimeout(function() {
+                        if (body.style.maxHeight !== '0px') {
+                            body.style.overflow = 'visible';
+                        }
+                    }, 800);
+                }
+            " style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.75rem 1rem; background: #f8fafc; cursor: pointer; user-select: none; transition: background 0.2s ease; border-radius: 8px 8px 0 0;">
+                
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 2px 7px; border-radius: 12px; line-height: 1; flex-shrink: 0;">02</span>
+                    <span style="color: #0f172a; font-size: 13.5px; font-weight: 600;">Сценарий: Работают с подрядчиком / фрилансером</span>
+                </div>
+                
+                <svg class="acc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.8s ease; flex-shrink: 0;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+
+            <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease-in-out; border-top: 1px solid #e2e8f0;">
+                <div class="spoiler-inner" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                            Поняла. А с кем именно работаете: подрядчик или фрилансер? По какому инструменту продвигаетесь (SEO / Контекст)? Как давно уже сотрудничаете?
+                        </p>
+                    </div>
+
+                    <!-- Дерево развилки -->
+                    <div style="position: relative; margin-left: 1.5rem; padding-top: 0.5rem;">
+                        <div style="position: absolute; left: 0; top: 0; bottom: 0.4rem; width: 2px; background: #cbd5e1;"></div>
+                        
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: -4px; bottom: -0.5rem;">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+
+                        <!-- Ветка 1 -->
+                        <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                            <div style="position: absolute; left: 0; top: 1.25rem; width: 1.2rem; height: 2px; background: #cbd5e1;"></div>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0.95rem; top: 1rem;">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                                <span style="display: inline-block; font-size: 12px; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: none;">Клиент: Всё ок, но готов рассмотреть</span>
+                                <p style="margin: 0 0 0.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                                    <i>Подскажите, есть ли что-то, что хотелось бы улучшить или что сейчас не совсем устраивает в работе? Вы же не просто так готовы рассмотреть альтернативы?</i>
+                                </p>
+                                <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                    <b>Зачем спрашиваем:</b> Даже если говорит, что всё ок, но готов рассмотреть — выясняем истинную причину.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ветка 2 -->
+                        <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                            <div style="position: absolute; left: 0; top: 1.25rem; width: 1.2rem; height: 2px; background: #cbd5e1;"></div>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0.95rem; top: 1rem;">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                                <span style="display: inline-block; font-size: 12px; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: none;">Клиент: Не доволен</span>
+                                <p style="margin: 0 0 0.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                                    <i>Подскажите, а что именно не устраивает? <br><br> Что бы вы хотели изменить в текущей работе подрядчика?</i>
+                                </p>
+                                <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                    <b>Зачем спрашиваем:</b> Выявить болевые точки, чтобы в КП закрыть их нашими преимуществами.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки переходов -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; padding-left: 1.5rem;">
+                        <a href="#block-seo" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; background: #ffffff; border: 1px solid #bae6fd; border-radius: 6px; color: #0284c7; font-size: 12.5px; font-weight: 700; text-decoration: none; transition: all 0.2s ease;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                            <span>Нажми, если заявка на SEO</span>
+                        </a>
+                        <a href="#block-kr" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; background: #ffffff; border: 1px solid #bae6fd; border-radius: 6px; color: #0284c7; font-size: 12.5px; font-weight: 700; text-decoration: none; transition: all 0.2s ease;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                            <span>Нажми, если заявка на КР</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= СЦЕНАРИЙ 03 ================= -->
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; overflow: hidden;">
+            
+            <div onclick="
+                var body = this.nextElementSibling;
+                var arrow = this.querySelector('.acc-arrow');
+                var inner = body.querySelector('.spoiler-inner');
+                
+                body.style.transitionDuration = '0.8s';
+                
+                if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+                    body.style.overflow = 'hidden';
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    void body.offsetHeight;
+                    body.style.maxHeight = '0px';
+                    body.style.opacity = '0';
+                    arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    body.style.opacity = '1';
+                    arrow.style.transform = 'rotate(180deg)';
+                    setTimeout(function() {
+                        if (body.style.maxHeight !== '0px') {
+                            body.style.overflow = 'visible';
+                        }
+                    }, 800);
+                }
+            " style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.75rem 1rem; background: #f8fafc; cursor: pointer; user-select: none; transition: background 0.2s ease; border-radius: 8px 8px 0 0;">
+                
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 2px 7px; border-radius: 12px; line-height: 1; flex-shrink: 0;">03</span>
+                    <span style="color: #0f172a; font-size: 13.5px; font-weight: 600;">Сценарий: Есть штат / свой специалист</span>
+                </div>
+                
+                <svg class="acc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.8s ease; flex-shrink: 0;">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+
+            <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease-in-out; border-top: 1px solid #e2e8f0;">
+                <div class="spoiler-inner" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+
+                    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                            Поняла. Подскажите, SEO или рекламой занимаетесь?
+                        </p>
+                    </div>
+
+                    <!-- Дерево развилки -->
+                    <div style="position: relative; margin-left: 1.5rem; padding-top: 0.5rem;">
+                        <div style="position: absolute; left: 0; top: 0; bottom: 0.4rem; width: 2px; background: #cbd5e1;"></div>
+                        
+                        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: -4px; bottom: -0.5rem;">
+                            <polyline points="6 9 12 15 18 9"></polyline>
+                        </svg>
+
+                        <!-- Ветка 1 -->
+                        <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                            <div style="position: absolute; left: 0; top: 1.25rem; width: 1.2rem; height: 2px; background: #cbd5e1;"></div>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0.95rem; top: 1rem;">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                                <span style="display: inline-block; font-size: 12px; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: none;">Клиент: Занимаются тем же инструментом</span>
+                                <p style="margin: 0 0 0.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                                    <i>Если будете подключать подрядчика, как удобнее: чтобы мы забрали задачи на себя или ваш специалист курировал?</i>
+                                </p>
+                                <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                    <b>Зачем спрашиваем:</b> Понять формат сотрудничества, чтобы не создавать конфликта с внутренним специалистом.
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Ветка 2 -->
+                        <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                            <div style="position: absolute; left: 0; top: 1.25rem; width: 1.2rem; height: 2px; background: #cbd5e1;"></div>
+                            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#94a3b8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" style="position: absolute; left: 0.95rem; top: 1rem;">
+                                <polyline points="9 18 15 12 9 6"></polyline>
+                            </svg>
+                            <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                                <span style="display: inline-block; font-size: 12px; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: none;">Клиент: Занимаются другим инструментом</span>
+                                <p style="margin: 0 0 0.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                                    <i>Подскажите, а почему пока не запускали [предлагаемый инструмент]?</i>
+                                </p>
+                                <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                    <b>Зачем спрашиваем:</b> Выяснить причину: нехватка бюджета, нет компетенций, не видели необходимости.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Кнопки переходов -->
+                    <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; padding-left: 1.5rem;">
+                        <a href="#block-seo" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; background: #ffffff; border: 1px solid #bae6fd; border-radius: 6px; color: #0284c7; font-size: 12.5px; font-weight: 700; text-decoration: none; transition: all 0.2s ease;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                            <span>Нажми, если заявка на SEO</span>
+                        </a>
+                        <a href="#block-kr" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; background: #ffffff; border: 1px solid #bae6fd; border-radius: 6px; color: #0284c7; font-size: 12.5px; font-weight: 700; text-decoration: none; transition: all 0.2s ease;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                            <span>Нажми, если заявка на КР</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 5. ПРОДУКТОВАЯ ПРЕЗЕНТАЦИЯ: SEO                        -->
+    <!-- ============================================================ -->
+    <div id="block-seo" style="display: flex; align-items: center; gap: 0.75rem; margin: 2rem 0 1rem 0; font-family: system-ui, -apple-system, sans-serif; scroll-margin-top: 1rem;">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 3px 10px 3px 4px; border-radius: 20px; flex-shrink: 0;">
+            <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #ffffff; background: #0f172a; padding: 2px 7px; border-radius: 12px; line-height: 1;">05</span>
+            <span style="font-size: 12.5px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.03em;">SEO: презентация и бюджет</span>
+        </div>
+        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+    </div>
+
+    <style>
+      .seo-tooltip-modern {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: inherit;
+        font-weight: 600;
+        cursor: help;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-decoration-color: #94a3b8;
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 3px;
+        transition: all 0.2s ease;
+        vertical-align: baseline;
+      }
+
+      .seo-tooltip-modern:hover {
+        color: #0f172a;
+        text-decoration-color: #0f172a;
+      }
+
+      .seo-tooltip-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        border: 1.5px solid #64748b;
+        color: #64748b;
+        font-size: 10px;
+        font-weight: 700;
+        font-family: system-ui, -apple-system, sans-serif;
+        line-height: 1;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+        transform: translateY(-1px);
+      }
+
+      .seo-tooltip-modern:hover .seo-tooltip-badge {
+        border-color: #0f172a;
+        color: #0f172a;
+        background: #f1f5f9;
+      }
+
+      .seo-tooltip-box-modern {
+        position: absolute;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%) translateY(6px);
+        background: #0f172a;
+        color: #f1f5f9;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 400;
+        white-space: normal;
+        width: max-content;
+        max-width: 260px;
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid #1e293b;
+        z-index: 100;
+        line-height: 1.5;
+      }
+
+      .seo-tooltip-modern:hover .seo-tooltip-box-modern {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .seo-tooltip-box-modern::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #0f172a transparent transparent transparent;
+      }
+    </style>
+
+    <div style="margin: 0 0 2rem 0; font-family: system-ui, -apple-system, sans-serif;">
+
+        <!-- Карточка выявления пожеланий SEO (вынесена на всю ширину) -->
+        <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#475569" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span>Выявление пожеланий по SEO:</span>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+            <p style="margin: 0 0 0.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                А какие именно задачи по сайту стоят в первую очередь? Чтобы мы в коммерческом предложении сделали на них упор.
+            </p>
+
+            <p style="margin: 0; color: #64748b; font-size: 13px; line-height: 1.5;">
+                <i>Подсказка: вам важнее рост позиций в ТОП-10, увеличение общего трафика на сайт или работа над конверсией и удобством — больше заявок?</i>
+            </p>
+        </div>
+
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; overflow: hidden; margin-bottom: 1rem;">
+            <!-- Шапка аккордеона -->
+            <div onclick="
+                var body = this.nextElementSibling;
+                var arrow = this.querySelector('.acc-arrow');
+                var inner = body.querySelector('.seo-inner');
+                
+                body.style.transitionDuration = '0.8s';
+                
+                if (body.style.maxHeight !== '0px') {
+                    body.style.overflow = 'hidden';
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    void body.offsetHeight;
+                    body.style.maxHeight = '0px';
+                    body.style.opacity = '0';
+                    arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    body.style.opacity = '1';
+                    arrow.style.transform = 'rotate(180deg)';
+                    setTimeout(function() {
+                        if (body.style.maxHeight !== '0px') {
+                            body.style.overflow = 'visible';
+                        }
+                    }, 800);
+                }
+            " style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.75rem 1rem; background: #f8fafc; cursor: pointer; user-select: none; transition: background 0.2s ease; border-radius: 8px 8px 0 0;">
+                
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"></polyline><polyline points="16 7 22 7 22 13"></polyline></svg>
+                    <span style="color: #0f172a; font-size: 13.5px; font-weight: 600;">Презентация SEO + метрика + бюджет</span>
+                </div>
+                
+                <svg class="acc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.8s ease; flex-shrink: 0; transform: rotate(180deg);">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+
+            <!-- Выпадающее тело -->
+            <div style="max-height: 2000px; opacity: 1; overflow: visible; transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease-in-out; border-top: 1px solid #e2e8f0;">
+                <div class="seo-inner" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+                    
+                    <div>
+                        <strong style="color: #0f172a; font-size: 14px; display: block; margin-bottom: 0.3rem;">🎯 Клиента интересуют: Позиции в ТОП-10 / Трафик</strong>
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Как раз под задачу вывода сайта в ТОП и привлечения целевого трафика мы и выстраиваем работу. Мы не просто выводим сайт в ТОП-10 Яндекса и Гугла, а делаем упор на увеличение конверсии, чтобы позиции превращались в заявки. Мы берем на себя весь комплекс под ключ: наши оптимизаторы собирают эффективные ключевые слова, а наши разработчики сами внедряют все правки на сайт. То есть вам не придется искать программистов на стороне. При этом мы работаем строго на результат, а все ключевые показатели и KPI мы заранее обсуждаем с вами и фиксируем в договоре.</p>
+                    </div>
+
+                    <div>
+                        <strong style="color: #0f172a; font-size: 14px; display: block; margin-bottom: 0.3rem;">📈 Клиента интересуют: Конверсия / Заявки / Удобство</strong>
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Отлично, мы как раз делаем упор не на пустые заходы, а на увеличение конверсии, чтобы сайт приносил реальные звонки и продажи. Также мы заранее согласуем с вами, что будем считать лидом, и скажем, сколько таких лидов и в какой срок можно получить с SEO. По SEO мы делаем все работы под ключ — вам не придется искать дополнительных специалистов на стороне. Работаем на результат и все наши договоренности фиксируем договором с гарантиями.</p>
+                    </div>
+
+                    <div>
+                        <strong style="color: #0f172a; font-size: 14px; display: block; margin-bottom: 0.3rem;">🔥 Клиента интересует: Всё вместе</strong>
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Абсолютно правильный подход, ведь продвижение работает только в комплексе. У нас как раз предложение именно такого формата, где мы работаем и над ростом позиций в ТОП-10, и над заявками с SEO. Также по SEO мы делаем все работы под ключ, вам не придется искать дополнительных специалистов на стороне. Работаем на результат и все наши договоренности фиксируем договором с гарантиями.</p>
+                    </div>
+
+                    <div style="margin: 0.25rem 0; border-top: 1px solid #e2e8f0;"></div>
+                    
+                    <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em;">📊 Запрашиваем гостевой доступ в яндекс метрику:</div>
+                    
+                    <div>
+                        <p style="margin: 0 0 1rem 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                            Подскажите, сможете открыть гостевой доступ нашему специалисту, чтобы мы перед созвоном посмотрели текущую ситуацию по целям и подготовили более точный аудит?
+                            <span class="seo-tooltip-modern">
+                                Важно
+                                <span class="seo-tooltip-badge">?</span>
+                                <span class="seo-tooltip-box-modern">Расчёт КП выполняется только на основе данных из Яндекс.Метрики. Без доступа к метрике КП не готовим.</span>
+                            </span>
+                        </p>
+
+                        <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-top: 1rem; margin-bottom: 0.5rem;">
+                            💰 Уточняем (подтверждаем) бюджет:
+                        </div>
+
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                            По бюджету тоже сориентирую. То, про что я рассказала, у нас стоит 80–100 тысяч рублей в месяц в зависимости от объема работ. В целом готовы ориентироваться на такие бюджеты, подскажите?
+                            <span class="seo-tooltip-modern">
+                                Важно
+                                <span class="seo-tooltip-badge">?</span>
+                                <span class="seo-tooltip-box-modern">Без согласия рассматривать наши бюджеты — КП не готовим.</span>
+                            </span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 6. ПРОДУКТОВАЯ ПРЕЗЕНТАЦИЯ: КР                         -->
+    <!-- ============================================================ -->
+    <div id="block-kr" style="display: flex; align-items: center; gap: 0.75rem; margin: 2rem 0 1rem 0; font-family: system-ui, -apple-system, sans-serif; scroll-margin-top: 1rem;">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 3px 10px 3px 4px; border-radius: 20px; flex-shrink: 0;">
+            <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #ffffff; background: #0f172a; padding: 2px 7px; border-radius: 12px; line-height: 1;">06</span>
+            <span style="font-size: 12.5px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.03em;">КР: презентация и бюджет</span>
+        </div>
+        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+    </div>
+
+    <style>
+      .kr-tooltip-modern {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        color: inherit;
+        font-weight: 600;
+        cursor: help;
+        text-decoration: underline;
+        text-decoration-style: dotted;
+        text-decoration-color: #94a3b8;
+        text-decoration-thickness: 1.5px;
+        text-underline-offset: 3px;
+        transition: all 0.2s ease;
+        vertical-align: baseline;
+      }
+
+      .kr-tooltip-modern:hover {
+        color: #0f172a;
+        text-decoration-color: #0f172a;
+      }
+
+      .kr-tooltip-badge {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        border: 1.5px solid #0284c7;
+        color: #0284c7;
+        font-size: 10px;
+        font-weight: 700;
+        font-family: system-ui, -apple-system, sans-serif;
+        line-height: 1;
+        flex-shrink: 0;
+        transition: all 0.2s ease;
+        transform: translateY(-1px);
+      }
+
+      .kr-tooltip-modern:hover .kr-tooltip-badge {
+        border-color: #0369a1;
+        color: #0369a1;
+        background: #e0f2fe;
+      }
+
+      .kr-tooltip-box-modern {
+        position: absolute;
+        bottom: calc(100% + 10px);
+        left: 50%;
+        transform: translateX(-50%) translateY(6px);
+        background: #0f172a;
+        color: #f1f5f9;
+        padding: 10px 14px;
+        border-radius: 8px;
+        font-size: 12.5px;
+        font-weight: 400;
+        white-space: normal;
+        width: max-content;
+        max-width: 260px;
+        text-align: left;
+        opacity: 0;
+        visibility: hidden;
+        pointer-events: none;
+        transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid #1e293b;
+        z-index: 100;
+        line-height: 1.5;
+      }
+
+      .kr-tooltip-modern:hover .kr-tooltip-box-modern {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      .kr-tooltip-box-modern::after {
+        content: '';
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%);
+        border-width: 6px;
+        border-style: solid;
+        border-color: #0f172a transparent transparent transparent;
+      }
+    </style>
+
+    <div style="margin: 0 0 2rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        
+        <!-- Карточка выявления пожеланий КР -->
+        <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                <line x1="12" y1="17" x2="12.01" y2="17"/>
+            </svg>
+            <span>Выявление пожеланий по Рекламе:</span>
+        </div>
+
+        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem; margin-bottom: 1rem;">
+            <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                Подскажите, когда будете рассматривать коммерческое предложение, на что будете обращать внимание, возможно, есть что-то важное для Вас?
+            </p>
+        </div>
+
+        <div style="border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff; overflow: hidden;">
+            
+            <!-- Шапка аккордеона -->
+            <div onclick="
+                var body = this.nextElementSibling;
+                var arrow = this.querySelector('.acc-arrow');
+                var inner = body.querySelector('.kr-inner');
+                
+                body.style.transitionDuration = '0.8s';
+                
+                if (body.style.maxHeight !== '0px') {
+                    body.style.overflow = 'hidden';
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    void body.offsetHeight;
+                    body.style.maxHeight = '0px';
+                    body.style.opacity = '0';
+                    arrow.style.transform = 'rotate(0deg)';
+                } else {
+                    body.style.maxHeight = inner.scrollHeight + 'px';
+                    body.style.opacity = '1';
+                    arrow.style.transform = 'rotate(180deg)';
+                    setTimeout(function() {
+                        if (body.style.maxHeight !== '0px') {
+                            body.style.overflow = 'visible';
+                        }
+                    }, 800);
+                }
+            " style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.75rem 1rem; background: #f0f9ff; cursor: pointer; user-select: none; transition: background 0.2s ease; border-radius: 8px 8px 0 0;">
+                
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;"><circle cx="12" cy="12" r="10"></circle><circle cx="12" cy="12" r="6"></circle><circle cx="12" cy="12" r="2"></circle></svg>
+                    <span style="color: #0369a1; font-size: 13.5px; font-weight: 600;">Презентация КР + бюджет</span>
+                </div>
+                
+                <svg class="acc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.8s ease; flex-shrink: 0; transform: rotate(180deg);">
+                    <polyline points="6 9 12 15 18 9"></polyline>
+                </svg>
+            </div>
+
+            <!-- Выпадающее тело -->
+            <div style="max-height: 2000px; opacity: 1; overflow: visible; transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease-in-out; border-top: 1px solid #bae6fd;">
+                
+                <div class="kr-inner" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+
+                    <div>
+                        <strong style="color: #0f172a; font-size: 14px; display: block; margin-bottom: 0.3rem;">🚀 Презентация рекламы:</strong>
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">Контекст сейчас требует тонкой настройки ставок. Расскажу кратко, как мы ведем кампании, чтобы не сливать бюджет. Мы настраиваем и полностью ведем кампании в Яндексе под ключ. Наша главная задача — приводить не просто трафик, а реальные заявки и продажи, постоянно снижая стоимость привлечения клиента. Мы берем на себя абсолютно всё: от анализа конкурентов и написания объявлений до ежедневного контроля ставок. Чтобы вы не тратили бюджет вслепую, мы перед запуском всегда готовим детальный расчет: прогнозируем бюджет, количество целевых обращений и их ориентировочную стоимость конкретно в вашей нише.</p>
+                    </div>
+
+                    <div style="margin: 0.25rem 0; border-top: 1px solid #e2e8f0;"></div>
+
+                    <div>
+                        <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.5rem;">
+                            💰 Уточняем (подтверждаем) бюджет:
+                        </div>
+                        <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                            По бюджету тоже сориентирую. Наша работа стоит 50 тысяч рублей в месяц за настройку и ведение, плюс рекламный бюджет на показы обычно от 100–150 тысяч. В сумме это примерно от 150–200 тысяч в месяц. В целом готовы ориентироваться на такие бюджеты, подскажите?
+                            <span class="kr-tooltip-modern">
+                                Важно
+                                <span class="kr-tooltip-badge">?</span>
+                                <span class="kr-tooltip-box-modern">Без согласия рассматривать наши бюджеты — КП не готовим.</span>
+                            </span>
+                        </p>
+
+                        <div style="font-family: monospace; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-top: 1rem; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#eab308" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                <line x1="12" y1="17" x2="12.01" y2="17"/>
+                            </svg>
+                            Если сомневается:
+                        </div>
+                        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                            Бюджет формируется исходя из спроса, стоимости клика и количества ключевых слов в показе рекламы. Мы рассчитаем индивидуально, но обычно менее 50–70 тысяч на рекламный бюджет не получается. Подскажите, готовы такие бюджеты закладывать в рекламу?
+                            <span class="kr-tooltip-modern">
+                                Важно
+                                <span class="kr-tooltip-badge">?</span>
+                                <span class="kr-tooltip-box-modern">Наша комиссия при этом не меняется.</span>
+                            </span>
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 7. СБОР КОНТАКТОВ И ЗАКРЫТИЕ                           -->
+    <!-- ============================================================ -->
+    <div style="display: flex; align-items: center; gap: 0.75rem; margin: 2rem 0 1rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 3px 10px 3px 4px; border-radius: 20px; flex-shrink: 0;">
+            <span style="font-family: monospace; font-size: 11px; font-weight: 800; color: #ffffff; background: #0f172a; padding: 2px 7px; border-radius: 12px; line-height: 1;">07</span>
+            <span style="font-size: 12.5px; font-weight: 700; color: #334155; text-transform: uppercase; letter-spacing: 0.03em;">Остальные вопросы и закрытие на звонок</span>
+        </div>
+        <div style="flex: 1; height: 1px; background: #e2e8f0;"></div>
+    </div>
+
+    <div style="margin: 0 0 2rem 0; font-family: system-ui, -apple-system, sans-serif;">
+
+        <!-- Пункт 1 -->
+        <div style="margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.4rem; padding-left: 0.2rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                    <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                </svg>
+                <span>Должность</span>
+            </div>
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                    Как <b>корректно</b> могу вашу должность записать?
+                </p>
+            </div>
+        </div>
+
+        <!-- Пункт 2 -->
+        <div style="margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.4rem; padding-left: 0.2rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                </svg>
+                <span>Прямой контакт</span>
+            </div>
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                    Для связи с Вами можно этот номер телефона использовать или есть какой-то добавочный/личный?
+                </p>
+            </div>
+        </div>
+
+        <!-- Пункт 3 -->
+        <div style="margin-bottom: 1rem;">
+            <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 12px; font-weight: 700; color: #64748b; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.4rem; padding-left: 0.2rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>Плановые сроки</span>
+            </div>
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                    А по срокам подскажите, есть ли какие-то ориентиры? Как думаете, если понравится наше предложение, за месяц сможем начать работать?
+                </p>
+            </div>
+        </div>
+
+        <!-- Пункт 4 -->
+        <div>
+            <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 12px; font-weight: 700; color: #0284c7; text-transform: none; letter-spacing: 0.02em; margin-bottom: 0.4rem; padding-left: 0.2rem;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span>Финальное закрытие на созвон</span>
+            </div>
+            <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 0.85rem 1rem;">
+                <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                    Информацию я направлю, коллега свяжется с Вами, чтобы детально все обсудить. Это займет буквально 5–7 минут. Подскажите, завтра в течение дня будет удобно с ним пообщаться?
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Стили -->
+<style>
+html {
+  scroll-behavior: smooth;
+}
+
+.edu-glossary-native {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    box-sizing: border-box;
+}
+
+.edu-glossary-native h1 {
+    margin: 0 0 12px 0 !important;
+    font-size: 32px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    text-align: center !important;
+}
+
+.edu-glossary-native h2 {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    letter-spacing: normal !important;
+    margin: 0 0 1rem 0 !important;
+    padding: 0 !important;
+    border-bottom: none !important;
+    font-family: system-ui, -apple-system, sans-serif !important;
+    line-height: 1.25 !important;
+    text-align: left !important;
+    display: block !important;
+}
+
+.edu-glossary-native h3 {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 0 0 12px 0 !important;
+}
+
+.edu-glossary-native p {
+    font-size: 14.5px !important;
+    color: #334155 !important;
+    line-height: 1.65 !important;
+    margin: 0 0 1.25rem 0 !important;
+}
+</style>

@@ -1,0 +1,859 @@
+<style>
+  .edu-glossary-native {
+    width: 100%;
+  }
+
+  /* Обертка для термина */
+  .seo-tooltip-modern {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: inherit;
+    font-weight: 600;
+    cursor: help;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #94a3b8;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: all 0.2s ease;
+    vertical-align: baseline;
+  }
+
+  /* Эффект при наведении на термин */
+  .seo-tooltip-modern:hover {
+    color: #0284c7;
+    text-decoration-color: #0284c7;
+  }
+
+  /* Кружочек со знаком вопроса */
+  .seo-tooltip-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1.5px solid #64748b;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    transform: translateY(-1px); /* Точная подгонка по центру букв */
+  }
+
+  .seo-tooltip-modern:hover .seo-tooltip-badge {
+    border-color: #0284c7;
+    color: #0284c7;
+    background: #e0f2fe;
+  }
+
+  /* Сама всплывающая подсказка (ЧЕРНЫЙ ФОН) */
+  .seo-tooltip-box-modern {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: #0f172a; /* Темный фоновый цвет */
+    color: #f1f5f9; /* Четкий светлый текст */
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 400;
+    white-space: normal;
+    width: max-content;
+    max-width: 260px;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #1e293b;
+    z-index: 100;
+    line-height: 1.5;
+  }
+
+  /* Появление подсказки при наведении */
+  .seo-tooltip-modern:hover .seo-tooltip-box-modern {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Треугольник стрелочки снизу подсказки */
+  .seo-tooltip-box-modern::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+</style>
+
+<div class="edu-glossary-native">
+
+  <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Введение в SEO и Поисковую Выдачу</h2>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    Ежедневно поисковые системы обрабатывают миллиарды запросов. Пользователи ищут товары, услуги, инструкции и решения конкретных задач. Главная цель Яндекса и Google — за доли секунды отфильтровать огромный массив веб-страниц и показать человеку только то, что с максимальной точностью отвечает на его вопрос.
+  </p>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    Поисковая оптимизация строится на понимании критериев, по которым алгоритмы оценивают «качество» и «полезность» сайта. Чем лучше ресурс соответствует этим требованиям, тем выше он поднимается в органической выдаче 
+    <span class="seo-tooltip-modern">
+      без оплаты за клики
+      <span class="seo-tooltip-badge">?</span>
+      <span class="seo-tooltip-box-modern">Это происходит в контекстной рекламе, об этом далее..</span>
+    </span>.
+  </p>
+
+  <!-- БЛОКИ СЕО И СЕРП -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 28px 0; font-family: system-ui, -apple-system, sans-serif;">
+    
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: #f0f9ff; color: #0284c7;">
+          <i class="bi bi-search"></i>
+        </div>
+        <h3 style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.3;">Поисковая выдача (SERP)</h3>
+      </div>
+      <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0;">
+        <b>Search Engine Results Page</b> — итоговая страница, которую видит пользователь после ввода запроса. Она формируется из органических (бесплатных) результатов, рекламных блоков, а также внутренних сервисов поисковика (карты, маркетплейсы, ответы нейросетей).
+      </p>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: #f0fdf4; color: #166534;">
+          <i class="bi bi-graph-up-arrow"></i>
+        </div>
+        <h3 style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.3;">SEO (Search Engine Optimization)</h3>
+      </div>
+      <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0;">
+        <b>Поисковая оптимизация</b> — комплексный процесс доработки сайта: его структуры, технического кода, контента и внешнего авторитета. Цель SEO — сделать ресурс максимально релевантным целевым запросам для естественного выхода в ТОП-10.
+      </p>
+    </div>
+
+  </div>
+
+  <h2 style="margin: 2.5rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Как работают поисковые системы: 3 шага от сайта до выдачи</h2>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    Поисковая система не видит сайт так, как видит его человек. Поисковик смотрит на сайт через программы, которые называются <b>поисковыми роботами</b> (или «краулерами»). Весь процесс работы поисковика делится на три последовательных этапа:
+  </p>
+
+  <div style="display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 10px; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="background: #f1f5f9; color: #0284c7; font-weight: 700; font-size: 14px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+    <div style="color: #334155; font-size: 14.5px; line-height: 1.5;">
+      <b>Сканирование (Краулинг)</b><br>
+      Робот непрерывно ходит по интернету, переходит по ссылкам от сайта к сайту и считывает программный код страниц.
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 10px; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="background: #f1f5f9; color: #0284c7; font-weight: 700; font-size: 14px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+    <div style="color: #334155; font-size: 14.5px; line-height: 1.5;">
+      <b>Индексация</b><br>
+      Просканированная страница отправляется в «базу знаний» поисковика — <b>Индекс</b>. Если страницы нет в индексе, она не существует для поиска и люди никогда не найдут ее через поисковую строку.
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 16px; align-items: flex-start; margin-bottom: 2rem; background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 10px; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="background: #f1f5f9; color: #0284c7; font-weight: 700; font-size: 14px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+    <div style="color: #334155; font-size: 14.5px; line-height: 1.5;">
+      <b>Ранжирование</b><br>
+      Когда пользователь вводит запрос, специальный алгоритм моментально сравнивает все проиндексированные страницы по сотням параметров и расставляет их по порядку: от самого полезного сайта (1 место) к менее полезным 
+      <span class="seo-tooltip-modern">
+        и наша задача сделать так, чтобы сайт соответствовал всем факторам ранжирования
+        <span class="seo-tooltip-badge">?</span>
+        <span class="seo-tooltip-box-modern">об этом ниже</span>
+      </span>.
+    </div>
+  </div>
+
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin: 32px 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); font-family: system-ui, -apple-system, sans-serif;">
+    <div style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">
+      <span style="display: inline-block; background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Факторы</span>
+      <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 700; color: #0f172a; line-height: 1.3;">Почему выдача отличается у разных людей?</h3>
+      <p style="font-size: 14px; color: #475569; margin: 0; line-height: 1.5;">
+        Поисковая выдача не зафиксирована намертво. Даже если два разных человека введут одинаковый запрос, они могут увидеть разные сайты. Это происходит из-за факторов персонализации:
+      </p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      
+      <!-- Карточка 1 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; background: #f8fafc; border: 1px solid #f1f5f9; padding: 16px 20px; border-radius: 12px;">
+        <div style="flex: 0 0 220px; font-weight: 700; font-size: 14px; color: #0f172a; display: flex; align-items: center; gap: 12px; margin: 0;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #e0f2fe; color: #0284c7;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <span>Регион и город</span>
+        </div>
+        <p style="flex: 1; font-size: 13.5px; color: #334155; margin: 0; line-height: 1.55; text-align: left;">
+          По запросу <i>«ремонт авто»</i> человек из Москвы увидит московские сервисы, а человек из Екатеринбурга — сервисы своего города.
+        </p>
+      </div>
+
+      <!-- Карточка 2 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; background: #f8fafc; border: 1px solid #f1f5f9; padding: 16px 20px; border-radius: 12px;">
+        <div style="flex: 0 0 220px; font-weight: 700; font-size: 14px; color: #0f172a; display: flex; align-items: center; gap: 12px; margin: 0;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #f3e8ff; color: #7e22ce;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+          </div>
+          <span>Устройство</span>
+        </div>
+        <p style="flex: 1; font-size: 13.5px; color: #334155; margin: 0; line-height: 1.55; text-align: left;">
+          Результаты для мобильных телефонов и компьютеров могут различаться.
+        </p>
+      </div>
+
+      <!-- Карточка 3 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; background: #f8fafc; border: 1px solid #f1f5f9; padding: 16px 20px; border-radius: 12px;">
+        <div style="flex: 0 0 220px; font-weight: 700; font-size: 14px; color: #0f172a; display: flex; align-items: center; gap: 12px; margin: 0;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #fef3c7; color: #d97706;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span>История поисков</span>
+        </div>
+        <p style="flex: 1; font-size: 13.5px; color: #334155; margin: 0; line-height: 1.55; text-align: left;">
+          Поисковик учитывает, какие сайты человек посещал ранее.
+        </p>
+      </div>
+
+      <!-- Карточка 4 -->
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; background: #f8fafc; border: 1px solid #f1f5f9; padding: 16px 20px; border-radius: 12px;">
+        <div style="flex: 0 0 220px; font-weight: 700; font-size: 14px; color: #0f172a; display: flex; align-items: center; gap: 12px; margin: 0;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #fee2e2; color: #dc2626;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+          </div>
+          <span>Рекламные блоки</span>
+        </div>
+        <p style="flex: 1; font-size: 13.5px; color: #334155; margin: 0; line-height: 1.55; text-align: left;">
+          Вверху и внизу страницы поиска часто отображается платная контекстная реклама.
+        </p>
+      </div>
+
+    </div>
+  </div>
+
+  <h2 style="margin: 2.5rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Методы оптимизации: Белые, Серые и Черные</h2>
+
+  <div style="width: 100%; margin: 32px 0; font-family: system-ui, -apple-system, sans-serif;">
+    <p style="font-size: 15.5px; line-height: 1.6; color: #475569; margin: 0 0 28px 0;">
+      Способы, которыми можно продвинуть сайт в топ, условно делят на три категории в зависимости от честности по отношению к поисковым системам:
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <!-- 01. Белое SEO -->
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">01</span>
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Белое SEO</h3>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #f0fdf4; color: #15803d;">
+            <svg style="width: 14px; height: 14px;" viewBox="0 0 16 16" fill="none"><path d="M13.333 4L6 11.333 2.667 8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            Безопасно
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Суть и инструменты</span>
+            <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.6; color: #334155;">
+              Сайт оптимизируется строго по официальным руководствам поисковиков. Проводится работа над продуктом, удобством интерфейса, экспертностью авторов и полезностью контента.
+            </p>
+          </div>
+          
+          <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Последствия и перспективы</span>
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #0f172a; font-weight: 500;">
+              Фундаментальный долгосрочный рост. Сайт устойчив к апдейтам поисковых алгоритмов, планомерно накапливает авторитет и формирует постоянный поток целевого трафика без риска получить санкции.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 02. Серые методы -->
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">02</span>
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Серые методы</h3>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #fffbeb; color: #b45309;">
+            <svg style="width: 14px; height: 14px;" viewBox="0 0 16 16" fill="none"><path d="M8 5v4m0 3h.01M13.5 8a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            Умеренный риск
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Суть и инструменты</span>
+            <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.6; color: #334155;">
+              Использование уловок для ускорения ростов позиций, которые прямо не приводят к быстрому бану, но находятся на грани правил и активно отслеживаются алгоритмами.
+            </p>
+          </div>
+          
+          <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Последствия и перспективы</span>
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #0f172a; font-weight: 500;">
+              Быстрый всплеск позиций. Однако с очередным апдейтом антиспам-алгоритмов сайт может потерять до 80% трафика или попасть под ссылочные и текстовые фильтры.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03. Черное SEO -->
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">03</span>
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Черное SEO</h3>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #fef2f2; color: #b91c1c;">
+            <svg style="width: 14px; height: 14px;" viewBox="0 0 16 16" fill="none"><path d="M3 3l10 10M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+            Критический риск
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Суть и инструменты</span>
+            <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.6; color: #334155;">
+              Прямой обман и агрессивная манипуляция алгоритмами. Нацелено на сиюминутный результат за счет автоматизированной накрутки и подмены информации.
+            </p>
+          </div>
+          
+          <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Последствия и перспективы</span>
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #0f172a; font-weight: 500;">
+              Взрывной рост и неизбежный бан. Системы антифрода вычисляют аномалии в сжатые сроки, после чего домен полностью удаляется из поисковой выдачи без шанса на разблокировку.
+            </p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">7 Основных факторов ранжирования сайта</h2>
+
+<p style="margin: 0 0 2rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+  Для продвижения сайта в ТОП-10 поисковых систем необходимо соблюдать более сотни критериев. Однако все они разделяются на <b>7 ключевых групп</b>. Полноценная работа с каждым направлением позволяет планомерно вывести сайт на верхние строчки выдачи.
+</p>
+
+<!-- СЕТКА ИЗ 7 ФАКТОРОВ -->
+<div style="display: flex; flex-direction: column; gap: 24px; margin-bottom: 3rem; font-family: system-ui, -apple-system, sans-serif;">
+
+  <!-- 1. ХОСТОВЫЕ ФАКТОРЫ -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">01</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Хостовые (Доменные) факторы</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Авторитет домена</span>
+    </div>
+
+    <p style="margin: 0 0 16px 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Характеристики самого интернет-адреса сайта и его общая история в поиске. Чем выше доверие к домену, тем проще продвигать новые страницы.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Возраст домена:</b> Время от даты первой индексации сайта. Чем дольше существует сайт, тем больше к нему доверия.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Название домена:</b> Плюс, если содержит слова из основных ключей или название бренда.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Общая индексация:</b> Чем больше качественных страниц видно в поиске, тем сильнее сайт на фоне конкурентов.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">История домена:</b> Важно отсутствие в прошлом санкций, а также пиратского или «взрослого» контента.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Доменная зона:</b> Национальная зона (.ru, .by, .kz) имеет преимущество по локальным коммерческим запросам.
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. ТЕКСТОВЫЕ ФАКТОРЫ -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">02</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Текстовые факторы</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Релевантность контента</span>
+    </div>
+
+    <p style="margin: 0 0 16px 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Страница должна точно отвечать на вопросы пользователя. Уникальный, содержательный и хорошо оформленный текст заставляет человека задерживаться дольше, что повышает поисковый рейтинг.
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Тег Title:</b> Задает главный заголовок вкладки. Поисковики берут его в качестве названия ссылки в результатах поиска.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Метатег Description:</b> Краткое описание под заголовком в поиске. Составляет описание 
+        <span class="seo-tooltip-modern">
+          сниппета 
+          <span class="seo-tooltip-badge">?</span>
+          <span class="seo-tooltip-box-modern">
+            <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Сниппет</b>
+            Информационный блок в поисковой выдаче, состоящий из заголовка, описания и ссылки на сайт.
+          </span>
+        </span> 
+        и привлекает клики с поиска.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Оптимизация и Уникальность:</b> В текст добавляются ключевые слова без переспама. Текст должен быть уникальным и полностью заходить в тему запроса.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Форматирование и Точность:</b> Легкость чтения благодаря абзацам, спискам и таблицам. На коммерческих страницах нельзя писать «водянистые» статьи на отвлеченные темы.
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ССЫЛОЧНЫЕ ФАКТОРЫ -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">03</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Ссылочные факторы</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Внешняя цитируемость</span>
+    </div>
+
+    <p style="margin: 0 0 16px 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Когда на сайт ссылаются другие авторитетные ресурсы, поисковик считает его полезным и поднимает выше. Наличие рекомендаций с внешних площадок создает авторитет в глазах алгоритмов.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Текст ссылок (
+          <span class="seo-tooltip-modern">
+            Анкоры 
+            <span class="seo-tooltip-badge">?</span>
+            <span class="seo-tooltip-box-modern">
+              <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Анкор</b>
+              Кликабельный текст ссылки, в который вшита гиперссылка.
+            </span>
+          </span>):
+        </b> Тексты ссылок должны быть разнообразными и выглядеть естественно.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Динамика роста:</b> Ссылки должны появляться плавно и регулярно, без резких всплесков и закупки тысячами за один день.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">
+          <span class="seo-tooltip-modern">
+            Качество донора 
+            <span class="seo-tooltip-badge">?</span>
+            <span class="seo-tooltip-box-modern">
+              <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Донор</b>
+              Сторонний сайт, на котором размещена ссылка на ваш ресурс.
+            </span>
+          </span>:
+        </b> Сайт-донор должен совпадать по тематике, быть «старым» и не иметь лишних исходящих ссылок.
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. КОММЕРЧЕСКИЕ ФАКТОРЫ -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">04</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Коммерческие факторы</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Удобство покупки</span>
+    </div>
+
+    <p style="margin: 0 0 16px 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Выше ранжируется тот сайт, на котором клиенту удобнее совершить покупку: выбор больше, цены понятнее, а контакты прозрачны.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Ассортимент:</b> Чем больше выбор товаров или услуг на выбор пользователю, тем выше позиция сайта.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Контакты:</b> Подробная страница с реквизитами, картой проезда, мессенджерами и контактами.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Цены и Наличие:</b> Наличие актуальных цен, указание валюты и статусов наличия товара на складе.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Сервис и Акции:</b> Информация о скидках, спецпредложениях, а также ненавязчивые онлайн-консультанты.
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. ТЕХНИЧЕСКИЕ ФАКТОРЫ -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">05</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Технические факторы</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Стабильность и Скорость</span>
+    </div>
+
+    <p style="margin: 0 0 16px 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Фундамент работы ресурса. Сайт должен быстро открываться, работать по защищенному протоколу и не иметь битых ссылок.
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Коды ответа сервера:</b> Отсутствие ссылок на несуществующие страницы (ошибки 404) и редиректы.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Скорость и Оптимизация (
+          <span class="seo-tooltip-modern">
+            Core Web Vitals 
+            <span class="seo-tooltip-badge">?</span>
+            <span class="seo-tooltip-box-modern">
+              <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Core Web Vitals</b>
+              Метрики Google, оценивающие скорость загрузки, плавность интерфейса и отклик на клики.
+            </span>
+          </span>):
+        </b> Время ответа сервера до 200 мс, отсутствие сдвигов верстки при загрузке.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Защищенное соединение (HTTPS):</b> Наличие SSL-сертификата безопасности для шифрования данных.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Отсутствие дублей:</b> Контент не должен быть доступен по разным URL адресам.
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. ПОВЕДЕНЧЕСКИЕ ФАКТОРЫ -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">06</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Поведенческие факторы</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Реакция посетителей</span>
+    </div>
+
+    <p style="margin: 0 0 16px 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Оценивают, насколько реально сайт помогает людям. Если посетители удовлетворяют свой запрос и не возвращаются обратно в поисковик — сайт поднимают вверх.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Кликабельность (
+          <span class="seo-tooltip-modern">
+            CTR 
+            <span class="seo-tooltip-badge">?</span>
+            <span class="seo-tooltip-box-modern">
+              <b style="color: #38bdf8; display: block; margin-bottom: 4px;">CTR</b>
+              Процент пользователей, кликнувших на ссылку сайта из общего числа показов в поиске.
+            </span>
+          </span>):
+        </b> Чем чаще кликают на ваш сниппет, тем интереснее сайт для поиска.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Последний клик:</b> Ситуация, когда пользователь после перехода на ваш сайт нашел ответ и не вернулся обратно в поиск.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Длительность визита:</b> Долгое время на сайте говорит о высоком качестве и экспертности материалов.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Брендовый трафик:</b> Прямой поиск названия вашей компании подтверждает популярность и авторитет бизнеса.
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. СОЦИАЛЬНЫЕ ФАКТОРЫ -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">07</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Социальные факторы</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Присутствие в соцсетях</span>
+    </div>
+
+    <p style="margin: 0 0 16px 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Присутствие бренда на внешних социальных площадках подкрепляет доверие поисковых систем к реальному существованию бизнеса.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px;">
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Представительства:</b> Указание официальных ссылок на сообщества компании (VK, Telegram и др.).
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Социальный трафик:</b> Активные переходы пользователей из социальных сетей подтверждают интерес аудитории.
+      </div>
+      <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 12px 16px; border-radius: 10px; font-size: 13.5px; color: #334155;">
+        <b style="color: #0f172a;">Публикации и Репосты:</b> Шерринг материалов сайта ускоряет индексацию новых статей и улучшает ссылочный профиль.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+  <h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Основы технической настройки</h2>
+
+<p style="margin: 0 0 1.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+  Чтобы поисковые роботы не путались при сканировании и индексации страниц, на сайте в обязательном порядке настраивают три базовых служебных инструмента:
+</p>
+
+<!-- КАРТОЧКИ ТЕХНИЧЕСКИХ ИНСТРУМЕНТОВ -->
+<div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 3rem; font-family: system-ui, -apple-system, sans-serif;">
+
+  <!-- 1. 301 Редирект -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-family: monospace; font-size: 12px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 6px;">01</span>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Перенаправление (
+          <span class="seo-tooltip-modern">
+            301 редирект 
+            <span class="seo-tooltip-badge">?</span>
+            <span class="seo-tooltip-box-modern">
+              <b style="color: #38bdf8; display: block; margin-bottom: 4px;">301 Redirect</b>
+              Постоянное автоперенаправление пользователей и поисковых ботов с одного URL-адреса на другой.
+            </span>
+          </span>)
+        </h3>
+      </div>
+      <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #0369a1; background: #f0f9ff; padding: 4px 10px; border-radius: 6px; border: 1px solid #bae6fd;">Склейка адресов</span>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Для человека <i>site.ru</i> и <i>www.site.ru</i> — это один и тот же ресурс. Но для поискового робота это два абсолютно разных сайта с одинаковым содержимым (
+      <span class="seo-tooltip-modern">
+        дубли 
+        <span class="seo-tooltip-badge">?</span>
+        <span class="seo-tooltip-box-modern">
+          <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Дубли страниц</b>
+          Одинаковые страницы с разным URL. Пессимизируют сайт в выдаче.
+        </span>
+      </span>). 301-редирект мгновенно склеивает их в единый главный адрес.
+    </p>
+  </div>
+
+  <!-- 2. Robots.txt -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-family: monospace; font-size: 12px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 6px;">02</span>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Файл инструкций (Robots.txt)</h3>
+      </div>
+      <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #475569; background: #f1f5f9; padding: 4px 10px; border-radius: 6px; border: 1px solid #cbd5e1;">Запреты индексации</span>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Служебный текстовый файл в корневой папке сайта. Он дает указания 
+      <span class="seo-tooltip-modern">
+        краулерам 
+        <span class="seo-tooltip-badge">?</span>
+        <span class="seo-tooltip-box-modern">
+          <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Краулеры (пауки)</b>
+          Программы поисковиков, считывающие код веб-страниц.
+        </span>
+      </span>, какие скрытые и технические разделы сканировать не нужно (корзина, админка, личные данные клиентов).
+    </p>
+  </div>
+
+  <!-- 3. Sitemap.xml -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-family: monospace; font-size: 12px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 6px;">03</span>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Карта сайта (Sitemap.xml)</h3>
+      </div>
+      <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #15803d; background: #f0fdf4; padding: 4px 10px; border-radius: 6px; border: 1px solid #bbf7d0;">Навигация для робота</span>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Специальный XML-файл со структурированным списком всех актуальных страниц сайта. Помогает роботам быстро обнаруживать обновленный контент и только что добавленные товары.
+    </p>
+  </div>
+
+</div>
+
+<!-- ПЛЮСЫ И МИНУСЫ SEO -->
+<h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Плюсы и минусы SEO-продвижения</h2>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin: 20px 0 3rem 0; font-family: system-ui, -apple-system, sans-serif;">
+  
+  <!-- ПЛЮСЫ -->
+  <div style="background: #ffffff; border: 1px solid #dcfce7; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px -2px rgba(22, 101, 52, 0.04);">
+    <!-- Шапка блока -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f0fdf4;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; border-radius: 10px; background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px;">✓</div>
+        <h3 style="color: #14532d; margin: 0; font-size: 18px; font-weight: 700;">Преимущества</h3>
+      </div>
+      <span style="font-size: 11px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em;">Плюсы</span>
+    </div>
+    
+    <!-- Список пунктов -->
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      
+      <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #166534; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #16a34a; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #14532d;">Низкая стоимость за клик:</b> В отличие от платной рекламы, 
+          <span class="seo-tooltip-modern">
+            органический-трафик 
+            <span class="seo-tooltip-badge">?</span>
+            <span class="seo-tooltip-box-modern">
+              <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Органический трафик</b>
+              Бесплатный поток посетителей, переходящий с естественной поисковой выдачи.
+            </span>
+          </span> 
+          становится дешевле с каждым месяцем.
+        </div>
+      </div>
+
+      <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #166534; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #16a34a; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #14532d;">Долгосрочный эффект:</b> Результаты и позиции сохраняются надолго даже при временной паузе в работах.
+        </div>
+      </div>
+
+      <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #166534; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #16a34a; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #14532d;">Высокое доверие:</b> Люди доверяют естественной выдаче поиска значительно больше, чем явным рекламным блокам.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- МИНУСЫ -->
+  <div style="background: #ffffff; border: 1px solid #fee2e2; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px -2px rgba(153, 27, 27, 0.04);">
+    <!-- Шапка блока -->
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #fef2f2;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; border-radius: 10px; background: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px;">✕</div>
+        <h3 style="color: #7f1d1d; margin: 0; font-size: 18px; font-weight: 700;">Ограничения</h3>
+      </div>
+      <span style="font-size: 11px; font-weight: 800; color: #b91c1c; background: #fee2e2; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em;">Минусы</span>
+    </div>
+
+    <!-- Список пунктов -->
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+
+      <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #991b1b; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #ef4444; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #7f1d1d;">Сроки разгона:</b> Первые плоды видны через 2–3 месяца, а основной эффект — через 6–8 месяцев.
+        </div>
+      </div>
+
+      <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #991b1b; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #ef4444; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #7f1d1d;">Зависимость от 
+            <span class="seo-tooltip-modern">
+              алгоритмов 
+              <span class="seo-tooltip-badge">?</span>
+              <span class="seo-tooltip-box-modern">
+                <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Алгоритм поиска</b>
+                Формулы и критерии, по которым поисковик сортирует сайты.
+              </span>
+            </span>:
+          </b> Поисковые апдейты могут на время вызвать колебания позиций.
+        </div>
+      </div>
+
+      <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #991b1b; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #ef4444; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #7f1d1d;">Нет быстрых запусков:</b> Запустить мгновенную акцию к празднику через SEO не получится.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- КАК ОЦЕНИВАЮТ РЕЗУЛЬТАТЫ -->
+<h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Как оценивают результаты SEO?</h2>
+
+<p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+  Чтобы контролировать эффективность продвижения и окупаемость вложений, отслеживают три главных показателя:
+</p>
+
+<div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 2rem; font-family: system-ui, -apple-system, sans-serif;">
+  
+  <!-- 01. Позиции -->
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px;">
+    <span style="font-family: monospace; font-size: 18px; font-weight: 900; color: #0284c7; background: #e0f2fe; padding: 4px 10px; border-radius: 8px;">01</span>
+    <div>
+      <b style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 2px;">Позиции в поиске</b>
+      <span style="color: #475569; font-size: 13.5px; line-height: 1.5;">Зафиксированные места (в ТОП-10) по списку согласованных целевых поисковых запросов (семантическому ядру).</span>
+    </div>
+  </div>
+
+  <!-- 02. Трафик -->
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px;">
+    <span style="font-family: monospace; font-size: 18px; font-weight: 900; color: #0284c7; background: #e0f2fe; padding: 4px 10px; border-radius: 8px;">02</span>
+    <div>
+      <b style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 2px;">Органический трафик</b>
+      <span style="color: #475569; font-size: 13.5px; line-height: 1.5;">
+        Количество целевых посетителей с поисковиков. Прозрачно отслеживается через сервисы аналитики, например
+        
+        <span class="seo-tooltip-modern">
+          Яндекс Метрику 
+          <span class="seo-tooltip-badge">?</span>
+          <span class="seo-tooltip-box-modern">
+            <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Системы аналитики</b>
+            Яндекс Метрика & Google Analytics — счетчики статистики, фиксирующие переходы, время на сайте и конверсии.
+          </span>
+        </span>.
+      </span>
+    </div>
+  </div>
+
+  <!-- 03. Лиды -->
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px;">
+    <span style="font-family: monospace; font-size: 18px; font-weight: 900; color: #0284c7; background: #e0f2fe; padding: 4px 10px; border-radius: 8px;">03</span>
+    <div>
+      <b style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 2px;">
+        <span class="seo-tooltip-modern">
+          Лиды 
+          <span class="seo-tooltip-badge">?</span>
+          <span class="seo-tooltip-box-modern">
+            <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Лиды (Leads)</b>
+            Потенциальные клиенты, которые проявили интерес: заполнили форму, оформили заказ или позвонили.
+          </span>
+        </span> 
+        и целевые действия
+      </b>
+      <span style="color: #475569; font-size: 13.5px; line-height: 1.5;">
+        Количество реальных обращений, звонков, покупок и заявок, полученных от пользователей, пришедших из поисковой выдачи.
+      </span>
+    </div>
+  </div>
+
+</div>
+
+
+</div>
+  </div>
+
+</div>
+
+</div>

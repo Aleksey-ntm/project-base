@@ -1,0 +1,403 @@
+<style>
+  .edu-glossary-native {
+    width: 100%;
+  }
+
+  /* Обертка для термина */
+  .seo-tooltip-modern {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: inherit;
+    font-weight: 600;
+    cursor: help;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #94a3b8;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: all 0.2s ease;
+    vertical-align: baseline;
+  }
+
+  .seo-tooltip-modern:hover {
+    color: #0284c7;
+    text-decoration-color: #0284c7;
+  }
+
+  /* Кружочек со знаком вопроса */
+  .seo-tooltip-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1.5px solid #64748b;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    transform: translateY(-1px);
+  }
+
+  .seo-tooltip-modern:hover .seo-tooltip-badge {
+    border-color: #0284c7;
+    color: #0284c7;
+    background: #e0f2fe;
+  }
+
+  /* Всплывающая подсказка (ТЕМНЫЙ ФОН) */
+  .seo-tooltip-box-modern {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: #0f172a; 
+    color: #f1f5f9; 
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 400;
+    white-space: normal;
+    width: max-content;
+    max-width: 260px;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #1e293b;
+    z-index: 100;
+    line-height: 1.5;
+  }
+
+  .seo-tooltip-modern:hover .seo-tooltip-box-modern {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .seo-tooltip-box-modern::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+
+  /* Стили для супер-плавного Аккордеона FAQ */
+  .faq-accordion-smooth {
+    background: #ffffff; 
+    border: 1px solid #e2e8f0; 
+    border-radius: 12px; 
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    overflow: hidden;
+    transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .faq-accordion-smooth:hover {
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  }
+
+  .faq-summary {
+    padding: 18px 20px; 
+    font-size: 15px; 
+    font-weight: 700; 
+    color: #0f172a; 
+    cursor: pointer; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center;
+    user-select: none;
+    list-style: none;
+  }
+
+  .faq-summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq-icon-arrow {
+    width: 28px; 
+    height: 28px; 
+    border-radius: 50%; 
+    background: #f1f5f9; 
+    color: #0f172a; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    font-size: 11px;
+    flex-shrink: 0;
+    margin-left: 12px;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease;
+  }
+
+  .faq-accordion-smooth[open] .faq-icon-arrow {
+    transform: rotate(180deg);
+    background: #e2e8f0;
+  }
+
+  .faq-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .faq-accordion-smooth[open] .faq-wrapper {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-overflow {
+    overflow: hidden;
+  }
+
+  .faq-body {
+    padding: 0 20px 18px 20px; 
+    font-size: 14px; 
+    line-height: 1.6; 
+    color: #475569; 
+    border-top: 1px solid #f1f5f9;
+    margin-top: 4px;
+    padding-top: 14px;
+    opacity: 0;
+    transition: opacity 0.35s ease-in-out 0.05s;
+  }
+
+  .faq-accordion-smooth[open] .faq-body {
+    opacity: 1;
+  }
+</style>
+
+<div class="edu-glossary-native">
+
+  <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Введение в Разработку Сайтов</h2>
+
+  <!-- Памятка Премиум -->
+  <div style="margin: 0 0 1.5rem 0; padding: 1.15rem 1.25rem; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03); font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: flex-start; gap: 1rem;">
+    <span style="font-size: 18px; line-height: 1.2; color: #334155;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V9H11V15ZM11 7H9V5H11V7Z" fill="currentColor"/>
+      </svg>
+    </span>
+    <div>
+      <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; letter-spacing: -0.01em;">Важно:</div>
+      <div style="font-size: 13.5px; line-height: 1.55; color: #475569; font-weight: 400;">
+        На этой странице подробно описаны базовые принципы веб-разработки, технологический стек и наши стандарты создания веб-ресурсов. Точные стоимости и описания конкретных пакетов услуг приведены ниже в блоке тарифов.
+      </div>
+    </div>
+  </div>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    <b>Веб-разработка</b> — это полный комплекс работ по проектированию, дизайну и программированию сайтов или веб-сервисов. Качественный сайт — это не просто «красивая картинка», а сложная бизнес-система, которая помогает компании презентовать услуги, привлекать заказы и автоматизировать внутренние процессы.
+  </p>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    Для простоты понимания сайт можно сравнить со строительством дома:
+  </p>
+
+  <!-- АНАЛОГИЯ С ДОМОМ -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; margin: 20px 0 2rem 0; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 2px 4px -1px rgba(0,0,0,0.02);">
+      <div style="font-size: 13px; font-weight: 700; color: #0284c7; margin-bottom: 4px;">01. Чертеж (Прототип)</div>
+      <div style="font-size: 13.5px; color: #334155; line-height: 1.5;">Архитектура дома: где находятся двери, окна и стены.</div>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 2px 4px -1px rgba(0,0,0,0.02);">
+      <div style="font-size: 13px; font-weight: 700; color: #0284c7; margin-bottom: 4px;">02. Отделка (Верстка)</div>
+      <div style="font-size: 13.5px; color: #334155; line-height: 1.5;">Внешний вид, фасад и интерьер, с которым взаимодействует жилец.</div>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 2px 4px -1px rgba(0,0,0,0.02);">
+      <div style="font-size: 13px; font-weight: 700; color: #0284c7; margin-bottom: 4px;">03. Инженерия (CMS)</div>
+      <div style="font-size: 13.5px; color: #334155; line-height: 1.5;">Проводка и трубы: код и система управления (1С-Битрикс), заставляющие все работать.</div>
+    </div>
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; box-shadow: 0 2px 4px -1px rgba(0,0,0,0.02);">
+      <div style="font-size: 13px; font-weight: 700; color: #0284c7; margin-bottom: 4px;">04. Участок (Хостинг)</div>
+      <div style="font-size: 13.5px; color: #334155; line-height: 1.5;">Земля и адрес, на котором физически располагается готовый объект.</div>
+    </div>
+  </div>
+
+  <h2 style="margin: 2.5rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">3 Подхода к разработке сайтов</h2>
+
+  <div style="width: 100%; margin: 28px 0; font-family: system-ui, -apple-system, sans-serif;">
+    <p style="font-size: 15.5px; line-height: 1.6; color: #475569; margin: 0 0 24px 0;">
+      На рынке существует три принципиально разных подхода к созданию веб-ресурсов. Понимание этой разницы помогает объяснить клиенту наше ценообразование:
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <!-- 01. Конструкторы (НЕ ДЕЛАЕМ) -->
+      <article style="background: #ffffff; border: 1px solid #fee2e2; border-radius: 16px; padding: 28px 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #fef2f2;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">01</span>
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Конструкторы (Tilda, Wix и др.)</h3>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #fef2f2; color: #b91c1c;">
+            Мы НЕ разрабатываем
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Суть подхода</span>
+            <p style="margin: 0 0 12px 0; font-size: 14px; line-height: 1.6; color: #334155;">
+              Сборка сайта из стандартных готовых кубиков на сторонней платной платформе. 
+            </p>
+            <p style="margin: 0; font-size: 13.5px; line-height: 1.55; color: #7f1d1d;">
+              <b>Минусы:</b> Сайт фактически принадлежит сервису («аренда»), имеет жесткие ограничения по функционалу, интеграциям с 1С и сложно поддается масштабированию.
+            </p>
+          </div>
+          
+          <div style="background: #fdf2f2; border: 1px solid #fee2e2; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #991b1b; margin-bottom: 8px; display: block;">Наша позиция</span>
+            <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #7f1d1d; font-weight: 500;">
+              Мы не разрабатываем новые сайты на конструкторах, так как они не подходят для создания надежных цифровых активов растущего бизнеса.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 02. Готовые решения -->
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">02</span>
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Готовые решения (Шаблонная разработка)</h3>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #f0f9ff; color: #0369a1;">
+            Быстрый запуск на Битрикс
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Суть подхода</span>
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #334155;">
+              За основу берется проверенное готовое отраслевое решение на 1С-Битрикс. Мы полностью адаптируем его под клиента: брендируем, перестраиваем структуру, загружаем контент и настраиваем необходимые интеграции.
+            </p>
+          </div>
+          
+          <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Для кого</span>
+            <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #0f172a; font-weight: 500;">
+              Для бизнеса, которому нужен быстрый старт (от 1-2 месяцев) и экономия бюджета без потери качества движка.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03. Индивидуальная разработка -->
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">03</span>
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Индивидуальная разработка (Custom)</h3>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #f0fdf4; color: #15803d;">
+            Уникальные решения
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+          <div>
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Суть подхода</span>
+            <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #334155;">
+              Проектирование и программирование сайта «с нуля» строго под уникальные бизнес-процессы заказчика. Уникальный UI/UX дизайн, сложная логика, кастомные личные кабинеты и нестандартные интеграции.
+            </p>
+          </div>
+          
+          <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Для кого</span>
+            <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #0f172a; font-weight: 500;">
+              Для крупного бизнеса, B2B-порталов и брендов, требующих эксклюзивного позиционирования и сложного функционала.
+            </p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <!-- Заголовок -->
+  <div style="margin-bottom: 24px;">
+    <h3 style="margin: 0 0 10px 0; font-size: 22px; font-weight: 700; color: #0f172a;">
+      Почему мы разрабатываем сайты <b>только</b> на 1С-Битрикс?
+    </h3>
+    <p style="margin: 0; font-size: 14px; color: #475569; line-height: 1.5;">
+      1С-Битрикс — главное решение для бизнеса в России. Наша компания имеет статус <b>«Золотой партнер 1С-Битрикс»</b>, а все наши программисты прошли официальную сертификацию от самих разработчиков платформы.
+    </p>
+  </div>
+
+  <!-- Примечание для менеджера -->
+  <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 8px; padding: 14px 16px; margin-bottom: 20px; font-size: 13.5px; color: #1e40af; line-height: 1.5;">
+    <b>📌 Важно:</b> Мы создаем <u>новые сайты только на 1С-Битрикс</u>. Однако на продвижение (SEO) и техническую поддержку (ТП) берем существующие сайты клиентов на любых распространенных движках (WordPress, OpenCart, ModX и др.).
+  </div>
+
+  <!-- Список с нумерацией и пунктиром -->
+  <div style="margin-bottom: 24px;">
+    
+    <div style="border-bottom: 1px dashed #cbd5e1; padding: 12px 0; font-size: 13.5px; color: #334155; line-height: 1.5; display: flex; align-items: baseline;">
+      <span style="font-family: monospace; font-weight: 700; color: #0284c7; margin-right: 12px; font-size: 14px;">01.</span>
+      <div><b style="color: #0f172a;">Максимальная защита от взломов:</b> Лучшая система безопасности на рынке. Сайт надежно защищен от атак, вирусов и утечек данных покупателей.</div>
+    </div>
+
+    <div style="border-bottom: 1px dashed #cbd5e1; padding: 12px 0; font-size: 13.5px; color: #334155; line-height: 1.5; display: flex; align-items: baseline;">
+      <span style="font-family: monospace; font-weight: 700; color: #0284c7; margin-right: 12px; font-size: 14px;">02.</span>
+      <div><b style="color: #0f172a;">Мгновенная интеграция с 1С и CRM:</b> Цены, остатки товаров и заказы синхронизируются автоматически из коробки — без долгих и дорогих доработок.</div>
+    </div>
+
+    <div style="border-bottom: 1px dashed #cbd5e1; padding: 12px 0; font-size: 13.5px; color: #334155; line-height: 1.5; display: flex; align-items: baseline;">
+      <span style="font-family: monospace; font-weight: 700; color: #0284c7; margin-right: 12px; font-size: 14px;">03.</span>
+      <div><b style="color: #0f172a;">Защита от штрафов и проверок:</b> Сайт на 100% соответствует законам РФ (онлайн-кассы по 54-ФЗ, персональные данные по 152-ФЗ, «Честный Знак»).</div>
+    </div>
+
+    <div style="border-bottom: 1px dashed #cbd5e1; padding: 12px 0; font-size: 13.5px; color: #334155; line-height: 1.5; display: flex; align-items: baseline;">
+      <span style="font-family: monospace; font-weight: 700; color: #0284c7; margin-right: 12px; font-size: 14px;">04.</span>
+      <div><b style="color: #0f172a;">Никаких рисков из-за санкций:</b> Полная независимость от зарубежных сервисов. Никто не отозовет лицензию и не отключит сайт из-за границы.</div>
+    </div>
+
+    <div style="border-bottom: 1px dashed #cbd5e1; padding: 12px 0; font-size: 13.5px; color: #334155; line-height: 1.5; display: flex; align-items: baseline;">
+      <span style="font-family: monospace; font-weight: 700; color: #0284c7; margin-right: 12px; font-size: 14px;">05.</span>
+      <div><b style="color: #0f172a;">Выдержит любой поток клиентов:</b> Страницы открываются мгновенно, а сайт работает без сбоев даже во время пиковых распродаж и масштабной рекламы.</div>
+    </div>
+
+    <div style="border-bottom: 1px dashed #cbd5e1; padding: 12px 0; font-size: 13.5px; color: #334155; line-height: 1.5; display: flex; align-items: baseline;">
+      <span style="font-family: monospace; font-weight: 700; color: #0284c7; margin-right: 12px; font-size: 14px;">06.</span>
+      <div><b style="color: #0f172a;">Свобода выбора подрядчика:</b> Код и структура сайта стандартизированы. Вы не привязаны к нам — над Битрикс работают тысячи специалистов по всей стране.</div>
+    </div>
+
+  </div>
+
+  <!-- Блок с выгодами разработки -->
+    
+    <div style="font-size: 12px; font-weight: 700; color: #2563eb; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">
+      Что еще?
+    </div>
+
+    <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 10px; font-size: 13.5px; color: #334155; line-height: 1.5;">
+      <span style="color: #2563eb; font-weight: 700; margin-right: 6px;">→</span>
+      <b>Точные сроки и понятный бюджет:</b> Огромный выбор готовых инструментов позволяет запускать сайт быстро и не переплачивать за написание кода «с нуля».
+    </div>
+
+    <div style="border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; margin-bottom: 10px; font-size: 13.5px; color: #334155; line-height: 1.5;">
+      <span style="color: #2563eb; font-weight: 700; margin-right: 6px;">→</span>
+      <b>Предсказуемо высокий результат:</b> Разработка идет строго по официальным правилам 1С-Битрикс, что полностью исключает ошибки и «кривой» код.
+    </div>
+
+    <div style="font-size: 13.5px; color: #334155; line-height: 1.5;">
+      <span style="color: #2563eb; font-weight: 700; margin-right: 6px;">→</span>
+      <b>Легкий рост без переделок:</b> Сайт сможет свободно развиваться — от небольшого каталога до огромного маркетплейса на той же самой платформе.
+    </div>
+
+  </div>
+
+</div>
+

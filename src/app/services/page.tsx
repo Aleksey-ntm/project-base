@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react';
 import Papa from 'papaparse';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 const bxHeaders = [
   "ID", "Название лида", "Обращение", "Имя", "Фамилия", "Отчество", "Имя, Фамилия", "Дата рождения", 

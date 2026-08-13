@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
 export const metadata: Metadata = {
-  title: "Панель быстрых ссылок",
+  title: "NTM",
 };
 
 export default function RootLayout({

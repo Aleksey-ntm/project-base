@@ -1,0 +1,1037 @@
+<!-- БЛОК ТАРИФОВ И УСЛУГ (SEO, КОНТЕКСТ, ТЕХПОДДЕРЖКА И РАЗРАБОТКА) -->
+<div style="margin: 3rem 0; font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', Roboto, sans-serif;">
+
+  <!-- СТИЛИ КАРТОЧЕК И ВКЛАДОК -->
+  <style>
+    /* ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК НА ЧИСТОМ CSS */
+    .tab-switch-input {
+      display: none !important;
+    }
+
+    #sw-tab-seo-radio:checked ~ #sw-panel-seo { display: block !important; }
+    #sw-tab-seo-radio:checked ~ #sw-panel-context { display: none !important; }
+    #sw-tab-seo-radio:checked ~ #sw-panel-support { display: none !important; }
+    #sw-tab-seo-radio:checked ~ #sw-panel-dev { display: none !important; }
+
+    #sw-tab-context-radio:checked ~ #sw-panel-seo { display: none !important; }
+    #sw-tab-context-radio:checked ~ #sw-panel-context { display: block !important; }
+    #sw-tab-context-radio:checked ~ #sw-panel-support { display: none !important; }
+    #sw-tab-context-radio:checked ~ #sw-panel-dev { display: none !important; }
+
+    #sw-tab-support-radio:checked ~ #sw-panel-seo { display: none !important; }
+    #sw-tab-support-radio:checked ~ #sw-panel-context { display: none !important; }
+    #sw-tab-support-radio:checked ~ #sw-panel-support { display: block !important; }
+    #sw-tab-support-radio:checked ~ #sw-panel-dev { display: none !important; }
+
+    #sw-tab-dev-radio:checked ~ #sw-panel-seo { display: none !important; }
+    #sw-tab-dev-radio:checked ~ #sw-panel-context { display: none !important; }
+    #sw-tab-dev-radio:checked ~ #sw-panel-support { display: none !important; }
+    #sw-tab-dev-radio:checked ~ #sw-panel-dev { display: block !important; }
+
+    /* СТИЛИ АКТИВНЫХ КНОПОК ПЕРЕКЛЮЧЕНИЯ */
+    #sw-tab-seo-radio:checked ~ .sw-tabs-nav label[for="sw-tab-seo-radio"],
+    #sw-tab-context-radio:checked ~ .sw-tabs-nav label[for="sw-tab-context-radio"],
+    #sw-tab-support-radio:checked ~ .sw-tabs-nav label[for="sw-tab-support-radio"],
+    #sw-tab-dev-radio:checked ~ .sw-tabs-nav label[for="sw-tab-dev-radio"] {
+      background: #ffffff !important;
+      color: #0f172a !important;
+      border-color: #cbd5e1 !important;
+    }
+
+    .sw-tab-label {
+      padding: 10px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #64748b;
+      background: transparent;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+    }
+
+    .sw-tab-label:hover { 
+      color: #0f172a; 
+    }
+
+    /* ОСНОВНАЯ ПРЕМИАЛЬНАЯ КАРТОЧКА ТАРИФА */
+    .tariff-info-card {
+      position: relative;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 24px;
+      padding: 40px;
+      margin-bottom: 32px;
+      color: #0f172a;
+    }
+
+    /* АНИМАЦИИ И ЭФФЕКТЫ АККОРДЕОНА */
+    @keyframes pulse-subtle {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.85; transform: scale(0.98); }
+    }
+    .acc-details[open] .acc-arrow {
+      transform: rotate(180deg);
+    }
+    .acc-details[open] .acc-trigger {
+      border-bottom-color: transparent !important;
+      border-bottom-left-radius: 0 !important;
+      border-bottom-right-radius: 0 !important;
+    }
+    .acc-trigger:hover {
+      background: #f1f5f9 !important;
+    }
+    .acc-item-card {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .acc-item-card:hover {
+      background: #f8fafc !important;
+      border-color: #cbd5e1 !important;
+      transform: translateX(4px);
+    }
+    .acc-item-card:hover .acc-item-arrow {
+      opacity: 1 !important;
+      transform: translateX(0) !important;
+    }
+
+    /* СТИЛИ НЕИЗМЕНЕННЫХ АККОРДЕОНОВ СЕО И КОНТЕКСТА */
+    .lux-seo-wrap { display: block; width: 100%; }
+    .v33-accordion { border: 1px solid #e2e8f0; border-radius: 14px; margin-bottom: 12px; background: #ffffff; transition: border-color 0.2s ease; }
+    .v33-accordion.open { border-color: #cbd5e1; }
+    .v33-summary { display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; cursor: pointer; user-select: none; }
+    .v33-title { font-size: 17px; font-weight: 700; color: #0f172a; }
+    .v33-arrow { font-size: 12px; color: #94a3b8; transition: transform 0.25s ease; }
+    .v33-accordion.open .v33-arrow { transform: rotate(180deg); color: #0284c7; }
+    .v33-content { display: none; padding: 0 24px 24px 24px; }
+    .v33-accordion.open .v33-content { display: block; }
+    .v33-intro { font-size: 14px; color: #64748b; margin: 0 0 18px 0; line-height: 1.5; }
+    .v33-task-list { display: flex; flex-direction: column; gap: 10px; }
+    .v33-task-card { background: #f8fafc; border: 1px dashed #cbd5e1; border-radius: 10px; padding: 16px 18px; }
+    .v33-task-header { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .v33-task-title { font-size: 14px; font-weight: 700; color: #0f172a; }
+    .v33-tag-text { font-size: 11px; font-weight: 700; color: #0284c7; margin-left: 6px; }
+    .v33-task-meta { font-size: 11px; font-weight: 700; letter-spacing: 0.02em; padding: 3px 10px; border-radius: 6px; white-space: nowrap; }
+    .v33-task-meta.before-pay { color: #15803d; background: #f0fdf4; border: 1px solid #bbf7d0; }
+    .v33-task-meta.after-pay { color: #0369a1; background: #f0f9ff; border: 1px solid #bae6fd; }
+    .v33-task-desc { font-size: 13.5px; color: #475569; margin: 0; line-height: 1.6; }
+    .lux-excluded-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px 28px; padding-top: 8px; }
+    .lux-excluded-item { font-size: 13.5px; color: #64748b; line-height: 1.55; }
+    .lux-excluded-item b { color: #991b1b; font-weight: 700; }
+  </style>
+
+  <!-- СКРЫТЫЕ РАДИО-ПЕРЕКЛЮЧАТЕЛИ -->
+  <input type="radio" id="sw-tab-seo-radio" name="sw_pricing_tabs" class="tab-switch-input" checked>
+  <input type="radio" id="sw-tab-context-radio" name="sw_pricing_tabs" class="tab-switch-input">
+  <input type="radio" id="sw-tab-support-radio" name="sw_pricing_tabs" class="tab-switch-input">
+  <input type="radio" id="sw-tab-dev-radio" name="sw_pricing_tabs" class="tab-switch-input">
+
+  <!-- КНОПКИ ПЕРЕКЛЮЧЕНИЯ ВКЛАДОК -->
+  <div class="sw-tabs-nav" style="display: flex; gap: 8px; background: #f8fafc; padding: 6px; border-radius: 14px; border: 1px solid #cbd5e1; margin-bottom: 32px; max-width: max-content;">
+    <label for="sw-tab-seo-radio" class="sw-tab-label">SEO-продвижение</label>
+    <label for="sw-tab-context-radio" class="sw-tab-label">Контекстная реклама</label>
+    <label for="sw-tab-support-radio" class="sw-tab-label">Техподдержка</label>
+    <label for="sw-tab-dev-radio" class="sw-tab-label">Разработка</label>
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- РАЗДЕЛ 1: SEO-ПРОДВИЖЕНИЕ -->
+  <!-- ======================================================== -->
+  <div id="sw-panel-seo">
+    
+    <h2 style="margin: 0 0 1.5rem 0; font-size: 32px; color: #0f172a; font-weight: 900; letter-spacing: -0.02em;">
+      Тарифы и условия работы (SEO)
+    </h2>
+
+    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 16px; padding: 20px 24px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 280px;">
+        <span style="font-size: 11px; font-weight: 800; color: #ffffff; background: #0f172a; padding: 6px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;">ОБЯЗАТЕЛЬНО:</span>
+        <div style="font-size: 14px; font-weight: 600; color: #0f172a; line-height: 1.5;">
+          Расчёт КП выполняется только на основе данных из Яндекс.Метрики. <p style="margin: 4px 0 0 0; color: #475569;">Для тарифа по позициям - важен трафик с СЕО. Для тарифа по лидам - текущие количество лидов с СЕО.</p>
+        </div>
+      </div>
+      <div style="font-size: 13px; font-weight: 700; color: #64748b; white-space: nowrap;">
+        Без доступа к метрике КП не делаем
+      </div>
+    </div>
+
+    <!-- ТАРИФ №1: SEO ПО ПОЗИЦИЯМ (ТОП-10) -->
+    <div class="tariff-info-card">
+      <span style="position: absolute; top: 28px; right: 32px; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 14px; border-radius: 8px;">
+        Основной
+      </span>
+
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid #e2e8f0;">
+        <div style="max-width: 620px;">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.1em; margin-bottom: 8px;">Тариф №1</div>
+          <div role="heading" aria-level="3" style="margin: 0 0 12px 0; font-size: 32px; font-weight: 900; color: #0f172a; letter-spacing: -0.02em;">SEO по позициям (ТОП-10)</div>
+          <p style="font-size: 16px; color: #334155; line-height: 1.6; margin: 0; font-weight: 500;">
+            SEO по позициям (ТОП-10) — это формат продвижения, где основной показатель результата — вывод поисковых запросов в ТОП-10 поисковых систем.
+          </p>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 24px; border-radius: 16px; text-align: right; min-width: 250px;">
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em;">Стоимость:</div>
+          <div style="font-size: 32px; font-weight: 900; color: #0f172a; margin-top: 4px; letter-spacing: -0.02em;">80 000 ₽ <span style="font-size: 14px; font-weight: 600; color: #64748b;">/ мес</span></div>
+          <div style="font-size: 12px; color: #059669; font-weight: 700; margin-top: 6px;">вкл. 5% НДС • Фиксированная стоимость</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 32px 0; border-bottom: 1px solid #e2e8f0;">
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">🎯 Главная задача:</div>
+          <div style="font-size: 15px; font-weight: 500; color: #334155; line-height: 1.6;">
+            Вывести согласованные целевые запросы в ТОП-10 поисковой выдачи, существенно увеличить органическую видимость сайта и обеспечить стабильный рост привлекаемого трафика из Яндекса и Google.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">👥 Кому подойдет:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Небольшим сайтам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Услуговым сайтам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Небольшим корпоративным сайтам</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; padding: 32px 0; border-bottom: 1px solid #e2e8f0;">
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">KPI</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">позиции в ТОП-10</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Первый результат</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">2-3 месяц работ</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Основной результат</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">6 месяц работ</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Часов в месяц</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">27-30 часов</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Период работ</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">от 6 месяцев</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Отчетность</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">5 раз/мес + менеджер 👨‍💼</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; padding-top: 32px;">
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #0f172a; margin-bottom: 10px;">
+            ⚡ Гарантия:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 600;">
+            Не менее 60% запросов в ТОП-10 к 6-му месяцу работ.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 10px;">
+            💰 Дополнительные расходы:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 600;">
+            Не предусмотрены (Никаких дополнительных затрат).
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ТАРИФ №2: SEO ПО ЛИДАМ -->
+    <div class="tariff-info-card">
+      <span style="position: absolute; top: 28px; right: 32px; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 14px; border-radius: 8px;">
+        Основной
+      </span>
+
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid #e2e8f0;">
+        <div style="max-width: 620px;">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.1em; margin-bottom: 8px;">Тариф №2</div>
+          <div role="heading" aria-level="3" style="margin: 0 0 12px 0; font-size: 32px; font-weight: 900; color: #0f172a; letter-spacing: -0.02em;">SEO по лидам</div>
+          <p style="font-size: 16px; color: #334155; line-height: 1.6; margin: 0; font-weight: 500;">
+            SEO по лидам — это формат продвижения, где основной показатель результата — увеличение целевых обращений с сайта: заявок, звонков, форм обратной связи и других действий, которые важны для бизнеса клиента.
+          </p>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 24px; border-radius: 16px; text-align: right; min-width: 250px;">
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em;">Стоимость:</div>
+          <div style="font-size: 32px; font-weight: 900; color: #0f172a; margin-top: 4px; letter-spacing: -0.02em;">100 000 ₽ <span style="font-size: 14px; font-weight: 600; color: #64748b;">/ мес</span></div>
+          <div style="font-size: 12px; color: #059669; font-weight: 700; margin-top: 6px;">вкл. 5% НДС • Фиксированная стоимость</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 32px 0; border-bottom: 1px solid #e2e8f0;">
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">🎯 Главная задача:</div>
+          <div style="font-size: 15px; font-weight: 500; color: #334155; line-height: 1.6;">
+            Увеличить количество целевых обращений с сайта за счет SEO-продвижения, улучшения посадочных страниц, роста поискового трафика и повышения конверсии сайта.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">👥 Кому подойдет:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Интернет-магазинам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Производителям</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Оптово-розничным компаниям</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Каталогам от ~500+ товаров</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; padding: 32px 0; border-bottom: 1px solid #e2e8f0;">
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">KPI</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">звонки, заявки, лиды</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Первый результат</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">2-3 месяц работ</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Основной результат</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">6 месяц работ</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Часов в месяц</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">от 35 часов</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Период работ</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">от 6 месяцев</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Отчетность</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">позиции + лиды 👨‍💼</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; padding-top: 32px;">
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #0f172a; margin-bottom: 10px;">
+            ⚡ Гарантия:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 600;">
+            Определяем квалификационные признаки лида с клиентом и прописываем количество обращений в договоре.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 10px;">
+            💰 Дополнительные расходы:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 600;">
+            Не предусмотрены (Никаких дополнительных затрат).
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ТАРИФ №3: SEO ПО ПОЗИЦИЯМ (БИЧ ТАРИФ / LITE) -->
+    <div class="tariff-info-card" style="border-color: #881337;">
+      <span style="position: absolute; top: 28px; right: 32px; background: #881337; color: #ffffff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 14px; border-radius: 8px;">
+        Временный
+      </span>
+
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid #fecdd3;">
+        <div style="max-width: 620px;">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #881337; letter-spacing: 0.1em; margin-bottom: 8px;">Тариф №3</div>
+          <div role="heading" aria-level="3" style="margin: 0 0 12px 0; font-size: 32px; font-weight: 900; color: #0f172a; letter-spacing: -0.02em;">SEO по позициям (Бич тариф)</div>
+          <p style="font-size: 16px; color: #334155; line-height: 1.6; margin: 0; font-weight: 500;">
+            Облегченный формат продвижения по позициям. Основной показатель результата — вывод поисковых запросов в ТОП-10, но с уменьшенным объемом продвигаемого ядра.
+          </p>
+        </div>
+
+        <div style="background: #fff1f2; border: 1px solid #fecdd3; padding: 24px; border-radius: 16px; text-align: right; min-width: 250px;">
+          <div style="font-size: 11px; font-weight: 800; color: #881337; text-transform: uppercase; letter-spacing: 0.08em;">Стоимость:</div>
+          <div style="font-size: 32px; font-weight: 900; color: #881337; margin-top: 4px; letter-spacing: -0.02em;">60 000 ₽ <span style="font-size: 14px; font-weight: 600; color: #881337;">/ мес</span></div>
+          <div style="font-size: 12px; color: #881337; font-weight: 700; margin-top: 6px;">вкл. 5% НДС • Фиксированная стоимость</div>
+        </div>
+      </div>
+
+      <div style="background: #fff1f2; border: 1px solid #fecdd3; padding: 18px 20px; border-radius: 12px; margin: 32px 0;">
+        <div style="font-size: 11px; font-weight: 800; color: #881337; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;">
+          📌 Правило продажи для менеджера:
+        </div>
+        <div style="font-size: 15px; font-weight: 800; color: #881337;">
+          Предлагаем ТОЛЬКО при ОТКАЗЕ по бюджету от ОСНОВНЫХ тарифов!
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding-bottom: 32px; border-bottom: 1px solid #fecdd3;">
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #881337; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">🎯 Главная задача:</div>
+          <div style="font-size: 15px; font-weight: 500; color: #334155; line-height: 1.6;">
+            Вывести согласованные целевые запросы в ТОП-10 поисковой выдачи, существенно увеличить органическую видимость сайта и обеспечить стабильный рост привлекаемого трафика.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #881337; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">👥 Кому подойдет:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span style="background: #fff1f2; border: 1px solid #fecdd3; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #881337;">Небольшим сайтам</span>
+            <span style="background: #fff1f2; border: 1px solid #fecdd3; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #881337;">Услуговым сайтам</span>
+            <span style="background: #fff1f2; border: 1px solid #fecdd3; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #881337;">Небольшим корпоративным сайтам</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; padding: 32px 0; border-bottom: 1px solid #fecdd3;">
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: #881337; text-transform: uppercase;">KPI</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">позиции в ТОП-10</div>
+        </div>
+
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: #881337; text-transform: uppercase;">Первый результат</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">2-3 месяц работ</div>
+        </div>
+
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: #881337; text-transform: uppercase;">Основной результат</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">6 месяц работ</div>
+        </div>
+
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: #881337; text-transform: uppercase;">Часов в месяц</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">21-22 часа</div>
+        </div>
+
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: #881337; text-transform: uppercase;">Период работ</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">от 6 месяцев</div>
+        </div>
+
+        <div>
+          <div style="font-size: 11px; font-weight: 800; color: #881337; text-transform: uppercase;">Отчетность</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">5 раз/мес + менеджер 👨‍💼</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; padding: 32px 0 20px 0;">
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #0f172a; margin-bottom: 10px;">
+            ⚡ Гарантия:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 600;">
+            Не менее 60% запросов в ТОП-10 к 6-му месяцу работ.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 10px;">
+            💰 Дополнительные расходы:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 600;">
+            Не предусмотрены (Никаких дополнительных затрат).
+          </div>
+        </div>
+      </div>
+
+      <div style="margin: 0 -40px -40px -40px; background: #fff1f2; border-top: 1px dashed #fecdd3; padding: 16px 40px; border-radius: 0 0 24px 24px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+        <span style="font-size: 16px;">⚠️</span>
+        <div style="font-size: 14px; color: #881337; font-weight: 600;">
+          <b>Отличие от стандартного тарифа по позициям (ТОП-10):</b> Объем семантического ядра на <b>20-30% меньше</b>, соответственно и гарантии на меньшее количество запросов.
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin: 2rem 0 1.5rem 0; font-size: 28px; color: #0f172a; font-weight: 900;">
+      Что входит в SEO:
+    </h2>
+    
+    <!-- НЕИЗМЕНЕННЫЕ АККОРДЕОНЫ СЕО -->
+    <div class="lux-seo-wrap">
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">1. Аудиты</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">На старте работ анализируем сайт, конкурентов и ключевые факторы, влияющие на продвижение.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Аудит конкурентов по продвигаемому ядру</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Смотрим сайты конкурентов по тем запросам, по которым клиент хочет продвигаться. Анализируем, почему они выше в поиске: какие у них страницы, тексты, структура, коммерческие блоки, цены, формы заявок, доверие, ссылки.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Аудит технического состояния сайта</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Проверяем, нет ли на сайте технических ошибок, которые мешают продвижению: битые ссылки, дубли страниц, проблемы с индексацией, ошибки в коде, медленная загрузка, некорректные редиректы и другие SEO-проблемы.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Анализ данных Яндекс.Метрики</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Смотрим реальные данные по сайту: сколько людей заходит, откуда они приходят, какие страницы смотрят, где уходят, какие заявки оставляют. Это помогает понять, что уже работает, а что нужно улучшать.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Аудит поведенческих факторов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Смотрим, как пользователи ведут себя на сайте: заходят и сразу уходят или изучают страницы, переходят по разделам, оставляют заявки, пользуются формами и кнопками. Если людям неудобно, поисковые системы это тоже могут учитывать.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Аудит коммерческих факторов <span class="v33-tag-text">• Только Тариф Лиды</span></span></div><p class="v33-task-desc" style="padding: 14px 16px;">Проверяем, насколько сайт вызывает доверие и помогает принять решение о покупке или заявке. Есть ли цены, контакты, кнопки связи, формы заявки, гарантии, отзывы, кейсы, сертификаты, информация о компании.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Аудит юзабилити</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Проверяем, насколько сайтом удобно пользоваться. Понятно ли, куда нажимать, легко ли найти нужную информацию, удобно ли оставить заявку, нормально ли сайт выглядит на телефоне.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">2. Семантическое ядро</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Формируем список поисковых запросов, по которым сайт будет продвигаться.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Сбор и согласование семантического ядра</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Подбираем запросы, по которым сайт можно продвигать, и согласовываем их с клиентом, чтобы продвигать не случайные фразы, а именно те, которые могут привести заявки.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Подбор эффективных поисковых запросов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Выбираем не просто популярные запросы, а те, которые могут привести целевых клиентов. Например, не только информационные запросы, а запросы с намерением купить, заказать, рассчитать стоимость или обратиться в компанию.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Распределение семантического ядра по посадочным страницам</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Определяем, какая страница сайта под какой запрос должна продвигаться. Например, запросы по одной услуге ведут на одну страницу, по другой услуге — на другую.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">3. Страницы сайта</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Работаем с продвигаемыми страницами, чтобы они лучше соответствовали требованиям поисковых систем и ожиданиям пользователей.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Техническая оптимизация страниц по SEO-чек-листу (200+ пунктов)</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Проверяем и исправляем большое количество SEO-мелочей и технических моментов на страницах: заголовки, ссылки, дубли, ошибки, скорость, индексацию, структуру, микроразметку и другие параметры.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Оптимизация Title, Description, H1 и структуры страниц</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Настраиваем основные SEO-элементы страницы. Title — заголовок страницы для поисковика. Description — краткое описание в поиске. H1 — главный заголовок страницы. Структура — логика блоков.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Оптимизация страниц под мобильные устройства</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Проверяем, чтобы страницы нормально открывались и удобно использовались на телефоне: текст читался, кнопки нажимались, формы работали, ничего не съезжало.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Работа с поведенческими факторами</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Делаем страницы удобнее и понятнее, чтобы посетители дольше оставались на сайте, переходили по разделам и чаще оставляли заявки.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Усиление коммерческих факторов и E-E-A-T</span></div><p class="v33-task-desc" style="padding: 14px 16px;">E-E-A-T — факторы доверия к сайту и компании. Добавляем информацию о компании, опыте, специалистах, кейсах, отзывах, гарантиях, сертификатах, условиях работы.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Написание продающих SEO-текстов и заполнение контентом</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Пишем тексты, закрывающие вопросы клиента. Наполняем страницы нужными материалами: текстами, картинками, видео, таблицами, блоками преимуществ.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">4. Работа с конверсией и лидами <span class="v33-tag-text">• Только Тариф Лиды</span></span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Дополнительно смотрим не только позиции и трафик, но и то, как пользователи оставляют обращения на сайте.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ целевых действий и проверка форм/способов связи</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Анализируем заявки, звонки, клики, отправку форм и переходы в мессенджеры. Проверяем удобство способов связи и отсутствие ошибок на сайте.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ посадочных страниц и рекомендации по конверсии</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Оцениваем готовность коммерческих страниц приводить заявки. Даем рекомендации: добавить кнопки, усилить оффер, улучшить структуру, цены, отзывы и формы.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Точечные доработки дизайна в рамках задач по конверсии</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Вносим небольшие визуальные и структурные изменения, напрямую влияющие на получение заявок: кнопки, формы, блоки доверия, понятность страницы.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">5. Сайт в целом</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Оптимизируем сайт не только на уровне отдельных страниц, но и как единую систему.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Внутренняя перелинковка и внешняя оптимизация</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Настраиваем внутренние ссылки между страницами. Работаем с внешними справочниками, каталогами, профильными площадками и упоминаниями компании.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Базовая оптимизация сервера и внедрение SEO-доработок</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Проверяем доступность, скорость загрузки и внедряем правки метатегов, заголовков, текстов, структуры страниц и технических параметров.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">6. Сопровождение и отчетность</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Регулярно контролируем ход работ, показываем динамику результата и объясняем клиенту, что сделано по проекту.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Отчеты по позициям и лидам</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Показываем динамику позиций в ТОП-10 (5 раз в месяц) и отчет по целевым обращениям/лидам (1 раз в месяц в тарифе «Лиды»).</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Персональный менеджер и гарантия / Moneyback</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Закрепляем менеджера для связи и фиксируем гарантию по договору. В случае невыполнения условий гарантии применяется механизм Moneyback.</p></div></div></div></div>
+
+      <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 24px; margin-top: 24px;">
+        <div style="display: inline-block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #ffffff; background: #0f172a; padding: 6px 12px; border-radius: 6px; margin-bottom: 16px;">
+          Что не входит в SEO:
+        </div>
+        <div class="lux-excluded-grid">
+          <div class="lux-excluded-item"><b>GEO & SGE / AI-оптимизация:</b><br>Отдельная работа под нейропоиск и AI-ответы.</div>
+          <div class="lux-excluded-item"><b>Ускорение ИИ:</b><br>Искусственное ускорение индексации через AI-инструменты.</div>
+          <div class="lux-excluded-item"><b>Новые страницы:</b><br>Создание новых полноценных посадочных страниц.</div>
+          <div class="lux-excluded-item"><b>Редизайн сайта:</b><br>Полное изменение дизайна сайта.</div>
+          <div class="lux-excluded-item"><b>Контекстная реклама:</b><br>Настройка и ведение Яндекс Директа.</div>
+          <div class="lux-excluded-item"><b>Гарантия продаж:</b><br>Гарантия суммы выручки или работы отдела продаж.</div>
+          <div class="lux-excluded-item"><b>Работа по задачам клиента:</b><br>Это отдельная услуга. Тех. поддержка.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- РАЗДЕЛ 2: КОНТЕКСТНАЯ РЕКЛАМА -->
+  <!-- ======================================================== -->
+  <div id="sw-panel-context" style="display: none;">
+    
+    <h2 style="margin: 0 0 1.5rem 0; font-size: 32px; color: #0f172a; font-weight: 900; letter-spacing: -0.02em;">
+      Тарифы и условия работы (Контекстная реклама)
+    </h2>
+
+    <!-- ТАРИФ: КОНТЕКСТНАЯ РЕКЛАМА -->
+    <div class="tariff-info-card">
+      <span style="position: absolute; top: 28px; right: 32px; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 14px; border-radius: 8px;">
+        Основной
+      </span>
+
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid #e2e8f0;">
+        <div style="max-width: 620px;">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.1em; margin-bottom: 8px;">Платное продвижение</div>
+          <div role="heading" aria-level="3" style="margin: 0 0 12px 0; font-size: 32px; font-weight: 900; color: #0f172a; letter-spacing: -0.02em;">Яндекс Директ</div>
+          <p style="font-size: 16px; color: #334155; line-height: 1.6; margin: 0; font-weight: 500;">
+            Яндекс Директ — это формат платного продвижения, где реклама показывается пользователям в поиске Яндекса и рекламной сети Яндекса (РСЯ). В тариф включено все под ключ с гарантией переходов.
+          </p>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 24px; border-radius: 16px; text-align: right; min-width: 250px;">
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em;">Комиссия:</div>
+          <div style="font-size: 32px; font-weight: 900; color: #0f172a; margin-top: 4px; letter-spacing: -0.02em;">50 000 ₽ <span style="font-size: 14px; font-weight: 600; color: #64748b;">/ мес</span></div>
+          <div style="font-size: 12px; color: #059669; font-weight: 700; margin-top: 6px;">вкл. 5% НДС • Фиксированная цена</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 32px 0; border-bottom: 1px solid #e2e8f0;">
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">🎯 Главная задача:</div>
+          <div style="font-size: 15px; font-weight: 500; color: #334155; line-height: 1.6;">
+            Настроить и вести рекламные кампании в Яндекс Директе под ключ, чтобы привлекать целевой трафик на сайт и достигать целей, обозначенных в медиаплане по лидам.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">👥 Кому подойдет:</div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Любым конвертящим сайтам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Сезонным бизнесам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Моно Брендам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Интернет-магазинам и услугам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Кому нужен результат сейчас</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Кому не подходит SEO</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; padding: 32px 0; border-bottom: 1px solid #e2e8f0;">
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">KPI</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">показы, клики, лиды</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Настройка</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">от 3 до 7 дней</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Первый результат</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">1-й месяц работы</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Основной результат</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">1-2 месяц работы</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Период работ</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">ежемесячно</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Отчетность</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">1 раз/мес + менеджер 👨‍💼</div>
+        </div>
+      </div>
+
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; padding-top: 32px;">
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #0f172a; margin-bottom: 10px;">
+            ⚡ Гарантия:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 600;">
+            Количество переходов, трафика и кликов по рекламным кампаниям.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 10px;">
+            💰 Рекламный бюджет Яндекса:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 600;">
+            от 100 000 – 150 000 руб. / мес (оплачивается отдельно).
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="margin: 2rem 0 1.5rem 0; font-size: 28px; color: #0f172a; font-weight: 900;">
+      Что входит в контекстную рекламу:
+    </h2>
+
+    <!-- НЕИЗМЕНЕННЫЕ АККОРДЕОНЫ КОНТЕКСТА -->
+    <div class="lux-seo-wrap">
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">1. Подготовка рекламной стратегии</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">На старте определяем, что именно будем рекламировать, кому показывать рекламу, в каких регионах и с каким бюджетом.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Предварительно смотрим сайт (это не аудит)</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Смотрим сайт клиента, товары, услуги, посадочные страницы, географию работы, преимущества, формы заявок. Это нужно, чтобы понять, можно ли запускать рекламу на текущий сайт и какие направления стоит продвигать в первую очередь.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Определение целей рекламной кампании</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Фиксируем, какой результат важен клиенту: переходы на сайт, заявки, звонки, обращения, заказы, посещение конкретных страниц или другие целевые действия.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Подготовка медиа-плана / прогноза по проекту</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Оцениваем рекламный бюджет, возможный объем трафика, прогноз по переходам и основные показатели, на которые можно ориентироваться после запуска рекламы.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Определение географии показа рекламы</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Уточняем, в каких городах, регионах нужно показывать рекламу, чтобы не тратить бюджет на нецелевую аудиторию.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Определение рекламируемых товаров или услуг</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Выбираем направления, которые будут продвигаться в рекламе. Это могут быть отдельные услуги, категории товаров, сезонные предложения, приоритетные направления или наиболее маржинальные продукты.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">2. Подготовка поисковых запросов</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Формируем список запросов, по которым пользователи будут видеть рекламу в поиске Яндекса.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Сбор поисковых запросов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Подбираем запросы, по которым потенциальные клиенты могут искать товар или услугу клиента в Яндексе.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Редактирование существующих поисковых запросов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Если у клиента уже есть список запросов или ранее запускалась реклама, проверяем и дорабатываем текущую семантику: убираем лишнее, добавляем недостающие направления, корректируем формулировки.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta before-pay">До оплаты</span><span class="v33-task-title">Подбор эффективных коммерческих запросов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Выбираем не просто популярные фразы, а запросы с намерением купить, заказать, рассчитать стоимость, обратиться в компанию или получить услугу.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Кластеризация запросов по группам</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Разбиваем запросы на понятные группы по смыслу, товару, услуге, категории или направлению. Это нужно, чтобы объявления были точнее и соответствовали тому, что ищет пользователь.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Разделение запросов по направлениям</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Отдельно группируем разные товары, услуги, регионы, бренды или типы спроса, чтобы не смешивать все в одну рекламную кампанию.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Первичная минусовка нецелевых запросов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Добавляем минус-слова, чтобы реклама не показывалась по нерелевантным фразам. Например, исключаем запросы со словами “бесплатно”, “скачать”, “своими руками” и т.д.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">3. Создание рекламных кампаний и объявлений</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Подготавливаем рекламные кампании, объявления и креативы, которые будут показываться пользователям.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Создание структуры рекламных кампаний</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Формируем логику рекламного кабинета: какие кампании будут отдельно, какие группы объявлений нужны, как разделить поиск, РСЯ, направления, регионы и посадочные страницы.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Создание рекламных кампаний</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Создаём кампании в Яндекс Директе и настраиваем их под выбранные цели, бюджет, географию, аудиторию и формат показа.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Написание продающих текстов рекламных объявлений</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Пишем объявления, которые объясняют предложение клиента, показывают преимущества и мотивируют пользователя перейти на сайт.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Создание рекламных объявлений</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Собираем объявления в рекламном кабинете: заголовки, тексты, ссылки, уточнения, быстрые ссылки и другие элементы, помогающие сделать рекламу заметнее.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Подбор посадочных страниц для рекламных объявлений</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Определяем, на какие страницы сайта вести пользователей, чтобы человек сразу попадал на нужный товар, услугу или форму заказа.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Создание креативов для РСЯ</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Подготавливаем визуальные материалы для Рекламной сети Яндекса: баннеры, изображения и креативы для объявлений на сайтах-партнерах.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">4. Настройка рекламного кабинета</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Настраиваем правила показа рекламы, ограничения бюджета, стратегии и технические параметры кампаний.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Настройка стратегий</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Выбираем, по какому принципу Яндекс будет показывать рекламу и управлять ставками: например, ориентация на клики, конверсии или трафик.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Настройка дневных и недельных лимитов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Ограничиваем расходы, чтобы рекламный бюджет распределялся контролируемо и не расходовался слишком быстро.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Ограничение рекламного бюджета</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Настраиваем бюджетные рамки, в которых должны работать рекламные кампании.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Настройка географии показа</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Указываем регионы, города или зоны, где должна показываться реклама, чтобы отсечь нерелевантные локации.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Настройка времени показа рекламы</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Определяем дни и часы работы рекламы (например, только в рабочее время отдела продаж или круглосуточно).</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Подготовка кампаний к запуску</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Проверяем все настройки перед стартом: запросы, объявления, ссылки, бюджеты, стратегии, цели и гео-таргетинг.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">5. Модерация и запуск рекламных кампаний</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Перед запуском реклама проходит проверку со стороны Яндекса, после чего кампании можно включать.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Прохождение модерации Яндекс</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Отправляем объявления на проверку Яндекса, чтобы система подтвердила их соответствие правилам площадки.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Редактирование объявлений при необходимости</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Если модерация отклоняет объявление или просит правки, оперативно корректируем текст, креативы или ссылки.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Исправление замечаний модерации</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Устраняем причины отклонения: некорректные формулировки, спорные слова или технические нюансы посадочной страницы.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Запуск рекламных кампаний после одобрения</span></div><p class="v33-task-desc" style="padding: 14px 16px;">После успешной модерации активируем кампании и начинаем получать первые показы и клики.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Проверка корректности первых показов и переходов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Сразу после запуска контролируем, что реклама идет без сбоев, клики приводят на нужные страницы, а бюджет расходуется плавно.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">6. Аналитика и доступы</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Подключаем инструменты аналитики, чтобы видеть не только клики, но и реальные действия пользователей на сайте.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Установка счетчика Яндекс.Метрики</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Подключаем или проверяем работу Яндекс.Метрики для отслеживания источников трафика и посещаемости.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Настройка целей в Яндекс.Метрике</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Настраиваем цели для оценки результата: отправка заявки, звонок, переход в мессенджер, клик по кнопке или покупка.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Настройка Call Tracking при необходимости</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Если важны звонки с сайта, подключаем систему коллтрекинга, чтобы точно знать, какая реклама дала телефонные обращения.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Настройка клиентского доступа для просмотра основной статистики</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Предоставляем клиенту доступ для прозрачного отслеживания ключевых показателей рекламных кампаний.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Предоставление представительского доступа при необходимости</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Если работа ведет в нашем агентском кабинете, даем представительский доступ к статистике проекта.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Проверка корректности отслеживания целевых действий</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Убеждаемся, что все действия (заявки, формы, клики) фиксируются в системе без сбоев и накладок.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">7. Ежемесячное ведение рекламных кампаний</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">После запуска рекламные кампании нужно регулярно анализировать, корректировать и улучшать.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Регулярный контроль рекламных кампаний</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Отслеживаем работу рекламы в динамике: наличие показов, кликов, открутку бюджета, исключая резкие просадки.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ эффективности поисковых запросов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Выявляем рабочие запросы, дающие конверсии, и сливные ключи, расходующие средства без результата.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ трафика и трат</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Оцениваем общее число посетителей, общие расходы и проверяем соответствие расходов первоначальному прогнозу.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ результатов и попадания в прогноз</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Сравниваем реальные цифры (переходы, стоимость клика, конверсии) с показателями из медиаплана.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ поведения пользователей на сайте</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Изучаем поведение пользователей после перехода из рекламы: отказы, глубину просмотра и активность на целевых страницах.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ конкурентов в рекламной выдаче</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Изучаем рекламные тексты и акционные предложения конкурентов в нише для своевременного усиления своих офферов.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">8. Оптимизация рекламных кампаний</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Улучшаем рекламу на основе накопленной статистики, чтобы бюджет работал с максимальной отдачей.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Минусовка слов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Регулярно пополняем списки минус-слов по реальным поисковым отчетам, чтобы исключить показ объявления по нецелевым фразам.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Изменение стратегий</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Меняем и перенастраиваем типы автостратегий, если текущий формат перестает давать необходимый объем заявок.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ обучения стратегий</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Следим за тем, как автостратегии Яндекса обучаются на конверсиях, и вносим корректировки при сбоях в обучении.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Корректировка рекламных кампаний</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Вносим рабочие правки: корректируем ставки, таргетинги, тексты, площадки РСЯ, гео-расписание и посадочные страницы.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Оптимизация расходов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Отключем убыточные ключи и площадки, снижая неэффективные расходы и перенаправляя средства на сильные направления.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Масштабирование эффективных кампаний</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Увеличиваем охват и лимиты у успешных кампаний для роста объема целевых кликов и обращений.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Тестирование объявлений и креативов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Тестируем новые офферы, заголовки и картинки в РСЯ, находя решения с более высоким CTR и снижая стоимость за клик.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Корректировка посадочных страниц в рамках рекомендаций</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Формируем рекомендации по улучшению коммерческих элементов посадочных страниц для роста конверсии из клика в заявку.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">9. Контроль бюджета</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Следим за расходами и эффективностью использования рекламного бюджета.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Контроль дневных и недельных лимитов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Следим за тем, чтобы списания происходили ровно в рамках выставленных плановых лимитов.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ рекламных расходов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Проверяем целесообразность затрат на отдельные регионы, ключи и объявления.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Контроль перерасхода бюджета</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Не допускаем неплановых списаний и перерасхода денежных средств сверх согласованной суммы.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Рекомендации по масштабированию бюджета</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Предлагаем разумное увеличение бюджета на те направления, которые приносят окупаемый результат.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Перераспределение бюджета между кампаниями при необходимости</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Оперативно переносим доступные деньги с менее эффективных кампаний на более конверсионные.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Контроль стоимости перехода и целевого действия</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Отслеживаем стоимость каждого клика и итоговую цену заявки/звонка в рамках заданных рамок.</p></div></div></div></div>
+      <div class="v33-accordion"><div class="v33-summary" onclick="this.parentElement.classList.toggle('open')"><span class="v33-title">10. Сопровождение и отчетность</span><span class="v33-arrow">▼</span></div><div class="v33-content"><p class="v33-intro">Регулярно контролируем ход работ, показываем динамику результата и объясняем клиенту, что сделано по проекту.</p><div class="v33-task-list"><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Персональный менеджер</span></div><p class="v33-task-desc" style="padding: 14px 16px;">За проектом закрепляется менеджер, помогающий оперативно решать возникающие вопросы и вести коммуникацию.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Отчет по рекламным кампаниям</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Предоставляем подробный ежемесячный отчет по всем ключевым метрикам: показы, клики, расход и динамика показателей.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Отчет по целевым действиям при настроенной аналитике</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Показываем точное количество сформированных лидов, звонков и заявок за отчетный период.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Анализ ключевых показателей</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Анализируем зоны роста и узкие места в работе кампаний, намечая план оптимизации на следующий период.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Достижение целей, обозначенных в медиа-плане</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Ориентируем текущее ведение рекламных кампаний на выполнение зафиксированных KPI.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Гарантия по количеству переходов</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Фиксируем юридическую гарантию по количеству получаемого трафика по условиям договора и медиаплана.</p></div><div class="v33-task-card" style="padding: 0; overflow: hidden; background: #ffffff; border: 1px solid #e2e8f0;"><div class="v33-task-header" style="justify-content: flex-start; gap: 10px; padding: 12px 16px; background: #f8fafc; border-bottom: 1px solid #e2e8f0; margin: 0;"><span class="v33-task-meta after-pay">После оплаты</span><span class="v33-task-title">Рекомендации по улучшению результата</span></div><p class="v33-task-desc" style="padding: 14px 16px;">Консультируем по шагам, которые помогут повысить конверсию: улучшение посадочных страниц, офферов и бюджета.</p></div></div></div></div>
+
+      <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 16px; padding: 24px; margin-top: 24px;">
+        <div style="display: inline-block; font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #ffffff; background: #0f172a; padding: 6px 12px; border-radius: 6px; margin-bottom: 16px;">
+          Что не входит в Контекстную рекламу:
+        </div>
+        <div class="lux-excluded-grid">
+          <div class="lux-excluded-item"><b>Рекламный бюджет Яндекса:</b><br>Оплачивается отдельно напрямую в Яндекс.</div>
+          <div class="lux-excluded-item"><b>Доработки сайта:</b><br>Правки кода, программирование и верстка страниц.</div>
+          <div class="lux-excluded-item"><b>Новые посадочные страницы:</b><br>Создание полноценных новых страниц под ключи.</div>
+          <div class="lux-excluded-item"><b>Разработка сайта:</b><br>Создание сайтов, интернет-магазинов или каталогов.</div>
+          <div class="lux-excluded-item"><b>Оплата Call Tracking:</b><br>Сервисы коллтрекинга оплачиваются напрямую разработчику.</div>
+          <div class="lux-excluded-item"><b>SEO-продвижение:</b><br>Работа с органической выдачей поисковиков.</div>
+          <div class="lux-excluded-item"><b>Сквозная аналитика:</b><br>Сложные CRM-интеграции до чистой выручки.</div>
+          <div class="lux-excluded-item"><b>Обработка заявок:</b><br>Работа и качество менеджеров отдела продаж.</div>
+          <div class="lux-excluded-item"><b>Гарантия продаж:</b><br>Гарантируются клики/переходы, но не финансовые сделки.</div>
+          <div class="lux-excluded-item"><b>GEO & SGE / AI:</b><br>Отдельная работа под нейровыдачу.</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- РАЗДЕЛ 3: ТЕХНИЧЕСКАЯ ПОДДЕРЖКА -->
+  <!-- ======================================================== -->
+  <div id="sw-panel-support" style="display: none;">
+    
+    <h2 style="margin: 0 0 1.5rem 0; font-size: 32px; color: #0f172a; font-weight: 900; letter-spacing: -0.02em;">
+      Тарифы на техническую поддержку сайта
+    </h2>
+
+    <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 16px; padding: 20px 24px; margin-bottom: 32px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+      <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 280px;">
+        <span style="font-size: 11px; font-weight: 800; color: #ffffff; background: #0f172a; padding: 6px 12px; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.08em; white-space: nowrap;">ОБЯЗАТЕЛЬНО:</span>
+        <div style="font-size: 14px; font-weight: 600; color: #0f172a;">
+          Минимальный период работы по ТП — <b>от 3 месяцев</b> (суммарно не менее 45 часов работ).
+        </div>
+      </div>
+      <div style="font-size: 13px; font-weight: 700; color: #64748b; white-space: nowrap;">
+        Такие дела.
+      </div>
+    </div>
+
+    <!-- СЕТКА 4 ТАРИФОВ ТЕХПОДДЕРЖКИ -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 32px;">
+      
+      <!-- ТАРИФ 1: БАЗОВЫЙ -->
+      <div class="tariff-info-card" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+        <div>
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.08em; margin-bottom: 4px;">Тариф №1</div>
+          <div style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">Базовый</div>
+          
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Стоимость:</div>
+            <div style="font-size: 26px; font-weight: 900; color: #0f172a; margin-top: 2px;">19 000 ₽ <span style="font-size: 12px; font-weight: 600; color: #64748b;">/ мес</span></div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: #334155;">
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Часов в тарифе:</b> 5 часов</div>
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Время реакции:</b> 8 часов</div>
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Стоимость часа:</b> 3 800 ₽</div>
+            <div><b>Бэкап:</b> Ежемесячно</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ТАРИФ 2: СТАНДАРТ -->
+      <div class="tariff-info-card" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+        <div>
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.08em; margin-bottom: 4px;">Тариф №2</div>
+          <div style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">Стандарт</div>
+          
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Стоимость:</div>
+            <div style="font-size: 26px; font-weight: 900; color: #0f172a; margin-top: 2px;">28 000 ₽ <span style="font-size: 12px; font-weight: 600; color: #64748b;">/ мес</span></div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: #334155;">
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Часов в тарифе:</b> 8 часов</div>
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Время реакции:</b> 6 часов</div>
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Стоимость часа:</b> 3 500 ₽</div>
+            <div><b>Бэкап:</b> Ежемесячно</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ТАРИФ 3: ОПТИМУМ -->
+      <div class="tariff-info-card" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+        <span style="position: absolute; top: 16px; right: 16px; background: #0f172a; color: #ffffff; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 10px; border-radius: 6px;">Основной</span>
+        <div>
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.08em; margin-bottom: 4px;">Тариф №3</div>
+          <div style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">Оптимум</div>
+          
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Стоимость:</div>
+            <div style="font-size: 26px; font-weight: 900; color: #0f172a; margin-top: 2px;">48 000 ₽ <span style="font-size: 12px; font-weight: 600; color: #64748b;">/ мес</span></div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: #334155;">
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Часов в тарифе:</b> 15 часов</div>
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Время реакции:</b> 4 часа</div>
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Стоимость часа:</b> 3 200 ₽</div>
+            <div><b>Бэкап:</b> Ежемесячно</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ТАРИФ 4: ПРЕМИУМ -->
+      <div class="tariff-info-card" style="padding: 28px; display: flex; flex-direction: column; justify-content: space-between; margin-bottom: 0;">
+        <div>
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.08em; margin-bottom: 4px;">Тариф №4</div>
+          <div style="font-size: 24px; font-weight: 900; color: #0f172a; margin-bottom: 16px;">Премиум</div>
+          
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+            <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase;">Стоимость:</div>
+            <div style="font-size: 26px; font-weight: 900; color: #0f172a; margin-top: 2px;">84 000 ₽ <span style="font-size: 12px; font-weight: 600; color: #64748b;">/ мес</span></div>
+          </div>
+
+          <div style="display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: #334155;">
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Часов в тарифе:</b> 30 часов</div>
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Время реакции:</b> 2 часа</div>
+            <div style="padding-bottom: 8px; border-bottom: 1px solid #e2e8f0;"><b>Стоимость часа:</b> 2 800 ₽</div>
+            <div><b>Бэкап:</b> Ежемесячно</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- РАЗДЕЛ 4: РАЗРАБОТКА -->
+  <!-- ======================================================== -->
+  <div id="sw-panel-dev" style="display: none;">
+    <h2 style="margin: 0 0 1.5rem 0; font-size: 32px; color: #0f172a; font-weight: 900; letter-spacing: -0.02em;">
+      Разработка сайтов
+    </h2>
+
+    <!-- ЕДИНЫЙ ВНЕШНИЙ КОНТЕЙНЕР (РАЗРАБОТКА ПО ВАРИАНТУ 1С) -->
+    <div class="tariff-info-card">
+      
+      <!-- БЕЙДЖ -->
+      <span style="position: absolute; top: 28px; right: 32px; background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; padding: 6px 14px; border-radius: 8px;">
+        Быстрый старт
+      </span>
+
+      <!-- ШАПКА С БЛОКОМ ЦЕНЫ -->
+      <div style="display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 32px; padding-bottom: 32px; border-bottom: 1px solid #e2e8f0;">
+        <div style="max-width: 620px;">
+          <div style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: #64748b; letter-spacing: 0.1em; margin-bottom: 8px;">
+            Разработка на 1С-Битрикс
+          </div>
+          <div role="heading" aria-level="3" style="margin: 0 0 12px 0; font-size: 32px; font-weight: 900; color: #0f172a; letter-spacing: -0.02em;">
+            Сайт на шаблоне
+          </div>
+          <p style="font-size: 16px; color: #334155; line-height: 1.6; margin: 0; font-weight: 500;">
+            Использование готового «коробочного» решения, которое настраивается и наполняется вашим контентом. Это как квартира в новостройке: можно сделать отделку и расставить мебель, но нельзя двигать несущие стены.
+          </p>
+        </div>
+
+        <!-- ВНУТРЕННИЙ БЛОК ЦЕНЫ -->
+        <div style="background: #f8fafc; border: 1px solid #cbd5e1; padding: 24px; border-radius: 16px; text-align: right; min-width: 250px;">
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em;">Стоимость:</div>
+          <div style="font-size: 32px; font-weight: 900; color: #0f172a; margin-top: 4px; letter-spacing: -0.02em;">от 250 000 ₽</div>
+          <div style="font-size: 12px; color: #475569; font-weight: 700; margin-top: 6px;">Наши работы: ~100 000 ₽ • Итого до 500 000 ₽</div>
+        </div>
+      </div>
+
+      <!-- ИНТЕРАКТИВНЫЙ АККОРДЕОН (СОСТАВ РАБОТ) -->
+      <div style="padding: 32px 0; border-bottom: 1px solid #e2e8f0;">
+        <details class="acc-details" style="width: 100%;">
+          <summary class="acc-trigger" style="list-style: none; cursor: pointer; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 16px; padding: 20px 24px; display: flex; justify-content: space-between; align-items: center; transition: all 0.25s ease;">
+            <div style="display: flex; align-items: center; gap: 16px;">
+              <div style="width: 40px; height: 40px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+                </svg>
+              </div>
+              <div>
+                <div style="font-size: 16px; font-weight: 800; color: #0f172a;">Состав работ и что входит в стоимость</div>
+                <div style="font-size: 13px; font-weight: 600; color: #64748b; margin-top: 2px;">8 ключевых этапов разработки под ключ</div>
+              </div>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span style="background: #0f172a; color: #ffffff; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; padding: 6px 12px; border-radius: 20px; animation: pulse-subtle 2s infinite;">
+                Нажмите, чтобы развернуть
+              </span>
+              <div class="acc-arrow" style="width: 32px; height: 32px; background: #ffffff; border: 1px solid #cbd5e1; border-radius: 50%; display: flex; align-items: center; justify-content: center; transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);">
+                <svg width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M1 1.5L6 6.5L11 1.5" stroke="#0F172A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </div>
+            </div>
+          </summary>
+
+          <div style="background: #f8fafc; border: 1px solid #cbd5e1; border-top: none; border-bottom-left-radius: 16px; border-bottom-right-radius: 16px; padding: 8px 24px 24px 24px;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; padding-top: 12px;">
+              
+              <div class="acc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <svg class="acc-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transform: translateX(-4px); transition: all 0.2s ease;">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <span>Лицензия 1С-Битрикс</span>
+                </div>
+              </div>
+
+              <div class="acc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <svg class="acc-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transform: translateX(-4px); transition: all 0.2s ease;">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <span>Покупка готового шаблона</span>
+                </div>
+              </div>
+
+              <div class="acc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <svg class="acc-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transform: translateX(-4px); transition: all 0.2s ease;">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <span>Установка и настройка (от 40 ч)</span>
+                </div>
+              </div>
+
+              <div class="acc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <svg class="acc-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transform: translateX(-4px); transition: all 0.2s ease;">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <span>Настройка стиля (лого, цвета)</span>
+                </div>
+              </div>
+
+              <div class="acc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <svg class="acc-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transform: translateX(-4px); transition: all 0.2s ease;">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <span>Заполнение страниц (от 30 шт)</span>
+                </div>
+              </div>
+
+              <div class="acc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <svg class="acc-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transform: translateX(-4px); transition: all 0.2s ease;">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <span>Первичная SEO-оптимизация</span>
+                </div>
+              </div>
+
+              <div class="acc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <svg class="acc-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transform: translateX(-4px); transition: all 0.2s ease;">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <span>Запуск сайта под ключ</span>
+                </div>
+              </div>
+
+              <div class="acc-item-card" style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 14px 18px; font-size: 14px; font-weight: 700; color: #0f172a; display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                  <svg class="acc-item-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="opacity: 0.4; transform: translateX(-4px); transition: all 0.2s ease;">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
+                  <span>Обучающая видеоинструкция</span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- ЗАДАЧА И АУДИТОРИЯ -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; padding: 32px 0; border-bottom: 1px solid #e2e8f0;">
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">
+            🎯 Главная задача:
+          </div>
+          <div style="font-size: 15px; font-weight: 500; color: #334155; line-height: 1.6;">
+            Запустить полностью функциональный и готовый к продажам сайт в минимальные сроки с фиксированным бюджетом без затрат на индивидуальный дизайн и сложную разработку с нуля.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 12px;">
+            👥 Кому подойдет:
+          </div>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Малому и среднему бизнесу</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Стартапам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Сайтам-визиткам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Каталогам и Лендингам</span>
+            <span style="background: #f1f5f9; padding: 6px 14px; border-radius: 8px; font-size: 13px; font-weight: 700; color: #0f172a;">Простым интернет-магазинам</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- КЛЮЧЕВЫЕ МЕТРИКИ С ИКОНКАМИ -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 24px; padding: 32px 0; border-bottom: 1px solid #e2e8f0;">
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Сроки реализации</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">от 2 нед. до 2 мес.</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="2" y="4" width="20" height="16" rx="2"></rect>
+              <line x1="2" y1="10" x2="22" y2="10"></line>
+            </svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Условия оплаты</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">50% / 50%</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Интеграция 1С</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">110 000 ₽</div>
+        </div>
+
+        <div>
+          <div style="width: 36px; height: 36px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 8px;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+            </svg>
+          </div>
+          <div style="font-size: 11px; font-weight: 800; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em;">Гарантия</div>
+          <div style="font-size: 16px; font-weight: 800; color: #0f172a; margin-top: 2px;">3 месяца</div>
+        </div>
+      </div>
+
+      <!-- ПЛЮСЫ И МИНУСЫ -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; padding-top: 32px;">
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #0f172a; margin-bottom: 10px;">
+            👍 Плюсы:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 500;">
+            <b style="color: #0f172a;">Высокая скорость:</b> сайт «из коробки» имеет готовую структуру.<br>
+            <b style="color: #0f172a;">Стоимость:</b> значительно ниже разработки с нуля, оплата в основном за лицензию, шаблон и доработки.
+          </div>
+        </div>
+
+        <div>
+          <div style="font-size: 13px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 10px;">
+            👎 Минусы:
+          </div>
+          <div style="font-size: 14px; color: #334155; line-height: 1.6; font-weight: 500;">
+            <b style="color: #0f172a;">Ограничения:</b> типовой дизайн и жесткие рамки шаблона.<br>
+            <b style="color: #0f172a;">Сложность доработок:</b> уникальные функции требуют переделки шаблона.
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

@@ -1,0 +1,361 @@
+<style>
+  .edu-glossary-native {
+    width: 100%;
+  }
+
+  /* Обертка для термина */
+  .seo-tooltip-modern {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: inherit;
+    font-weight: 600;
+    cursor: help;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #94a3b8;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: all 0.2s ease;
+    vertical-align: baseline;
+  }
+
+  /* Эффект при наведении на термин */
+  .seo-tooltip-modern:hover {
+    color: #0284c7;
+    text-decoration-color: #0284c7;
+  }
+
+  /* Кружочек со знаком вопроса */
+  .seo-tooltip-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1.5px solid #64748b;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    transform: translateY(-1px);
+  }
+
+  .seo-tooltip-modern:hover .seo-tooltip-badge {
+    border-color: #0284c7;
+    color: #0284c7;
+    background: #e0f2fe;
+  }
+
+  /* Сама всплывающая подсказка (ЧЕРНЫЙ ФОН) */
+  .seo-tooltip-box-modern {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: #0f172a; 
+    color: #f1f5f9; 
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 400;
+    white-space: normal;
+    width: max-content;
+    max-width: 260px;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #1e293b;
+    z-index: 100;
+    line-height: 1.5;
+  }
+
+  .seo-tooltip-modern:hover .seo-tooltip-box-modern {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .seo-tooltip-box-modern::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+</style>
+
+<div class="edu-glossary-native">
+
+  <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Введение в Техническую поддержку сайта</h2>
+
+  <!-- Памятка Премиум -->
+  <div style="margin: 0 0 1.5rem 0; padding: 1.15rem 1.25rem; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03); font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: flex-start; gap: 1rem;">
+    <span style="font-size: 18px; line-height: 1.2; color: #334155;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V9H11V15ZM11 7H9V5H11V7Z" fill="currentColor"/>
+      </svg>
+    </span>
+    <div>
+      <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; letter-spacing: -0.01em;">О тарифах и содержании:</div>
+      <div style="font-size: 13.5px; line-height: 1.55; color: #475569; font-weight: 400;">
+        На этой странице подробно описано, <strong>ЧТО</strong> входит в услугу технической поддержки, как строятся процессы и над чем именно мы работаем. Актуальные цены, количество часов указаны ниже в разделе тарифов.
+      </div>
+    </div>
+  </div>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    <b>Техническая поддержка сайта</b> — это <span style="text-decoration: underline; text-decoration-style: dotted; text-decoration-color: #94a3b8; text-decoration-thickness: 2px; text-underline-offset: 3px;">регулярная</span> и комплексная работа, которая помогает поддерживать ресурс в стабильном состоянии, исправлять ошибки, вносить доработки, обновлять информацию и развивать функционал. Это не просто «разовое обслуживание», а гарантия того, что сайт остается безопасным, удобным для пользователей и готовым к развитию бизнеса.
+  </p>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    Простыми словами: техническая поддержка нужна бизнесу, если сайт используется в работе, приносит прибыль и его нельзя просто оставить без контроля и развития.
+  </p>
+
+  <!-- КОМАНДА -->
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 20px; margin: 28px 0; font-family: system-ui, -apple-system, sans-serif;">
+    <h3 style="margin: 0 0 12px 0; font-size: 17px; font-weight: 700; color: #0f172a;">Кто работает над сайтом клиента?</h3>
+    <p style="margin: 0 0 16px 0; font-size: 14px; color: #475569; line-height: 1.6;">
+      В рамках услуги клиент получает не одного исполнителя, а <b>целую команду специалистов</b>. Ему не нужно отдельно общаться с программистом или дизайнером — всю коммуникацию ведет Менеджер проекта.
+    </p>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+      <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #334155; font-weight: 500;">👨‍💼 Менеджер проекта</span>
+      <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #334155; font-weight: 500;">💻 Программист</span>
+      <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #334155; font-weight: 500;">🎨 Дизайнер</span>
+      <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #334155; font-weight: 500;">⌨️ Верстальщик</span>
+      <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #334155; font-weight: 500;">📈 Маркетолог</span>
+      <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #334155; font-weight: 500;">🔍 Тестировщик</span>
+      <span style="background: #ffffff; border: 1px solid #cbd5e1; padding: 6px 12px; border-radius: 8px; font-size: 13px; color: #334155; font-weight: 500;">✍️ Копирайтер</span>
+    </div>
+  </div>
+
+  <h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">3 главных направления Техподдержки</h2>
+
+  <div style="width: 100%; margin: 32px 0; font-family: system-ui, -apple-system, sans-serif;">
+    <p style="font-size: 15.5px; line-height: 1.6; color: #475569; margin: 0 0 28px 0;">
+      Техническую поддержку можно условно разделить на три большие категории работ, которые закрывают все возможные потребности сайта:
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <!-- 01. Технические доработки -->
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">01</span>
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Технические доработки и стабильность</h3>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #fef2f2; color: #b91c1c;">
+            Ремонт и защита
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+          <div>
+            <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.6; color: #334155;">
+              Все, что связано с исправлением ошибок, стабильностью кода и бесперебойной работой ресурса. Ремонт неработающего функционала, правка поехавшей верстки, устранение вирусов и скрытых уязвимостей.
+            </p>
+          </div>
+          
+          <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Инструменты</span>
+            <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #0f172a; font-weight: 500;">
+              Резервное копирование (бэкапы), оптимизация скорости, контроль продления доменов и SSL, взаимодействие с хостингом.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 02. Модернизация -->
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">02</span>
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Модернизация сайта</h3>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #f0f9ff; color: #0369a1;">
+            Развитие функционала
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+          <div>
+            <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.6; color: #334155;">
+              Это когда сайт не просто поддерживают, а развивают: добавляют новые возможности, улучшают старые и делают интерфейс удобнее для продаж. Разработка нового функционала (калькуляторы, формы, галереи).
+            </p>
+          </div>
+          
+          <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Инструменты</span>
+            <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #0f172a; font-weight: 500;">
+              Двухсторонняя интеграция со сторонними сервисами (1С, CRM), редизайн отдельных частей, создание адаптивных версий.
+            </p>
+          </div>
+        </div>
+      </article>
+
+      <!-- 03. Контент -->
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">03</span>
+            <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Контент-поддержка</h3>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #f0fdf4; color: #15803d;">
+            Наполнение и дизайн
+          </span>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+          <div>
+            <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.6; color: #334155;">
+              Работа с информацией на сайте, чтобы он оставался актуальным и понятным. Написание и рерайт текстов, регулярное ведение новостей, обработка фотографий, создание визуального оформления (баннеры).
+            </p>
+          </div>
+          
+          <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+            <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Инструменты</span>
+            <p style="margin: 0; font-size: 13.5px; line-height: 1.5; color: #0f172a; font-weight: 500;">
+              Копирайтинг, отрисовка инфографики, повышение читабельности текстов, выгрузка товаров из различных систем.
+            </p>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+
+  <h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Форматы и принципы работы</h2>
+
+  <p style="margin: 0 0 1.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    Работа с клиентом строится в двух основных форматах в зависимости от его вовлеченности:
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 2rem; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+      <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 10px 0;">Формат 1: По задачам клиента</h3>
+      <p style="margin: 0; color: #475569; font-size: 14px; line-height: 1.6;">
+        Клиент знает, что ему нужно. Он дает задачу (или ТЗ). Мы изучаем ее, задаем вопросы, оцениваем в часах, согласовываем и выполняем.
+      </p>
+    </div>
+    
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+      <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0 0 10px 0;">Формат 2: По нашему плану</h3>
+      <p style="margin: 0; color: #475569; font-size: 14px; line-height: 1.6;">
+        Клиент не знает, какие задачи ставить. Мы сами проводим аудит, находим точки роста, формируем ТЗ, согласовываем с клиентом и внедряем.
+      </p>
+    </div>
+  </div>
+
+  <!-- Блок с этапами -->
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin: 32px 0; font-family: system-ui, -apple-system, sans-serif;">
+    <h3 style="margin: 0 0 20px 0; font-size: 20px; font-weight: 700; color: #0f172a;">Важные стандарты производства</h3>
+    
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="background: #ffffff; border: 1px solid #f1f5f9; padding: 16px; border-radius: 10px; font-size: 14px; color: #334155; line-height: 1.55;">
+        <b style="color: #0f172a;">Удобство общения:</b> Вся переписка, задачи, файлы и согласования ведутся в специально созданной рабочей группе. Это может быть чат в нашем Битрикс24 или в телеграмме.
+      </div>
+      <div style="background: #ffffff; border: 1px solid #f1f5f9; padding: 16px; border-radius: 10px; font-size: 14px; color: #334155; line-height: 1.55;">
+        <b style="color: #0f172a;">Тестовый сервер:</b> Большинство доработок сначала выполняются на локальной копии сайта. Это защищает рабочий ресурс клиента от поломок во время разработки.
+      </div>
+      <div style="background: #ffffff; border: 1px solid #f1f5f9; padding: 16px; border-radius: 10px; font-size: 14px; color: #334155; line-height: 1.55;">
+        <b style="color: #0f172a;">
+          <span class="seo-tooltip-modern">
+            Бэкапы
+            <span class="seo-tooltip-badge">?</span>
+            <span class="seo-tooltip-box-modern">Резервная копия файлов и базы данных сайта.</span>
+          </span>:
+        </b> Перед началом любых технических работ мы в обязательном порядке делаем резервную копию сайта, чтобы при любой нештатной ситуации откатить изменения назад.
+      </div>
+      <div style="background: #ffffff; border: 1px solid #f1f5f9; padding: 16px; border-radius: 10px; font-size: 14px; color: #334155; line-height: 1.55;">
+        <b style="color: #0f172a;">Прозрачная отчетность:</b> Ежемесячно готовится отчет о проделанной работе с детализацией потраченных часов, а также формируются закрывающие акты.
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Красные флаги и Ограничения (Важно!)</h2>
+
+  <p style="margin: 0 0 1.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    Чтобы не сформировать у клиента ложных ожиданий, менеджер должен четко понимать, как расходуются часы и какие задачи <b>НЕ входят</b> в зону нашей компетенции.
+  </p>
+
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin: 20px 0 3rem 0; font-family: system-ui, -apple-system, sans-serif;">
+    
+    <!-- ПРАВИЛА ЧАСОВ -->
+    <div style="background: #ffffff; border: 1px solid #fef08a; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px -2px rgba(202, 138, 4, 0.04);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #fef9c3;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h3 style="color: #854d0e; margin: 0; font-size: 18px; font-weight: 700;">Пакеты часов</h3>
+        </div>
+      </div>
+      
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: #fef9c3; border: 1px solid #fef08a; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #713f12; display: flex; align-items: flex-start; gap: 10px;">
+          <span style="font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+          <div>
+            <b>Часы не переносятся:</b> Неиспользованные часы сгорают в конце месяца. Если их копить, это нарушит планирование отдела разработки.
+          </div>
+        </div>
+        <div style="background: #fef9c3; border: 1px solid #fef08a; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #713f12; display: flex; align-items: flex-start; gap: 10px;">
+          <span style="font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+          <div>
+            <b>Если нет задач:</b> Мы не даем часам просто сгореть. Мы сами предлагаем провести аудит, анализ скорости или конкурентов, чтобы выработать полезные доработки.
+          </div>
+        </div>
+        <div style="background: #fef9c3; border: 1px solid #fef08a; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #713f12; display: flex; align-items: flex-start; gap: 10px;">
+          <span style="font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+          <div>
+            <b>Несогласие с оценкой:</b> Если клиенту кажется, что часов на задачу выделено много, менеджер проекта детально объясняет сложность и возможность разбить задачу на этапы.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ЧЕГО МЫ НЕ ДЕЛАЕМ -->
+    <div style="background: #ffffff; border: 1px solid #fee2e2; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px -2px rgba(153, 27, 27, 0.04);">
+      <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #fef2f2;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <h3 style="color: #7f1d1d; margin: 0; font-size: 18px; font-weight: 700;">Что НЕ входит в поддержку</h3>
+        </div>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 10px;">
+        <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #991b1b; display: flex; align-items: flex-start; gap: 10px;">
+          <span style="color: #ef4444; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+          <div>
+            <b>Нет поддержки 24/7:</b> Работаем по производственному календарю (5/2, 9:00-18:00). Если сайт падает ночью, мы это не чиним. В выходные дежурный программист подключается <i>только</i> к критичным сбоям.
+          </div>
+        </div>
+        <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #991b1b; display: flex; align-items: flex-start; gap: 10px;">
+          <span style="color: #ef4444; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+          <div>
+            <b>Стек и Конструкторы:</b> Мы работаем с 1С-Битрикс, PHP, HTML/CSS/JS. Мы <b>не берем</b> проекты на Python, Java, C#, мобильные приложения (Swift, Kotlin) и конструкторы (Wix, Ucoz, Tilda и др).
+          </div>
+        </div>
+        <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #991b1b; display: flex; align-items: flex-start; gap: 10px;">
+          <span style="color: #ef4444; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+          <div>
+            <b>Мы не 
+              <span class="seo-tooltip-modern">
+                DevOps
+                <span class="seo-tooltip-badge">?</span>
+                <span class="seo-tooltip-box-modern">Специалисты по глубокому администрированию и настройке сложной серверной инфраструктуры.</span>
+              </span>:
+            </b> Помогаем с базовыми настройками хостинга, но не берем на себя полноценное администрирование серверов клиента.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

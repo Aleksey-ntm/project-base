@@ -1,0 +1,884 @@
+/* ================================================================== */
+/* ИЗОЛИРОВАННЫЕ СТИЛИ ПОРТАЛА ОБУЧЕНИЯ (CSS MODULE)                 */
+/* ================================================================== */
+
+.educationPortalContainer {
+  width: 100%;
+  overflow: visible !important;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.6; 
+  color: #0f172a; 
+  background: #ffffff;
+  -webkit-font-smoothing: antialiased; 
+  display: flex; 
+  flex-direction: column; 
+  min-height: 100vh;
+}
+
+.educationPortalContainer * { 
+  box-sizing: border-box; 
+}
+
+/* ================================================================== */
+/* ЗАКРЕПЛЕННЫЙ ХЕДЕР И ВЕРХНЕЕ МЕНЮ                                  */
+/* ================================================================== */
+
+:global(.global-header), .globalHeader {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 64px !important;
+  z-index: 1000 !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid #e2e8f0;
+  margin: 0 !important;
+  transform: translateZ(0) !important;
+}
+
+.topSectionsNav { 
+  position: fixed !important;
+  top: 64px !important;
+  left: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  height: 48px !important;
+  z-index: 999 !important; 
+  background: #ffffff !important;
+  border-bottom: 1px solid #f1f5f9;
+  margin: 0 !important;
+  transform: translateZ(0) !important;
+}
+
+.topNavInside { 
+  display: flex; 
+  gap: 24px; 
+  height: 48px; 
+  align-items: center; 
+  padding: 0 max(20px, calc((100vw - 1600px) / 2)); 
+}
+
+.topSectionLink { 
+  font-size: 14px; 
+  font-weight: 600; 
+  color: #64748b; 
+  text-decoration: none; 
+  height: 100%; 
+  display: inline-flex; 
+  align-items: center; 
+  position: relative; 
+  transition: color 0.15s ease; 
+  border: none; 
+  background: transparent; 
+  cursor: pointer; 
+}
+.topSectionLink:hover { color: #0f172a; }
+.topSectionLink.active { color: #0284c7; }
+.topSectionLink.active::after { 
+  content: ''; 
+  position: absolute; 
+  bottom: -1px; 
+  left: 0; 
+  right: 0; 
+  height: 2px; 
+  background: #0284c7; 
+  border-radius: 2px; 
+}
+
+/* ================================================================== */
+/* ОСНОВНАЯ СЕТКА И МОНОЛИТНЫЕ САЙДБАРЫ                               */
+/* ================================================================== */
+
+.mainWrapper { 
+  display: grid; 
+  grid-template-columns: 
+      max(20px, calc((100vw - 1600px) / 2)) 
+      280px 
+      1fr 
+      280px 
+      max(20px, calc((100vw - 1600px) / 2)); 
+  width: 100%; 
+  margin-top: 0 !important;
+  align-items: start !important; 
+  min-height: 100vh;
+  transition: none !important; /* Убираем рассинхрон грида */
+}
+
+.navSidebar,
+.rightSidebar {
+  transition: none !important; /* Убираем растягивание сайдбаров */
+}
+
+.contentInner {
+  transition: none !important; /* Убираем плавное расплывание текста */
+}
+
+/* КНОПКА СВОРАЧИВАНИЯ ТОЖЕ ПЕРЕНОСИТСЯ МГНОВЕННО ПО КООРДИНАТАМ */
+.sidebarBottomToggleBtn {
+  transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+}
+
+/* МИКРО-ФЕЙД ДЛЯ СГЛАЖИВАНИЯ МГНОВЕННОГО РЕНДЕРА КОНТЕНТА */
+.sidebarRe-rendering {
+  opacity: 0.1;
+  pointer-events: none;
+  transition: opacity 0.08s ease-in-out;
+}
+
+.leftCollapsed .mainWrapper {
+  grid-template-columns: max(20px, calc((100vw - 1600px) / 2)) 68px 1fr 280px max(20px, calc((100vw - 1600px) / 2));
+}
+
+.rightCollapsed .mainWrapper {
+  grid-template-columns: max(20px, calc((100vw - 1600px) / 2)) 280px 1fr 48px max(20px, calc((100vw - 1600px) / 2));
+}
+
+.leftCollapsed.rightCollapsed .mainWrapper {
+  grid-template-columns: max(20px, calc((100vw - 1600px) / 2)) 68px 1fr 48px max(20px, calc((100vw - 1600px) / 2));
+}
+
+.navSidebarWrapper,
+.rightSidebarWrapper {
+  position: static !important;
+  height: 100%;
+  z-index: 90;
+}
+
+.navSidebarWrapper { 
+  grid-column: 1 / 3; 
+  position: relative !important;
+}
+.rightSidebarWrapper { grid-column: 4 / 6; }
+
+.navSidebar { 
+  position: fixed !important;
+  top: 0px !important;
+  left: 0 !important;
+  width: calc(max(20px, calc((100vw - 1600px) / 2)) + 280px) !important; 
+  height: 100vh !important;
+  overflow-y: auto !important; 
+  overflow-x: visible !important; 
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 15px 12px 20px max(20px, calc((100vw - 1600px) / 2)) !important;
+  border-right: 1px solid #e2e8f0; 
+  background: #ffffff !important;
+  z-index: 90 !important;
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 transparent;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.rightSidebar { 
+  position: fixed !important;
+  top: 0px !important;
+  right: 0 !important;
+  width: calc(max(20px, calc((100vw - 1600px) / 2)) + 280px) !important; 
+  height: 100vh !important;
+  overflow: visible !important; 
+  display: flex !important;
+  flex-direction: column !important;
+  padding: 15px max(20px, calc((100vw - 1600px) / 2)) 40px 16px !important; /* Установили 15px сверху */
+  border-left: none !important;
+  background: #ffffff !important;
+  z-index: 90 !important;
+  transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              padding 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.navSidebar::-webkit-scrollbar,
+.rightSidebar::-webkit-scrollbar { width: 5px; }
+.navSidebar::-webkit-scrollbar-track,
+.rightSidebar::-webkit-scrollbar-track { background: transparent; }
+.navSidebar::-webkit-scrollbar-thumb,
+.rightSidebar::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+.navSidebar::-webkit-scrollbar-thumb:hover,
+.rightSidebar::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+
+.leftCollapsed .navSidebar {
+  width: calc(max(20px, calc((100vw - 1600px) / 2)) + 68px) !important;
+  padding-left: max(20px, calc((100vw - 1600px) / 2)) !important;
+  padding-right: 0 !important;
+}
+
+.contentContainer { 
+  grid-column: 3 / 4; 
+  position: relative; 
+  padding: 15px 36px 120px 36px !important;
+}
+
+.contentLoadingState {
+  opacity: 0.45;
+  pointer-events: none;
+  transition: opacity 0.15s ease;
+}
+
+/* ================================================================== */
+/* ЛЕВОЕ МЕНЮ (РАЗВЕРНУТОЕ СОСТОЯНИЕ)                                */
+/* ================================================================== */
+
+.navSidebarTitle { 
+  font-size: 11px; 
+  font-weight: 700; 
+  color: #94a3b8; 
+  margin-bottom: 8px; 
+  margin-top: 20px; 
+  padding-left: 48px !important;
+  text-transform: uppercase; 
+  letter-spacing: 0.05em; 
+  white-space: nowrap; 
+  overflow: hidden;
+  width: 180px; 
+  opacity: 1; 
+  transform: translateX(0);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease !important;
+}
+.navSidebarTitle:first-of-type { margin-top: 0; }
+
+.tabSwitcher, .navList { list-style: none; padding: 0; margin: 0; width: 100%; display: block; }
+.tabSwitcher { margin-bottom: 20px; }
+.navItem { margin-bottom: 4px; display: block; width: 100%; }
+
+.tabSwitchBtn, .navLink { 
+  position: relative;
+  display: flex !important; 
+  align-items: center !important; 
+  justify-content: flex-start !important;
+  gap: 12px !important; 
+  width: 100%; 
+  min-height: 40px; 
+  padding: 8px 12px !important; /* Было 8px 14px, меняем на 8px 12px */
+  color: #475569;
+  text-decoration: none; 
+  border-radius: 10px; 
+  font-weight: 500; 
+  font-size: 14px; 
+  text-align: left; 
+  background: transparent; 
+  border: none; 
+  cursor: pointer;
+  overflow: hidden !important; 
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.navLink:hover, .tabSwitchBtn:hover { background: #f8fafc; color: #0f172a; }
+.navLink.active { background: #f0f9ff; color: #0284c7; font-weight: 600; }
+.tabSwitchBtn.active { background: #0f172a; color: #ffffff; }
+
+.tabBtnIcon, .navIconFa { 
+  display: inline-flex !important; 
+  align-items: center !important; 
+  justify-content: center !important;
+  width: 20px !important; 
+  min-width: 20px !important; 
+  height: 20px !important; 
+  font-size: 18px; 
+  color: #94a3b8; 
+  flex-shrink: 0 !important; 
+  text-align: center;
+  transition: color 0.2s ease;
+  margin: 0 !important; 
+}
+.navLink.active .navIconFa { color: #0284c7; }
+.tabSwitchBtn.active .tabBtnIcon { color: #38bdf8; }
+
+.tabBtnText, .navItemText {
+  width: 100% !important;
+  min-width: 0 !important;
+  white-space: nowrap; 
+  overflow: hidden !important; 
+  text-overflow: ellipsis; 
+  line-height: 1.3; 
+  margin: 0 !important; 
+  opacity: 1; 
+  transform: translateX(0);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease !important;
+}
+
+/* ================================================================== */
+/* КНОПКА СВОРАЧИВАНИЯ ЛЕВОГО САЙДБАРА (НА РАЗДЕЛИТЕЛЕ)              */
+/* ================================================================== */
+
+/* КНОПКА СВОРАЧИВАНИЯ ЛЕВОГО САЙДБАРА (В ТОЧНОМ ДИЗАЙНЕ ПРАВОЙ СТРЕЛКИ) */
+/* КНОПКА СВОРАЧИВАНИЯ ЛЕВОГО САЙДБАРА */
+.sidebarBottomToggleBtn {
+  position: fixed !important;
+  bottom: 24px;
+  left: calc(max(20px, calc((100vw - 1600px) / 2)) + 266px); 
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  border-radius: 8px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  z-index: 1000 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+  
+  /* ИЗМЕНЕНО: Синхронизируем с 0.8s cubic-bezier(0.16, 1, 0.3, 1) левого меню */
+  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.2s ease, 
+              border-color 0.2s ease, 
+              color 0.2s ease !important;
+}
+
+.leftCollapsed .sidebarBottomToggleBtn {
+  left: calc(max(20px, calc((100vw - 1600px) / 2)) + 54px) !important;
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 10px !important;
+}
+
+.sidebarBottomToggleBtn:hover {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+/* ================================================================== */
+/* СВЕРНУТОЕ СОСТОЯНИЕ (ПЛАВНЫЙ СДВИГ БУКВ ВЛЕВО И ТЕМНЫЙ ВЕРХ)        */
+/* ================================================================== */
+
+.leftCollapsed .navSidebarTitle { 
+  opacity: 0 !important; 
+  transform: translateX(-30px) !important; 
+  pointer-events: none !important; 
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease !important;
+}
+
+.leftCollapsed .navItemText,
+.leftCollapsed .tabBtnText { 
+  opacity: 0 !important; 
+  transform: translateX(-30px) !important;
+  pointer-events: none !important; 
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease !important;
+}
+
+.leftCollapsed .tabSwitchBtn,
+.leftCollapsed .navLink { 
+  padding: 8px 12px !important; 
+  justify-content: flex-start !important; 
+}
+
+.leftCollapsed .navLink {
+  background: transparent !important;
+}
+.leftCollapsed .navLink.active {
+  background: #f0f9ff !important;
+}
+
+.leftCollapsed .tabSwitchBtn.active {
+  background: #0f172a !important;
+  color: #ffffff !important;
+}
+.leftCollapsed .tabSwitchBtn.active .tabBtnIcon {
+  color: #38bdf8 !important;
+}
+
+.leftCollapsed .navLink.active::before {
+  content: ''; 
+  position: absolute; 
+  top: 6px; 
+  right: 6px; 
+  width: 6px; 
+  height: 6px;
+  background-color: #0284c7; 
+  border-radius: 50%; 
+  box-shadow: 0 0 6px rgba(2, 132, 199, 0.6);
+  animation: dotFadeIn 0.2s ease-out;
+}
+
+/* ================================================================== */
+/* ПРАВЫЙ ЗАГОЛОВОК И ВСТРОЕННАЯ ПРАВАЯ СТРЕЛКА                       */
+/* ================================================================== */
+
+.rightSidebarTitle { 
+  font-size: 12px; 
+  font-weight: 700; 
+  color: #94a3b8; 
+  text-transform: uppercase; 
+  letter-spacing: 0.05em; 
+  display: flex !important; 
+  align-items: center !important; 
+  justify-content: space-between !important;
+  margin-bottom: 16px; 
+  padding-right: 4px;
+  width: 100%;
+}
+
+.rstText {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: opacity 0.3s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.inlineToggleBtnRight {
+  width: 28px;
+  height: 28px;
+  min-width: 28px;
+  border-radius: 8px;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #475569;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: all 0.2s ease;
+}
+
+.inlineToggleBtnRight:hover {
+  background: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+}
+
+/* СВЁРНУТЫЙ ПРАВЫЙ САЙДБАР С ТОЧКАМИ-ЯКОРЯМИ */
+.rightCollapsed .rightSidebar {
+  width: calc(max(20px, calc((100vw - 1600px) / 2)) + 52px) !important;
+  padding: 20px 8px !important;
+  box-sizing: border-box !important;
+  overflow: visible !important;
+}
+
+.rightCollapsed .rightSidebarTitle {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+  width: 100% !important;
+  padding: 0 !important;
+  margin-bottom: 20px !important;
+}
+
+.rightCollapsed .rstText {
+  display: none !important;
+}
+
+.rightCollapsed .inlineToggleBtnRight {
+  margin: 0 auto !important;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  border-radius: 8px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+  z-index: 100 !important;
+}
+
+.rightCollapsed .inlineToggleBtnRight:hover {
+  background: #0284c7;
+  color: #ffffff;
+  border-color: #0284c7;
+}
+
+.rightCollapsed .anchorList {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 12px !important;
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.rightCollapsed .anchorItem {
+  width: auto !important;
+  margin: 0 !important;
+}
+
+.rightCollapsed .anchorLink {
+  padding: 0 !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: #cbd5e1;
+  display: block !important;
+  position: relative !important;
+  transition: all 0.2s ease !important;
+}
+
+.rightCollapsed .anchorText {
+  display: none !important;
+}
+
+.rightCollapsed .anchorLink:hover {
+  background: #38bdf8 !important;
+  transform: scale(1.3) !important;
+}
+
+.rightCollapsed .anchorLink.active {
+  background: #0284c7 !important;
+  box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.25) !important;
+  transform: scale(1.2) !important;
+}
+
+.rightCollapsed .anchorLink[data-tooltip]:hover::after {
+  content: attr(data-tooltip);
+  position: fixed !important;
+  right: calc(max(20px, calc((100vw - 1600px) / 2)) + 60px);
+  background: #0f172a;
+  color: #ffffff;
+  padding: 5px 10px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  border-radius: 7px;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2);
+  z-index: 99999 !important;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+.anchorList { 
+  list-style: none; padding: 0; margin: 0; border-left: none !important;
+  flex: 1 1 auto !important; overflow-y: auto !important; overflow-x: hidden !important; padding-bottom: 60px !important;
+  scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;
+  transition: border-color 0.3s ease, gap 0.35s cubic-bezier(0.2, 0, 0, 1); 
+}
+
+.anchorList::-webkit-scrollbar { width: 5px; }
+.anchorList::-webkit-scrollbar-track { background: transparent; }
+.anchorList::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
+.anchorList::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
+
+.anchorItem { margin-bottom: 4px; display: block; width: 100%; transition: all 0.35s cubic-bezier(0.2, 0, 0, 1); }
+
+.anchorLink { 
+  position: relative; display: flex; align-items: flex-start; padding: 8px 0 8px 16px; color: #64748b; 
+  text-decoration: none; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; overflow: hidden;
+  transition: padding 0.35s cubic-bezier(0.2, 0, 0, 1), margin 0.35s cubic-bezier(0.2, 0, 0, 1), color 0.2s ease;
+}
+.anchorLink:hover { color: #0f172a; }
+
+.anchorText {
+  width: 210px; 
+  min-width: 210px; 
+  flex-shrink: 0; 
+  white-space: normal; 
+  word-break: break-word;
+  line-height: 1.35; 
+  opacity: 1; 
+  transform: translateX(0);
+  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ================================================================== */
+/* ШАПКА И КОНТЕНТ УРОКОВ                                            */
+/* ================================================================== */
+
+.eduHeader { border-bottom: 1px solid #e2e8f0; padding-bottom: 28px; margin-bottom: 36px; width: 100%; }
+.eduBreadcrumb { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; margin-bottom: 16px; font-weight: 600; }
+.eduHeaderMain, .eduHeaderTop { display: flex; justify-content: space-between; align-items: center; gap: 40px; flex-wrap: wrap; max-width: 100%; margin: 0; }
+.eduHeader .eduTitle { font-size: 28px; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.25; letter-spacing: -0.02em; text-align: left; flex: 1 1 300px; max-width: 450px; }
+.eduHeader .eduIntro { font-size: 15px; line-height: 1.6; color: #475569; margin: 0; text-align: left; flex: 2 1 450px; max-width: 650px; padding-left: 24px; border-left: 1px solid #e2e8f0; }
+
+@media (max-width: 850px) {
+  .eduHeaderMain, .eduHeaderTop { flex-direction: column; align-items: flex-start; gap: 16px; }
+  .eduHeader .eduTitle, .eduHeader .eduIntro { max-width: 100%; flex: none; padding-left: 0; border-left: none; }
+}
+
+/* ================================================================== */
+/* КНОПКА SCROLL TO TOP                                              */
+/* ================================================================== */
+
+.scrollToTopBtn {
+  position: fixed; 
+  right: calc(max(20px, calc((100vw - 1600px) / 2)) + 257px) !important;
+  bottom: 32px; width: 50px; height: 50px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  color: #0f172a; border: 1px solid #e2e8f0; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 4px 6px -2px rgba(15, 23, 42, 0.05); opacity: 0; visibility: hidden; z-index: 900;
+  transition: opacity 0.25s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), right 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease !important;
+}
+
+.rightCollapsed .scrollToTopBtn { right: calc(max(20px, calc((100vw - 1600px) / 2)) + 25px) !important; }
+.scrollToTopBtn.show { opacity: 1; visibility: visible; }
+.scrollToTopBtn:hover { background: #0284c7; border-color: #0284c7; color: #ffffff; transform: translateY(-3px); box-shadow: 0 14px 28px -6px rgba(2, 132, 199, 0.35); }
+.scrollToTopBtn:active { transform: translateY(-1px) scale(0.96) !important; }
+
+/* ТУЛТИПЫ ПРИ НАВЕДЕНИИ */
+.leftCollapsed .navLink[data-tooltip]:hover::after {
+  content: attr(data-tooltip); position: fixed; left: 78px; background: #0f172a; color: #ffffff;
+  padding: 6px 12px; font-size: 12px; font-weight: 600; white-space: nowrap; border-radius: 8px;
+  box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.2); z-index: 99999; pointer-events: none; animation: tooltipFadeIn 0.15s ease-out;
+}
+@keyframes tooltipFadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+@keyframes dotFadeIn { from { opacity: 0; transform: scale(0); } to { opacity: 1; transform: scale(1); } }
+
+/* КНОПКИ НАВИГАЦИИ */
+.eduNextPrevPanel { margin-top: 60px; padding-top: 32px; border-top: 1px solid #e2e8f0; margin-bottom: 20px; }
+.enppContainer { display: flex; justify-content: space-between; align-items: center; gap: 16px; width: 100%; }
+.enppBtn {
+  flex: 1; display: flex; align-items: center; gap: 14px; background: #ffffff; border: 1px solid #e2e8f0;
+  padding: 14px 18px; border-radius: 12px; text-decoration: none; color: #0f172a; cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1); box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+.enppBtn:hover { border-color: #0284c7; background: #f0f9ff; transform: translateY(-2px); box-shadow: 0 10px 20px -5px rgba(2, 132, 199, 0.12); }
+.enppBtnPrev { justify-content: flex-start; text-align: left; }
+.enppBtnNext { justify-content: flex-end; text-align: right; }
+.enppBtn i { font-size: 18px; color: #64748b; transition: transform 0.2s ease, color 0.2s ease; }
+.enppBtnPrev:hover i { color: #0284c7; transform: translateX(-4px); }
+.enppBtnNext:hover i { color: #0284c7; transform: translateX(4px); }
+.enppBtnText { display: flex; flex-direction: column; }
+.enppBtnText span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; font-weight: 700; margin-bottom: 2px; }
+.enppBtnTitle { font-size: 14px; font-weight: 600; color: #1e293b; }
+.enppBtn:hover .enppBtnTitle { color: #0284c7; }
+
+/* УВЕДОМЛЕНИЯ И ТУЛБАРЫ */
+.globalSavePanel { display: none; position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); background: #ffffff; padding: 10px 20px; border-radius: 100px; box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12), 0 0 0 1px #e2e8f0; z-index: 9500; align-items: center; justify-content: space-between; gap: 24px; animation: toolbarSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.globalSavePanel.active { display: flex; }
+.gspInfo { display: flex; align-items: center; gap: 10px; }
+.gspBadge { background: #e0f2fe; color: #0284c7; font-size: 10px; font-weight: 800; padding: 2px 8px; border-radius: 100px; letter-spacing: 0.05em; }
+.gspText { color: #0f172a; font-weight: 600; font-size: 13.5px; }
+.gspActions { display: flex; align-items: center; gap: 8px; }
+.gspBtn { border: none; border-radius: 50px; padding: 8px 18px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.15s ease; display: flex; align-items: center; gap: 6px; }
+.gspBtnSave { background: #0284c7; color: #ffffff; }
+.gspBtnSave:hover { background: #0369a1; }
+.gspBtnCancel { background: #f1f5f9; color: #64748b; }
+.gspBtnCancel:hover { background: #e2e8f0; color: #0f172a; }
+
+.customModalBackdrop { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 23, 42, 0.4); backdrop-filter: blur(8px); z-index: 999999; display: flex; align-items: center; justify-content: center; padding: 20px; animation: modalBackdropFadeIn 0.2s ease-out; }
+.customModalCard { background: #ffffff; width: 100%; max-width: 440px; border-radius: 16px; padding: 28px; box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.1), 0 0 0 1px rgba(0, 0, 0, 0.05); display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid #e2e8f0; animation: modalCardSlideUp 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
+.cmIconDanger { width: 48px; height: 48px; background: #fef2f2; color: #ef4444; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; margin-bottom: 16px; }
+.cmTitle { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 8px; }
+.cmDescription { font-size: 14px; color: #64748b; line-height: 1.5; margin-bottom: 24px; }
+.cmActions { display: flex; gap: 12px; width: 100%; }
+.cmBtn { flex: 1; padding: 10px 16px; border-radius: 8px; font-size: 13.5px; font-weight: 600; cursor: pointer; transition: all 0.15s ease; border: none; }
+.cmBtnCancel { background: #f1f5f9; color: #475569; }
+.cmBtnCancel:hover { background: #e2e8f0; color: #0f172a; }
+.cmBtnDanger { background: #ef4444; color: #ffffff; }
+.cmBtnDanger:hover { background: #dc2626; }
+
+.crmToast { position: fixed; bottom: 28px; right: 90px; min-width: 320px; max-width: 400px; background: #ffffff; color: #0f172a; padding: 14px 18px; border-radius: 12px; box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.12), 0 0 0 1px #e2e8f0; display: flex; align-items: center; gap: 12px; z-index: 99999; overflow: hidden; animation: toastSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.crmToastIcon { font-size: 18px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.crmToastSuccess .crmToastIcon { color: #10b981; }
+.crmToastInfo .crmToastIcon { color: #0284c7; }
+.crmToastError .crmToastIcon { color: #ef4444; }
+.crmToastContent { flex: 1; }
+.crmToastTitle { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #94a3b8; margin-bottom: 2px; }
+.crmToastMessage { font-size: 13px; font-weight: 500; color: #334155; line-height: 1.4; }
+.crmToastClose { background: transparent; border: none; color: #94a3b8; font-size: 14px; cursor: pointer; padding: 4px; }
+.crmToastClose:hover { color: #0f172a; }
+.crmToastProgress { position: absolute; bottom: 0; left: 0; height: 3px; width: 100%; animation: toastProgress 3.5s linear forwards; }
+.crmToastSuccess .crmToastProgress { background: #10b981; }
+.crmToastInfo .crmToastProgress { background: #0284c7; }
+.crmToastError .crmToastProgress { background: #ef4444; }
+
+@keyframes modalBackdropFadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes modalCardSlideUp { from { opacity: 0; transform: translateY(12px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toolbarSlideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes toastSlideIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes toastProgress { from { width: 100%; } to { width: 0%; } }
+
+/* ================================================================== */
+/* СТИЛИЗАЦИЯ ЗАГОЛОВКОВ СЕКЦИЙ (H2)                                 */
+/* ================================================================== */
+
+.contentContainer h2,
+:global(.edu-glossary-native) h2 {
+  text-align: center !important;
+  font-size: 25px !important;
+  font-weight: 800 !important;
+  color: #0f172a !important;
+  letter-spacing: -0.025em !important;
+  margin: 1.5rem auto 1.5rem auto !important;
+  display: block !important;
+  max-width: 100% !important;
+  border-bottom: none !important;
+  position: relative !important;
+  text-shadow: 
+    0px 0px 0px rgba(241, 245, 249, 0),
+    0px 0px 12px rgba(148, 163, 184, 0.15),
+    0px 0px 24px rgba(148, 163, 184, 0.08) !important;
+}
+
+/* ================================================================== */
+/* ИКОНКИ БЕЙДЖЕЙ C ВСПЛЫВАЮЩИМ ТУЛТИПОМ                              */
+/* ================================================================== */
+
+.devIconWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 6px;
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
+  font-size: 11px;
+  flex-shrink: 0 !important;
+  margin-left: auto;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navLink:hover .devIconWrapper {
+  background: #64748b;
+  color: #ffffff;
+  border-color: #64748b;
+}
+
+.navLink.active .devIconWrapper {
+  background: #e0f2fe;
+  color: #0284c7;
+  border-color: #bae6fd;
+}
+
+.newUpdateWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  border-radius: 6px;
+  background: #fefce8;
+  color: #d97706;
+  border: 1px solid #fef08a;
+  font-size: 12px;
+  flex-shrink: 0 !important;
+  margin-left: auto;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.navLink:hover .newUpdateWrapper {
+  background: #d97706;
+  color: #ffffff;
+  border-color: #d97706;
+}
+
+.navLink.active .newUpdateWrapper {
+  background: #fef08a;
+  color: #b45309;
+  border-color: #fde047;
+}
+
+.newUpdateWrapper[data-update-tooltip]:hover::after,
+.devIconWrapper[data-update-tooltip]:hover::after {
+  content: attr(data-update-tooltip);
+  position: fixed !important;
+  top: var(--tooltip-top, 0);
+  left: var(--tooltip-left, 0);
+  background: #0f172a;
+  color: #ffffff;
+  padding: 5px 10px;
+  border-radius: 7px;
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.3);
+  z-index: 999999 !important;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+.newUpdateWrapper[data-update-tooltip]:hover::before,
+.devIconWrapper[data-update-tooltip]:hover::before {
+  content: '';
+  position: fixed !important;
+  top: calc(var(--tooltip-top, 0) + 24px);
+  left: calc(var(--tooltip-left, 0) + 7px);
+  border-width: 5px;
+  border-style: solid;
+  border-color: #0f172a transparent transparent transparent;
+  z-index: 999999 !important;
+  pointer-events: none;
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+.leftCollapsed .devIconWrapper,
+.leftCollapsed .newUpdateWrapper {
+  display: none !important;
+}
+
+/* ================================================================== */
+/* РАСТЯЖЕНИЕ КОНТЕНТА И СТРАНИЦ БЕЗ ПРАВОГО САЙДБАРА                */
+/* ================================================================== */
+
+/* Базовое состояние */
+.contentInner { 
+  max-width: 1000px; 
+  margin: 0 auto; 
+  transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+/* Расширение при сворачивании левого или правого меню */
+.leftCollapsed .contentInner,
+.rightCollapsed .contentInner {
+  max-width: 1280px !important;
+}
+
+/* Расширение при сворачивании обоих меню */
+.leftCollapsed.rightCollapsed .contentInner {
+  max-width: 1440px !important;
+}
+
+/* СТРАНИЦЫ БЕЗ ПРАВОГО САЙДБАРА И НАСТРОЙКИ (ИТОГО ПО УМОЛЧАНИЮ РАСТЯНУТЫ НА 1280px / 1440px) */
+.noRightSidebar .contentInner,
+.settingsOpen .contentInner {
+  max-width: 1280px !important;
+  width: 100% !important;
+}
+
+.noRightSidebar.leftCollapsed .contentInner,
+.settingsOpen.leftCollapsed .contentInner {
+  max-width: 1440px !important;
+  width: 100% !important;
+}
+
+/* Сетка для страниц без правого сайдбара (Тарифы, Скрипты, Настройки) */
+.noRightSidebar.educationPortalContainer .mainWrapper,
+.settingsOpen.educationPortalContainer .mainWrapper {
+  grid-template-columns: 
+      max(20px, calc((100vw - 1600px) / 2)) 
+      280px 
+      1fr 
+      48px 
+      max(20px, calc((100vw - 1600px) / 2)) !important;
+}
+
+.noRightSidebar.leftCollapsed.educationPortalContainer .mainWrapper,
+.settingsOpen.leftCollapsed.educationPortalContainer .mainWrapper {
+  grid-template-columns: 
+      max(20px, calc((100vw - 1600px) / 2)) 
+      68px 
+      1fr 
+      48px 
+      max(20px, calc((100vw - 1600px) / 2)) !important;
+}
+
+/* МИКРО-ФЕЙД ДЛЯ СГЛАЖИВАНИЯ МГНОВЕННОГО РЕНДЕРА КОНТЕНТА */
+.sidebarReRendering {
+  opacity: 0.15;
+  pointer-events: none;
+  transition: opacity 5.28s ease-in-out !important; /* <--- Плавное проявление на 0.18s */
+}
+
+/* === ДОБАВЬТЕ ЭТИ СТИЛИ ДЛЯ АКТИВНОГО ПУНКТА В РАЗВЕРНУТОМ МЕНЮ === */
+.anchorLink.active {
+  color: #0284c7 !important;
+  font-weight: 600 !important;
+}
+

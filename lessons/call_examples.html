@@ -1,0 +1,886 @@
+<div class="edu-script-analysis">
+
+    <!-- ГЛОБАЛЬНЫЙ ИНИЦИАЛИЗАТОР ПЛЕЕРА -->
+    <img src="data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==" onload="
+        if(window.EduAudioSys) return;
+        window.EduAudioSys = {
+            audios: {}, currentId: null, autoScroll: true,
+            init: function(id, src) {
+                if(!this.audios[id]) { 
+                    this.audios[id] = new Audio(src); 
+                    this.audios[id].preload = 'metadata'; 
+                }
+                return this.audios[id];
+            },
+            togglePlay: function(id, src) {
+                var a = this.init(id, src);
+                if(this.currentId && this.currentId !== id && this.audios[this.currentId]) {
+                    this.audios[this.currentId].pause();
+                }
+                this.currentId = id;
+                a.paused ? a.play() : a.pause();
+            },
+            seek: function(id, src, offset) {
+                var a = this.init(id, src);
+                a.currentTime += offset;
+            },
+            dragSeek: function(id, src, val) {
+                var a = this.init(id, src);
+                if(a.duration) a.currentTime = (val / 100) * a.duration;
+            },
+            jumpTo: function(id, src, time) {
+                var a = this.init(id, src);
+                if(this.currentId && this.currentId !== id && this.audios[this.currentId]) {
+                    this.audios[this.currentId].pause();
+                }
+                a.currentTime = time;
+                this.currentId = id;
+                a.play();
+            },
+            setSpeed: function(id, src, rate, btn) {
+                var a = this.init(id, src);
+                a.playbackRate = rate;
+                var btns = btn.parentElement.querySelectorAll('.speed-btn');
+                btns.forEach(function(b){ b.classList.remove('active'); });
+                btn.classList.add('active');
+            }
+        };
+        
+        setInterval(function() {
+            var sys = window.EduAudioSys;
+            if(!sys.currentId) return;
+            var id = sys.currentId;
+            var a = sys.audios[id];
+            if(!a) return;
+
+            var card = document.getElementById('player-card-' + id);
+            if(card) {
+                var pBtn = card.querySelector('.play-btn-3d');
+                if(pBtn) {
+                    var p1 = pBtn.querySelector('.play-icon');
+                    var p2 = pBtn.querySelector('.pause-icon');
+                    if(a.paused) {
+                        if(p1) p1.style.display = 'block';
+                        if(p2) p2.style.display = 'none';
+                        pBtn.classList.remove('playing');
+                    } else {
+                        if(p1) p1.style.display = 'none';
+                        if(p2) p2.style.display = 'block';
+                        pBtn.classList.add('playing');
+                    }
+                }
+                if(a.duration) {
+                    var curr = card.querySelector('.curr-time');
+                    var dur = card.querySelector('.dur-time');
+                    var slider = card.querySelector('.time-slider');
+                    var cm = Math.floor(a.currentTime / 60), cs = Math.floor(a.currentTime % 60);
+                    var dm = Math.floor(a.duration / 60), ds = Math.floor(a.duration % 60);
+                    if(curr) curr.textContent = cm + ':' + (cs < 10 ? '0' : '') + cs;
+                    if(dur) dur.textContent = dm + ':' + (ds < 10 ? '0' : '') + ds;
+
+                    if(slider && !window.isDraggingSlider) {
+                        var pct = (a.currentTime / a.duration) * 100;
+                        slider.value = pct;
+                        slider.style.background = 'linear-gradient(to right, #0284c7 ' + pct + '%, #cbd5e1 ' + pct + '%)';
+                    }
+                }
+            }
+
+            var tbox = document.getElementById('transcript-' + id);
+            if(tbox) {
+                var cTime = a.currentTime;
+                var rows = tbox.querySelectorAll('.t-row');
+                rows.forEach(function(r) {
+                    var s = parseFloat(r.getAttribute('data-start'));
+                    var e = parseFloat(r.getAttribute('data-end'));
+                    if(cTime >= s && cTime < e) {
+                        if(!r.classList.contains('active-sub')) {
+                            rows.forEach(function(x){ x.classList.remove('active-sub'); });
+                            r.classList.add('active-sub');
+                            if(sys.autoScroll) {
+                                var targetTop = r.offsetTop - tbox.offsetTop - 60;
+                                tbox.scrollTo({ top: targetTop, behavior: 'smooth' });
+                            }
+                        }
+                    }
+                });
+            }
+        }, 100);
+    " style="display:none;">
+
+    <!-- Заголовок страницы -->
+    <div class="edu-header" style="width: 100% !important; display: flex !important; justify-content: center !important; margin-bottom: 2rem !important; padding-bottom: 0 !important; border-bottom: none !important;">
+        <div class="edu-header-top" style="display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 8px !important; width: 100% !important; max-width: 800px !important; margin: 0 auto !important;">
+            <h1 class="edu-title editable-node" data-global="title" style="font-size: 28px !important; font-weight: 800 !important; color: #0f172a !important;">
+                Примеры звонков и разборы
+            </h1>
+        </div>
+    </div>
+
+    <div class="section-title">Заявки на SEO с конкурентов:</div>
+
+    <div class="qa-grid">
+
+        <!-- КАРТОЧКА 1: ЗАЯВКА НА СЕО -->
+        <div class="qa-row">
+            <div class="qa-chamber qa-left">
+    <div class="tag-group">
+        <span class="service-tag seo-tag">SEO</span>
+        <span class="audio-tag">Успешный проход + Бриф</span>
+    </div>
+                <div class="call-meta">
+                    <b>Длительность:</b> 05:12<br>
+                    <b>Файл:</b> decor4rent.mp3<br>
+                    <b>Результат:</b> Лид квалифицирован, бюджет ОК, назначен перезвон специалиста.
+                </div>
+                
+                <div class="call-highlights" style="margin-top: 20px;">
+                    <div class="highlight-item"><b>[0:04] Выход на цель:</b> Задан прямой закрывающий вопрос про рассмотрение КП по сайту.</div>
+                    <div class="highlight-item"><b>[0:46] Переход к квалификации:</b> Зафиксирован регламент вопросов перед передачей специалисту.</div>
+                    <div class="highlight-item"><b>[2:28] Отработка Метрики:</b> Клиент не может дать доступ → менеджер легко закрывает на скриншоты отчетов.</div>
+                    <div class="highlight-item"><b>[3:06] Согласование вилки бюджета:</b> Озвучена сумма 80–100к, получен четкий маркер готовности.</div>
+                </div>
+            </div>
+            
+            <div class="qa-chamber qa-right">
+                
+                <!-- ОБЫЧНЫЙ СТАБИЛЬНЫЙ ПЛЕЕР -->
+                <div class="premium-player-card" id="player-card-decor">
+                    <div class="player-controls-row">
+                        <button class="play-btn-3d" onclick="window.EduAudioSys.togglePlay('decor', '/audio/decor4rent.mp3')">
+                            <svg class="play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="pause-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+
+                        <div class="seek-group">
+                            <button class="seek-btn" onclick="window.EduAudioSys.seek('decor', '/audio/decor4rent.mp3', -10)">-10s</button>
+                            <button class="seek-btn" onclick="window.EduAudioSys.seek('decor', '/audio/decor4rent.mp3', 10)">+10s</button>
+                        </div>
+
+                        <div class="time-badge">
+                            <span class="curr-time">0:00</span> / <span class="dur-time">0:00</span>
+                        </div>
+
+                        <div class="speed-group">
+                            <button class="speed-btn active" onclick="window.EduAudioSys.setSpeed('decor', '/audio/decor4rent.mp3', 1, this)">1x</button>
+                            <button class="speed-btn" onclick="window.EduAudioSys.setSpeed('decor', '/audio/decor4rent.mp3', 1.25, this)">1.25x</button>
+                            <button class="speed-btn" onclick="window.EduAudioSys.setSpeed('decor', '/audio/decor4rent.mp3', 1.5, this)">1.5x</button>
+                            <button class="speed-btn" onclick="window.EduAudioSys.setSpeed('decor', '/audio/decor4rent.mp3', 2, this)">2x</button>
+                        </div>
+                    </div>
+
+                    <div class="slider-container">
+                        <input type="range" class="time-slider" min="0" max="100" value="0" step="0.1" 
+                               onmousedown="window.isDraggingSlider = true;"
+                               onmouseup="window.isDraggingSlider = false;"
+                               oninput="
+                                   this.style.background = 'linear-gradient(to right, #0284c7 ' + this.value + '%, #cbd5e1 ' + this.value + '%)';
+                                   window.EduAudioSys.dragSeek('decor', '/audio/decor4rent.mp3', this.value);
+                               ">
+                    </div>
+                </div>
+
+                <!-- ШАПКА ТРАНСКРИПТА С ТУМБЛЕРОМ -->
+                <div class="transcript-header">
+                    <span class="th-title">Расшифровка звонка</span>
+                    <div class="th-toggle-wrap">
+                        <span class="th-label">Автоскролл субтитров</span>
+                        <label class="ios-switch">
+                            <input type="checkbox" checked onchange="window.EduAudioSys.autoScroll = this.checked">
+                            <span class="ios-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="call-transcript-box" id="transcript-decor">
+                    <div class="t-row" data-start="1" data-end="3" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 1)"><span class="t-time">[0:01]</span> <b>Менеджер:</b> Алло, алло, добрый день!</div>
+                    <div class="t-row" data-start="3" data-end="4" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 3)"><span class="t-time">[0:03]</span> <b>Клиент:</b> Добрый день.</div>
+                    <div class="t-row" data-start="4" data-end="14" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 4)"><span class="t-time">[0:04]</span> <b>Менеджер:</b> Меня Татьяна зовут, компания Uniofweb. Звоню вам по такому вопросу: скажите, вы сейчас коммерческие предложения по сайту рассматриваете?</div>
+                    <div class="t-row" data-start="14" data-end="18" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 14)"><span class="t-time">[0:14]</span> <b>Клиент:</b> Да, рассматриваем, но нас больше интересует SEO-продвижение.</div>
+                    <div class="t-row" data-start="18" data-end="30" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 18)"><span class="t-time">[0:18]</span> <b>Менеджер:</b> Да, замечательно! Мы как раз SEO занимаемся, а также контекстной рекламой. А домен сайта не подскажете, чтобы я могла ознакомиться?</div>
+                    <div class="t-row" data-start="30" data-end="37" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 30)"><span class="t-time">[0:30]</span> <b>Клиент:</b> <code>decor4rent.ru</code>. Дизайнерские столы в аренду в Москве.</div>
+                    <div class="t-row" data-start="37" data-end="46" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 37)"><span class="t-time">[0:37]</span> <b>Менеджер:</b> Всё, замечательно, увидела! Хорошо. Чтобы расчёты получились точными, я сейчас задам буквально несколько вопросов, далее передам информацию коллеге, и он уже свяжется с вами. Скажите, вы сейчас как-то сайт продвигаете, возможно, работаете с кем-то?</div>
+                    <div class="t-row" data-start="62" data-end="68" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 62)"><span class="t-time">[1:02]</span> <b>Клиент:</b> Ну, только через контекст. Так ни с кем не работаем, сами в принципе.</div>
+                    <div class="t-row" data-start="68" data-end="72" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 68)"><span class="t-time">[1:08]</span> <b>Менеджер:</b> Так, а по SEO, возможно, ранее был опыт работы?</div>
+                    <div class="t-row" data-start="72" data-end="84" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 72)"><span class="t-time">[1:12]</span> <b>Клиент:</b> Опыт был, но сейчас запустили, ничего не делали долгое время. Сейчас хотим возобновить.</div>
+                    <div class="t-row" data-start="84" data-end="85" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 84)"><span class="t-time">[1:24]</span> <b>Менеджер:</b> Поняла. А сейчас какие задачи по сайту в первую очередь стоят?</div>
+                    <div class="t-row" data-start="85" data-end="97" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 85)"><span class="t-time">[1:25]</span> <b>Клиент:</b> Ну, мы сейчас хотим улучшить сайт в плане SEO и работать в этом направлении.</div>
+                    <div class="t-row" data-start="97" data-end="105" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 97)"><span class="t-time">[1:37]</span> <b>Менеджер:</b> Поняла. Возможно, как раз увеличение лидов, заявок с сайта, вывести в позиции?</div>
+                    <div class="t-row" data-start="105" data-end="113" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 105)"><span class="t-time">[1:45]</span> <b>Клиент:</b> Ну да, позиции в первую очередь, но заявки, конечно, тоже.</div>
+                    <div class="t-row" data-start="113" data-end="148" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 113)"><span class="t-time">[1:53]</span> <b>Менеджер:</b> Хорошо, тогда кратко расскажу. Мы не просто выводим сайт в ТОП-10 Яндекса и Google, а делаем упор именно на увеличение конверсии, чтобы позиции превращались в заявки. Также берём на себя весь комплекс под ключ: наши оптимизаторы собирают эффективные ключевые слова, а разработчики сами внедряют все правки на сайте — вам не придётся искать программистов на стороне. При этом мы работаем строго на результат, все ключевые показатели заранее обсуждаем и фиксируем в коммерческом предложении и в договоре.</div>
+                    <div class="t-row" data-start="148" data-end="160" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 148)"><span class="t-time">[2:28]</span> <b>Менеджер:</b> Также для предварительного более конкретного расчёта нужен будет гостевой доступ в Яндекс.Метрику, инструкцию вышлю после разговора. Скажите, сможете предоставить в ближайшее время?</div>
+                    <div class="t-row" data-start="160" data-end="175" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 160)"><span class="t-time">[2:40]</span> <b>Клиент:</b> Вы знаете, у меня там почему-то не получается. Кнопка «Предоставить доступ» неактивна. У нас уже пытались другие люди так сделать, почему-то не получается, к сожалению.</div>
+                    <div class="t-row" data-start="175" data-end="182" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 175)"><span class="t-time">[2:55]</span> <b>Менеджер:</b> Поняла. А получится у вас скриншот предоставить тех страниц, которые специалист попросит?</div>
+                    <div class="t-row" data-start="182" data-end="186" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 182)"><span class="t-time">[3:02]</span> <b>Клиент:</b> Да, конечно, скриншот получится, всё хорошо.</div>
+                    <div class="t-row" data-start="186" data-end="200" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 186)"><span class="t-time">[3:06]</span> <b>Менеджер:</b> Отлично. И тогда по бюджету сориентирую: по SEO тариф, про который я рассказала, по бюджету от 80 до 100 тысяч. Скажите, такие бюджеты подходят, готовы рассматривать, если всё понравится?</div>
+                    <div class="t-row" data-start="200" data-end="204" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 200)"><span class="t-time">[3:20]</span> <b>Клиент:</b> Да-да, готова.</div>
+                    <div class="t-row" data-start="204" data-end="208" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 204)"><span class="t-time">[3:24]</span> <b>Менеджер:</b> Замечательно! Подскажите, как могу корректно вашу должность записать?</div>
+                    <div class="t-row" data-start="208" data-end="210" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 208)"><span class="t-time">[3:28]</span> <b>Клиент:</b> PR-менеджер можно записать.</div>
+                    <div class="t-row" data-start="210" data-end="226" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 210)"><span class="t-time">[3:30]</span> <b>Менеджер:</b> PR-менеджер, хорошо. Связаться с вами можно по этому номеру? И почту не подскажете, куда направить информацию о компании?</div>
+                    <div class="t-row" data-start="226" data-end="262" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 226)"><span class="t-time">[3:46]</span> <b>Клиент:</b> <code>maria.zhelnova@decor4rent.ru</code>.</div>
+                    <div class="t-row" data-start="262" data-end="280" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 262)"><span class="t-time">[4:22]</span> <b>Менеджер:</b> Всё, записала. И тогда по срокам подскажите, есть ориентиры? Если всё понравится, в течение месяца запустить можно? До середины июля?</div>
+                    <div class="t-row" data-start="280" data-end="290" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 280)"><span class="t-time">[4:40]</span> <b>Клиент:</b> Да, да, я думаю, да.</div>
+                    <div class="t-row" data-start="290" data-end="293" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 290)"><span class="t-time">[4:50]</span> <b>Менеджер:</b> Хорошо, тогда информацию направляю коллеге. Сегодня удобно было бы связаться детально всё обсудить? Займёт буквально 5–7 минут.</div>
+                    <div class="t-row" data-start="293" data-end="302" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 293)"><span class="t-time">[4:53]</span> <b>Клиент:</b> Если только после трёх, потому что сейчас буду недоступна.</div>
+                    <div class="t-row" data-start="302" data-end="308" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 302)"><span class="t-time">[5:02]</span> <b>Менеджер:</b> После 15:00 по Москве, хорошо. Тогда специалист наберёт вам. Спасибо за уделённое время, хорошего вам дня!</div>
+                    <div class="t-row" data-start="308" data-end="315" onclick="window.EduAudioSys.jumpTo('decor', '/audio/decor4rent.mp3', 308)"><span class="t-time">[5:08]</span> <b>Клиент:</b> Спасибо большое, до свидания!</div>
+                </div>
+            </div>
+        </div>
+
+    <!-- КАРТОЧКА 3: ЗАЯВКА НА SEO (gost-proekty.ru) -->
+        <div class="qa-row">
+            <div class="qa-chamber qa-left">
+    <div class="tag-group">
+        <span class="service-tag seo-tag">SEO</span>
+        <span class="audio-tag">Успешный проход + Бриф</span>
+    </div>
+                <div class="call-meta">
+                    <b>Длительность:</b> 05:52<br>
+                    <b>Файл:</b> gost-proekty.ru.mp3<br>
+                    <b>Результат:</b> Лид квалифицирован, зафиксирован бюджет до 150к, перезвон специалиста согласован.
+                </div>
+                
+                <div class="call-highlights" style="margin-top: 20px;">
+                    <div class="highlight-item"><b>[0:21] Выявление потребности:</b> Ищут единого подрядчика для SEO и техподдержки/доработок.</div>
+                    <div class="highlight-item"><b>[1:40] Запрос на "под ключ":</b> Важно закрывать все задачи (SEO + доработки) в рамках одной компании.</div>
+                    <div class="highlight-item"><b>[3:00] Экспертная позиция:</b> Клиент доверяет составление ТЗ и аудита специалистам.</div>
+                    <div class="highlight-item"><b>[3:32] Фиксация бюджета:</b> Озвучен ориентир компании (48к), клиент подтвердил готовность до 150k/мес.</div>
+                </div>
+            </div>
+            
+            <div class="qa-chamber qa-right">
+                
+                <div class="premium-player-card" id="player-card-gost">
+                    <div class="player-controls-row">
+                        <button class="play-btn-3d" onclick="window.EduAudioSys.togglePlay('gost', '/audio/gost-proekty.ru.mp3')">
+                            <svg class="play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="pause-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+
+                        <div class="seek-group">
+                            <button class="seek-btn" onclick="window.EduAudioSys.seek('gost', '/audio/gost-proekty.ru.mp3', -10)">-10s</button>
+                            <button class="seek-btn" onclick="window.EduAudioSys.seek('gost', '/audio/gost-proekty.ru.mp3', 10)">+10s</button>
+                        </div>
+
+                        <div class="time-badge">
+                            <span class="curr-time">0:00</span> / <span class="dur-time">0:00</span>
+                        </div>
+
+                        <div class="speed-group">
+                            <button class="speed-btn active" onclick="window.EduAudioSys.setSpeed('gost', '/audio/gost-proekty.ru.mp3', 1, this)">1x</button>
+                            <button class="speed-btn" onclick="window.EduAudioSys.setSpeed('gost', '/audio/gost-proekty.ru.mp3', 1.25, this)">1.25x</button>
+                            <button class="speed-btn" onclick="window.EduAudioSys.setSpeed('gost', '/audio/gost-proekty.ru.mp3', 1.5, this)">1.5x</button>
+                            <button class="speed-btn" onclick="window.EduAudioSys.setSpeed('gost', '/audio/gost-proekty.ru.mp3', 2, this)">2x</button>
+                        </div>
+                    </div>
+
+                    <div class="slider-container">
+                        <input type="range" class="time-slider" min="0" max="100" value="0" step="0.1" 
+                               onmousedown="window.isDraggingSlider = true;"
+                               onmouseup="window.isDraggingSlider = false;"
+                               oninput="
+                                   this.style.background = 'linear-gradient(to right, #0284c7 ' + this.value + '%, #cbd5e1 ' + this.value + '%)';
+                                   window.EduAudioSys.dragSeek('gost', '/audio/gost-proekty.ru.mp3', this.value);
+                               ">
+                    </div>
+                </div>
+
+                <div class="transcript-header">
+                    <span class="th-title">Расшифровка звонка</span>
+                    <div class="th-toggle-wrap">
+                        <span class="th-label">Автоскролл субтитров</span>
+                        <label class="ios-switch">
+                            <input type="checkbox" checked onchange="window.EduAudioSys.autoScroll = this.checked">
+                            <span class="ios-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="call-transcript-box" id="transcript-gost">
+                    <div class="t-row" data-start="1" data-end="12" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 1)"><span class="t-time">[0:01]</span> <b>Менеджер:</b> Алло, алло, добрый день! Здравствуйте! Меня зовут Татьяна, компания Uniofweb. Звоню вот по какому вопросу: смотрите, сейчас коммерческие предложения по сайту рассматриваете?</div>
+                    <div class="t-row" data-start="13" data-end="19" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 13)"><span class="t-time">[0:13]</span> <b>Клиент:</b> Коммерческие предложения на что? По сайту SEO-продвижение, контекстная реклама?</div>
+                    <div class="t-row" data-start="21" data-end="31" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 21)"><span class="t-time">[0:21]</span> <b>Клиент:</b> Да, мы сейчас ищем подрядчика на SEO. Всё остальное не требуется.</div>
+                    <div class="t-row" data-start="31" data-end="32" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 31)"><span class="t-time">[0:31]</span> <b>Менеджер:</b> Замечательно! Тогда адрес сайта не подскажете, чтобы я могла с ним ознакомиться?</div>
+                    <div class="t-row" data-start="33" data-end="34" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 33)"><span class="t-time">[0:33]</span> <b>Клиент:</b> <code>гос-проекты.рф</code> (<code>gost-proekty.ru</code>).</div>
+                    <div class="t-row" data-start="36" data-end="38" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 36)"><span class="t-time">[0:36]</span> <b>Менеджер:</b> Гос-дефис-проект точка ру?</div>
+                    <div class="t-row" data-start="40" data-end="46" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 40)"><span class="t-time">[0:40]</span> <b>Клиент:</b> Угу, так. Национальные проекты.</div>
+                    <div class="t-row" data-start="47" data-end="59" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 47)"><span class="t-time">[0:47]</span> <b>Клиент:</b> Там особо ознакамливаться не с чем: сайт на Bitrix, структура поднята, страниц нет, позиций нет.</div>
+                    <div class="t-row" data-start="61" data-end="111" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 61)"><span class="t-time">[1:01]</span> <b>Клиент:</b> Нужно соответственно структуру править, страницы писать, оптимизацию делать. В двух словах.</div>
+                    <div class="t-row" data-start="113" data-end="118" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 113)"><span class="t-time">[1:13]</span> <b>Менеджер:</b> Так, получается, вам также нужна еще и техническая поддержка, доработки на сайте?</div>
+                    <div class="t-row" data-start="120" data-end="122" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 120)"><span class="t-time">[1:20]</span> <b>Клиент:</b> Да, я думаю, нам всё абсолютно нужно.</div>
+                    <div class="t-row" data-start="123" data-end="134" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 123)"><span class="t-time">[1:23]</span> <b>Менеджер:</b> Поняла. Смотрите, по технической поддержке у нас есть два варианта: по нашим ТЗ либо по вашим...</div>
+                    <div class="t-row" data-start="137" data-end="138" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 137)"><span class="t-time">[1:37]</span> <b>Клиент:</b> Здесь мы только «под ключ» выбираем подрядчика в дальнейшем и по SEO.</div>
+                    <div class="t-row" data-start="140" data-end="228" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 140)"><span class="t-time">[1:40]</span> <b>Клиент:</b> Мы хотим отдать всё. У нас, как по Директу, есть исполнитель, который закрывает все задачи под ключ — это максимально эффективная концепция. Мне нравится брать подрядчика, который сразу берет процесс от начала до конца и отвечает за конечный результат. Поэтому мы ищем SEO-компанию, которая и технически будет вносить правки, и прописывать статьи. А штатными силами или фрилансерами — это уже второй вопрос. Главное, чтобы всё закрывалось в рамках одного подрядчика, чтобы мы с одним исполнителем общались и результаты оценивали по одному.</div>
+                    <div class="t-row" data-start="231" data-end="299" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 231)"><span class="t-time">[2:31]</span> <b>Менеджер:</b> Я вас поняла. Все специалисты у нас в штате, на аутсорсинг никого не берем. Мы подключим специалистов и по технической поддержке, и по SEO-продвижению. Скажите, по техподдержке вы сможете предоставить ТЗ, или лучше чтобы специалист позвонил и детально обсудил, что необходимо?</div>
+                    <div class="t-row" data-start="300" data-end="329" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 300)"><span class="t-time">[3:00]</span> <b>Клиент:</b> Я не смогу предоставить четкое ТЗ по технической доработке просто в силу того, что я не SEO-специалист. Если я что-то придумаю из головы, это может быть чушью. А SEO-специалист, посмотрев, скажет: «Это всё ерунда, нужно по-другому». Я буду доверять его мнению. У меня есть техническое задание именно для SEO...</div>
+                    <div class="t-row" data-start="330" data-end="331" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 330)"><span class="t-time">[3:30]</span> <b>Клиент:</b> Я его могу прислать, а вот ТЗ по доработкам — нет.</div>
+                    <div class="t-row" data-start="332" data-end="408" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 332)"><span class="t-time">[3:32]</span> <b>Менеджер:</b> Поняла. Тогда наш специалист ознакомится с сайтом и рассчитает часы на реализацию. По стоимости: для наших клиентов это от 48 000 рублей в месяц. Подскажите, по бюджету у вас есть ориентиры?</div>
+                    <div class="t-row" data-start="409" data-end="445" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 409)"><span class="t-time">[4:09]</span> <b>Клиент:</b> Мы рассчитываем вложиться до 150 000 рублей ежемесячно. Планируем начать техническую поддержку и продвижение в течение месяца, сейчас на этапе сбора предложений. Я консалтом занимаюсь в этой истории, помогаю выбрать подрядчика.</div>
+                    <div class="t-row" data-start="446" data-end="505" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 446)"><span class="t-time">[4:46]</span> <b>Менеджер:</b> Поняла. Как я могу к вам обращаться? Александр? Очень приятно! Должность можно записать как «помощник руководителя»?</div>
+                    <div class="t-row" data-start="508" data-end="550" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 508)"><span class="t-time">[5:08]</span> <b>Клиент:</b> Да, можно так. Связаться можно по этому номеру, лучше написать в WhatsApp или Telegram.</div>
+                    <div class="t-row" data-start="551" data-end="592" onclick="window.EduAudioSys.jumpTo('gost', '/audio/gost-proekty.ru.mp3', 551)"><span class="t-time">[5:51]</span> <b>Менеджер:</b> Отлично, отправлю информацию в Telegram. Завтра специалист с вами свяжется, уточнит детали по сайту. Спасибо за время, хорошего дня!</div>
+                </div>
+            </div>
+        </div>    
+
+    <div class="section-title">Заявки на КР с конкурентов:</div>
+
+        <!-- КАРТОЧКА 2: ЗАЯВКА НА КР -->
+        <div class="qa-row">
+            <div class="qa-chamber qa-left">
+    <div class="tag-group">
+        <span class="service-tag seo-tag">Контекст</span>
+        <span class="audio-tag">Успешный проход + Бриф</span>
+    </div>
+                <div class="call-meta">
+                    <b>Длительность:</b> 07:10<br>
+                    <b>Файл:</b> bigpanda-shop.ru.mp3<br>
+                    <b>Результат:</b> Потребность зафиксирована, бюджет 150к ОК, коммуникация переведена в Telegram, назначен звонок со специалистом.
+                </div>
+
+                <div class="call-highlights" style="margin-top: 20px;">
+                    <div class="highlight-item"><b>[1:23] Выявление боли:</b> Предыдущий подрядчик сливал бюджет, отчетов нет → ищут замену с кейсами в B2B.</div>
+                    <div class="highlight-item"><b>[2:31] Запрос клиента:</b> Нужна РСЯ / догоняющая реклама, чтобы регулярно мозолить глаза в B2B-сегменте.</div>
+                    <div class="highlight-item"><b>[3:18] Озвучка бюджета:</b> 50к за работу + 100к рекламный бюджет (итого 150к) → клиент подтверждает готовность.</div>
+                    <div class="highlight-item"><b>[4:49] ЛПР / Проход видеовстречи:</b> Маркетолог принимает решение сама, директор только утверждает бюджет.</div>
+                </div>
+            </div>
+
+            <div class="qa-chamber qa-right">
+                
+                <div class="premium-player-card" id="player-card-panda">
+                    <div class="player-controls-row">
+                        <button class="play-btn-3d" onclick="window.EduAudioSys.togglePlay('panda', '/audio/bigpanda-shop.ru.mp3')">
+                            <svg class="play-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            <svg class="pause-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor" style="display:none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+                        </button>
+
+                        <div class="seek-group">
+                            <button class="seek-btn" onclick="window.EduAudioSys.seek('panda', '/audio/bigpanda-shop.ru.mp3', -10)">-10s</button>
+                            <button class="seek-btn" onclick="window.EduAudioSys.seek('panda', '/audio/bigpanda-shop.ru.mp3', 10)">+10s</button>
+                        </div>
+
+                        <div class="time-badge">
+                            <span class="curr-time">0:00</span> / <span class="dur-time">0:00</span>
+                        </div>
+
+                        <div class="speed-group">
+                            <button class="speed-btn active" onclick="window.EduAudioSys.setSpeed('panda', '/audio/bigpanda-shop.ru.mp3', 1, this)">1x</button>
+                            <button class="speed-btn" onclick="window.EduAudioSys.setSpeed('panda', '/audio/bigpanda-shop.ru.mp3', 1.25, this)">1.25x</button>
+                            <button class="speed-btn" onclick="window.EduAudioSys.setSpeed('panda', '/audio/bigpanda-shop.ru.mp3', 1.5, this)">1.5x</button>
+                            <button class="speed-btn" onclick="window.EduAudioSys.setSpeed('panda', '/audio/bigpanda-shop.ru.mp3', 2, this)">2x</button>
+                        </div>
+                    </div>
+
+                    <div class="slider-container">
+                        <input type="range" class="time-slider" min="0" max="100" value="0" step="0.1" 
+                               onmousedown="window.isDraggingSlider = true;"
+                               onmouseup="window.isDraggingSlider = false;"
+                               oninput="
+                                   this.style.background = 'linear-gradient(to right, #0284c7 ' + this.value + '%, #cbd5e1 ' + this.value + '%)';
+                                   window.EduAudioSys.dragSeek('panda', '/audio/bigpanda-shop.ru.mp3', this.value);
+                               ">
+                    </div>
+                </div>
+
+                <div class="transcript-header">
+                    <span class="th-title">Расшифровка звонка</span>
+                    <div class="th-toggle-wrap">
+                        <span class="th-label">Автоскролл субтитров</span>
+                        <label class="ios-switch">
+                            <input type="checkbox" checked onchange="window.EduAudioSys.autoScroll = this.checked">
+                            <span class="ios-slider"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="call-transcript-box" id="transcript-panda">
+                    <div class="t-row" data-start="0" data-end="10" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 0)"><span class="t-time">[0:00]</span> <b>Менеджер:</b> Алло, алло, добрый день! Здравствуйте, меня Татьяна зовут, компания Uniofweb. Звоню вот по какому вопросу.</div>
+                    <div class="t-row" data-start="10" data-end="14" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 10)"><span class="t-time">[0:10]</span> <b>Клиент:</b> Да, смотрите, я вас не сразу услышала.</div>
+                    <div class="t-row" data-start="14" data-end="20" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 14)"><span class="t-time">[0:14]</span> <b>Менеджер:</b> Коммерческие предложения по сайту рассматриваете? Или сайт разработан уже?</div>
+                    <div class="t-row" data-start="20" data-end="28" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 20)"><span class="t-time">[0:20]</span> <b>Клиент:</b> Сайт разработан, а вот продвижение и реклама интересуют!</div>
+                    <div class="t-row" data-start="28" data-end="39" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 28)"><span class="t-time">[0:28]</span> <b>Менеджер:</b> Ага, замечательно! Реклама контекстная, верно? А домен сайта не подскажете, чтобы я могла ознакомиться и сориентировать?</div>
+                    <div class="t-row" data-start="39" data-end="54" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 39)"><span class="t-time">[0:39]</span> <b>Клиент:</b> «Большая панда» на английском, нижнее подчеркивание, шоп. <code>bigpanda-shop.ru</code>, по-моему.</div>
+                    <div class="t-row" data-start="54" data-end="83" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 54)"><span class="t-time">[0:54]</span> <b>Менеджер:</b> Всё отлично! Извините, сразу не уточнила — как вас зовут? Дарья? Очень приятно! Хорошо, Дарья, тогда сейчас уточню пару моментов по сайту, чтобы расчёты получились более точными, далее передам специалисту и с вами свяжутся. Подскажите, вы сейчас как-то сайт продвигаете, рекламируете, работаете с кем-то?</div>
+                    <div class="t-row" data-start="83" data-end="101" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 83)"><span class="t-time">[1:23]</span> <b>Клиент:</b> Ну, мы с кем-то работаем, но я не совсем понимаю, с кем конкретно. Я только пришла, до меня не было маркетолога. Они продвигались, но мне никто ничего внятного сказать не может. По отчётам я вижу, что ничего не делается, мы просто деньги сливаем. Поэтому ищем кого-то другого.</div>
+                    <div class="t-row" data-start="101" data-end="122" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 101)"><span class="t-time">[1:41]</span> <b>Клиент:</b> Нужны релевантные кейсы для B2B, чтобы мы точно понимали, можем ли довериться компании. Оставаться с текущими смысла не вижу.</div>
+                    <div class="t-row" data-start="122" data-end="142" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 122)"><span class="t-time">[2:02]</span> <b>Менеджер:</b> Поняла вас! Мы на рынке более 16 лет, у нас множество кейсов в разных тематиках, в том числе в B2B-сегменте. После разговора направлю информацию о нашей компании с кейсами. А сейчас какие первоочередные задачи стоят?</div>
+                    <div class="t-row" data-start="142" data-end="171" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 142)"><span class="t-time">[2:22]</span> <b>Клиент:</b> Хотим контекстную рекламу. Причем с эффектом «догоняющего поста» (РСЯ/ретаргетинг): чтобы если клиент перешел, на сайтах-партнерах реклама отображалась и мозолила глаза. В B2B продажи долгие, важно, чтобы про нас не забывали и было побольше заявок.</div>
+                    <div class="t-row" data-start="171" data-end="198" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 171)"><span class="t-time">[2:51]</span> <b>Менеджер:</b> Всё поняла! Мы настраиваем и полностью ведем кампании в Яндексе под ключ. Главная задача — приводить не просто трафик, а реальные заявки, постоянно снижая стоимость привлечения. Всё берём на себя: от анализа конкурентов до текстов объявлений.</div>
+                    <div class="t-row" data-start="198" data-end="257" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 198)"><span class="t-time">[3:18]</span> <b>Менеджер:</b> Чтобы не тратить бюджет вслепую, перед запуском готовим детальный расчёт, прогнозируемый бюджет и стоимость заявки под вашу нишу. По бюджету: 50 000 рублей — наша комиссия за настройку и ведение, плюс рекламный бюджет на показы от 100 000 рублей. В сумме около 150 000. Скажите, если предложение понравится, готовы такие бюджеты рассматривать?</div>
+                    <div class="t-row" data-start="257" data-end="258" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 257)"><span class="t-time">[4:17]</span> <b>Клиент:</b> Думаю, да.</div>
+                    <div class="t-row" data-start="258" data-end="268" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 258)"><span class="t-time">[4:18]</span> <b>Менеджер:</b> Замечательно! Дарья, подскажите, как могу корректно вашу должность записать?</div>
+                    <div class="t-row" data-start="268" data-end="276" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 268)"><span class="t-time">[4:28]</span> <b>Клиент:</b> Можете записать «менеджер по рекламе» или «маркетолог». Связаться можно по этому номеру.</div>
+                    <div class="t-row" data-start="276" data-end="288" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 276)"><span class="t-time">[4:36]</span> <b>Менеджер:</b> Подскажите, все предложения согласовываются через вас, а далее вы утверждаете у руководителя? Можно ли подключить руководителя на видеовстречу?</div>
+                    <div class="t-row" data-start="288" data-end="325" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 288)"><span class="t-time">[4:48]</span> <b>Клиент:</b> Скажем так: я буду решать, кто будет подрядчиком. Директор только вышла из отпуска, подключаться не будет. Ей достаточно, чтобы я ознакомилась и преподнесла. Но сбросить кейсы — приоритетно, ей важно посмотреть для согласования бюджета.</div>
+                    <div class="t-row" data-start="325" data-end="362" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 325)"><span class="t-time">[5:25]</span> <b>Менеджер:</b> Да, конечно, поняла! Куда удобнее направить информацию и кейсы? По этому номеру есть Мессенджеры?</div>
+                    <div class="t-row" data-start="362" data-end="401" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 362)"><span class="t-time">[6:02]</span> <b>Клиент:</b> Можете в Telegram направить по этому номеру, я постоянно там.</div>
+                    <div class="t-row" data-start="401" data-end="421" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 401)"><span class="t-time">[6:41]</span> <b>Менеджер:</b> По срокам: если предложение понравится, до конца следующей недели определитесь и в течение месяца сможем запустить работы?</div>
+                    <div class="t-row" data-start="421" data-end="427" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 421)"><span class="t-time">[7:01]</span> <b>Клиент:</b> Думаю, да. Рабочий день у меня через час заканчивается (разница +4 часа по региону).</div>
+                    <div class="t-row" data-start="427" data-end="430" onclick="window.EduAudioSys.jumpTo('panda', '/audio/bigpanda-shop.ru.mp3', 427)"><span class="t-time">[7:07]</span> <b>Менеджер:</b> Поняла! Передам информацию специалисту, скину кейсы в Telegram. Если не успеет сегодня — наберет в понедельник. Хорошего дня вам!</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+<style>
+.edu-script-analysis {
+    width: 100%;
+    font-family: system-ui, -apple-system, sans-serif;
+    color: #334155;
+    line-height: 1.6;
+}
+
+.section-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 16px 0;
+}
+
+.qa-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.qa-row {
+    display: flex;
+    align-items: stretch;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.05);
+    transition: box-shadow 0.2s ease;
+}
+
+.qa-chamber {
+    padding: 24px;
+    box-sizing: border-box;
+}
+
+.qa-left {
+    width: 32%;
+    background: #f8fafc;
+    border-right: 1px solid #e2e8f0;
+    border-top-left-radius: 16px;
+    border-bottom-left-radius: 16px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.qa-title {
+    font-size: 15px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.audio-tag {
+    font-size: 11px;
+    font-weight: 700;
+    color: #0284c7;
+    background: #e0f2fe;
+    padding: 4px 10px;
+    border-radius: 6px;
+    width: fit-content;
+}
+
+.call-meta {
+    font-size: 12px;
+    color: #475569;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed #cbd5e1;
+    line-height: 1.6;
+}
+
+.call-highlights {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.highlight-item {
+    font-size: 12px;
+    color: #334155;
+    line-height: 1.45;
+}
+
+.highlight-item b {
+    color: #0284c7;
+}
+
+.qa-right {
+    width: 68%;
+    background: #ffffff;
+    font-size: 13.5px;
+    color: #334155;
+    line-height: 1.55;
+    position: relative;
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+}
+
+/* СТАБИЛЬНЫЙ ПЛЕЕР (БЕЗ STICKY/ПЕРЕМЕЩЕНИЯ) */
+.premium-player-card {
+    position: relative !important;
+    top: 0 !important;
+    z-index: 1;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px 18px;
+    margin-bottom: 18px;
+    box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+}
+
+.player-controls-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.play-btn-3d {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    color: #ffffff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 6px 14px rgba(2, 132, 199, 0.3), inset 0 2px 4px rgba(255, 255, 255, 0.3), inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+    transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+}
+
+.play-btn-3d:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(2, 132, 199, 0.4), inset 0 2px 4px rgba(255, 255, 255, 0.4);
+}
+
+.play-btn-3d:active, .play-btn-3d.playing {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25), inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.seek-group {
+    display: flex;
+    gap: 6px;
+}
+
+.seek-btn {
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 700;
+    color: #334155;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    transition: all 0.15s ease;
+}
+
+.seek-btn:hover {
+    background: #f1f5f9;
+    border-color: #94a3b8;
+}
+
+.time-badge {
+    font-size: 12px;
+    font-weight: 700;
+    color: #0f172a;
+    font-family: monospace;
+    background: #f1f5f9;
+    padding: 5px 12px;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+    border: 1px solid #e2e8f0;
+}
+
+.speed-group {
+    display: flex;
+    gap: 4px;
+    margin-left: auto;
+}
+
+.speed-btn {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: 700;
+    color: #64748b;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.speed-btn:hover {
+    color: #0f172a;
+    background: #f1f5f9;
+}
+
+.speed-btn.active {
+    background: #0f172a;
+    color: #ffffff;
+    box-shadow: 0 3px 8px rgba(15, 23, 42, 0.25);
+}
+
+.slider-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.time-slider {
+    width: 100%;
+    height: 6px;
+    border-radius: 4px;
+    background: linear-gradient(to right, #0284c7 0%, #cbd5e1 0%);
+    outline: none;
+    cursor: pointer;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.15);
+}
+
+.time-slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #0284c7;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+    transition: transform 0.1s ease;
+}
+
+.time-slider::-moz-range-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #0284c7;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.time-slider::-webkit-slider-thumb:hover {
+    transform: scale(1.25);
+}
+
+/* ШАПКА ТРАНСКРИПТА И IOS SWITCH */
+.transcript-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 4px;
+}
+
+.th-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: #0f172a;
+}
+
+.th-toggle-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.th-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.ios-switch {
+    position: relative;
+    display: inline-block;
+    width: 36px;
+    height: 20px;
+}
+.ios-switch input { 
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.ios-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: #cbd5e1;
+    transition: .25s ease;
+    border-radius: 20px;
+}
+.ios-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 2px;
+    bottom: 2px;
+    background-color: white;
+    transition: .25s ease;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.ios-switch input:checked + .ios-slider {
+    background-color: #0284c7;
+}
+.ios-switch input:checked + .ios-slider:before {
+    transform: translateX(16px);
+}
+
+/* СТРОГИЙ ДИЗАЙН ВЫДЕЛЕНИЯ СУБТИТРОВ */
+.call-transcript-box {
+    max-height: 420px;
+    overflow-y: auto;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.6;
+    scroll-behavior: smooth;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.t-row {
+    margin-bottom: 4px;
+    padding: 8px 12px 8px 18px;
+    border-radius: 8px;
+    color: #94a3b8;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+    background: transparent;
+    border: none;
+}
+
+.t-row:hover {
+    color: #334155;
+    background: rgba(255, 255, 255, 0.7);
+}
+
+.t-row.active-sub {
+    background: #ffffff;
+    color: #0f172a;
+    font-weight: 600;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.08), 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.t-time {
+    font-family: monospace;
+    font-size: 12px;
+    color: #94a3b8;
+    font-weight: 700;
+    margin-right: 8px;
+    transition: color 0.25s ease;
+}
+
+.t-row.active-sub .t-time {
+    color: #0284c7;
+}
+
+.t-row b {
+    color: #334155;
+    transition: color 0.25s ease;
+}
+
+.t-row code {
+    background: #f1f5f9;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 13px;
+    color: #0f172a;
+}
+
+.call-transcript-box::-webkit-scrollbar {
+    width: 6px;
+}
+.call-transcript-box::-webkit-scrollbar-track {
+    background: transparent;
+}
+.call-transcript-box::-webkit-scrollbar-thumb {
+    background-color: #cbd5e1;
+    border-radius: 10px;
+}
+
+@media (max-width: 640px) {
+    .qa-row {
+        flex-direction: column;
+    }
+    .qa-left, .qa-right {
+        width: 100%;
+    }
+    .qa-left {
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        border-border-radius: 16px 16px 0 0;
+    }
+}
+
+/* Контейнер для двух бейджей в одну строку */
+.tag-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.service-tag {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+}
+
+/* Зелёный стиль для SEO */
+.seo-tag {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+/* Оранжевый/синий стиль для Контекстной рекламы (КР) */
+.ppc-tag {
+    background: #fef3c7;
+    color: #b45309;
+    border: 1px solid #fde68a;
+}
+</style>
+

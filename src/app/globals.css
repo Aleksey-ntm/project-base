@@ -201,3 +201,96 @@ body.admin-panel-active .drag-handle {
 .drag-handle:active {
     cursor: grabbing;
 }
+
+/* Автоматический cursor: pointer для всех интерактивных элементов */
+button,
+a,
+select,
+input[type="checkbox"],
+input[type="radio"],
+.cursor-pointer,
+[role="button"] {
+    cursor: pointer !important;
+}
+
+/* Стили курсора для drag-and-drop */
+.sortable-chosen,
+.drag-handle:active {
+    cursor: grabbing !important;
+}
+/* ================================================================== */
+/* ШАПКА И ПОИСК (HeaderSearch & Profile)                             */
+/* ================================================================== */
+.global-header {
+    position: sticky; top: 0; left: 0; right: 0; z-index: 9999;
+    overflow: visible; padding: 0 24px; box-sizing: border-box;
+    background-color: #f4f6f8;
+    border-bottom: 2px solid #e8ecef;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+.header-inside {
+    max-width: 1600px; margin: 0 auto; padding: 0 16px; height: 64px; 
+    display: flex; justify-content: space-between; align-items: center; gap: 24px;
+}
+.header-logo {
+    display: flex; align-items: center; gap: 8px; font-weight: 700; font-size: 19px; color: #222; text-decoration: none; flex-shrink: 0;
+}
+.header-logo span { color: #0284c7; }
+
+/* Поиск */
+.header-search-container { position: relative; flex: 1; max-width: 500px; }
+.search-input-wrapper { position: relative; width: 100%; display: flex; align-items: center; }
+.search-input-wrapper i.bi-search { position: absolute; left: 14px; color: #94a3b8; font-size: 14px; z-index: 2; }
+.header-search-input {
+    width: 100%; height: 40px; background: #ffffff; border: 1px solid #cbd5e1;
+    border-radius: 8px; padding: 0 80px 0 40px; font-family: inherit; font-size: 14px; color: #0f172a;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.02); transition: all 0.2s ease;
+}
+.header-search-input:focus { outline: none; border-color: #0284c7; box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12); }
+.search-shortcut {
+    position: absolute; right: 12px; font-size: 11px; font-weight: 700; color: #94a3b8; background: #f8fafc; 
+    border: 1px solid #e2e8f0; border-radius: 4px; padding: 3px 6px; pointer-events: none;
+}
+.search-clear-btn { position: absolute; right: 10px; background: none; border: none; color: #94a3b8; cursor: pointer; display: none; font-size: 18px; padding: 4px; z-index: 5; }
+.search-clear-btn:hover { color: #ef4444; }
+
+/* Выпадающий выпадающий список результатов */
+.search-global-dropdown {
+    display: none; position: absolute; top: calc(100% + 8px); left: 0; right: 0;
+    background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; box-shadow: 0 10px 30px rgba(15,23,42,0.15); 
+    max-height: 400px; overflow-y: auto; z-index: 10100; padding: 8px;
+}
+.search-global-dropdown.active { display: block; }
+.search-dropdown-header {
+    padding: 8px 12px; font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; border-bottom: 1px solid #f1f5f9;
+}
+.search-no-results { padding: 16px; text-align: center; font-size: 13px; color: #64748b; }
+
+/* Навбар и профиль */
+.header-nav { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+.header-btn-main { display: inline-flex; align-items: center; gap: 6px; color: #747d8c; text-decoration: none; font-size: 13px; font-weight: 600; padding: 8px 14px; border-radius: 8px; border: 1px solid #e8ecef; background: #fff; height: 36px; }
+.header-btn-main:hover { color: #333; background: #f8fafc; }
+.user-profile-menu { position: relative; display: inline-block; }
+.env-badge { font-size: 13px; font-weight: 600; background: #fff; color: #1e293b; padding: 0 14px; border-radius: 8px; border: 1px solid #e8ecef; cursor: pointer; display: inline-flex; align-items: center; gap: 8px; height: 36px; user-select: none; }
+.dropdown-wrapper { display: none; position: absolute; top: calc(100% + 6px); right: 0; width: 230px; z-index: 10050; }
+.user-profile-menu.active .dropdown-wrapper { display: block; }
+.dropdown-menu { background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 6px; box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); }
+.dropdown-item-menu { display: flex; align-items: center; gap: 8px; width: 100%; padding: 8px 10px; color: #334155; text-decoration: none; font-size: 13px; font-weight: 500; border-radius: 6px; cursor: pointer; border: none; background: transparent; }
+.dropdown-item-menu:hover { background: #f1f5f9; }
+.dropdown-item-logout { color: #ef4444; font-weight: 600; border-top: 1px solid #f1f5f9; margin-top: 4px; padding-top: 8px; }
+
+/* ================================================================== */
+/* ПЛАВАЮЩАЯ АДМИН-ПАНЕЛЬ (AdminPanelEdu)                            */
+/* ================================================================== */
+.ap-trigger { position: fixed; bottom: 24px; right: 24px; z-index: 9999; width: 52px; height: 52px; background: linear-gradient(135deg, #0f172a, #1e293b); color: #fff; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 10px 15px -3px rgba(15, 23, 42, 0.3); border: 1px solid rgba(79, 70, 229, 0.3); transition: all 0.3s; }
+.ap-trigger:hover { background: #4f46e5; transform: scale(1.08); }
+.ap-panel { position: fixed; bottom: 88px; right: 24px; z-index: 9998; width: 310px; background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(15px); border: 1px solid #e2e8f0; border-radius: 20px; padding: 20px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.08); display: none; flex-direction: column; gap: 16px; }
+.ap-panel.active { display: flex; }
+.ap-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; }
+.ap-header-title { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; color: #64748b; }
+.ap-pulse { width: 8px; height: 8px; background: #4f46e5; border-radius: 50%; }
+.ap-badge { background: #f1f5f9; color: #475569; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; }
+.ap-btn { width: 100%; height: 40px; border: none; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 12px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: all 0.2s; }
+.ap-btn-primary { background: #4f46e5; color: #fff; }
+.ap-btn-success { background: #10b981; color: #fff; }
+.ap-btn-danger { background: #e11d48; color: #fff; }

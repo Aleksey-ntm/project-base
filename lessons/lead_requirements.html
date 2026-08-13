@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Требования к лидам</title>
+    <style>
+        .lead-docs-native {
+            width: 100%;
+            max-width: 1000px;
+            margin: 0 auto;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            color: #334155;
+            box-sizing: border-box;
+            line-height: 1.6;
+        }
+        .v2-table tbody tr {
+            cursor: pointer;
+            transition: background-color 0.15s ease;
+        }
+
+        .lead-docs-native * {
+            box-sizing: border-box;
+        }
+
+        /* Шапка */
+        .edu-header {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .edu-header-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            gap: 8px;
+            width: 100%;
+            max-width: 750px;
+        }
+
+        .edu-title {
+            margin: 0;
+            font-size: 28px;
+            font-weight: 800;
+            color: #0f172a;
+        }
+
+        .edu-intro {
+            margin: 0;
+            font-size: 15px;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        /* Заголовки разделов */
+        .section-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #0f172a;
+            margin: 0 0 10px 0;
+        }
+
+        .subsection-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 24px 0 12px 0;
+        }
+
+        .intro-text {
+            font-size: 14px;
+            line-height: 1.55;
+            color: #475569;
+            margin: 0 0 16px 0;
+        }
+
+        .intro-section-clean {
+            margin-bottom: 2rem;
+        }
+
+        /* Карточки базовых критериев */
+        .criteria-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .criteria-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .criteria-card:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
+        }
+
+        .criteria-num {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: #475569;
+            color: #ffffff;
+            font-weight: 800;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .card-header-inline {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #475569;
+            line-height: 1.4;
+        }
+
+        /* Инфо-блоки */
+        .info-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+
+        .info-box-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+        }
+
+        .info-box-text {
+            font-size: 13px;
+            color: #334155;
+            line-height: 1.5;
+        }
+
+        .warning-box {
+            background: #fff5f5;
+            border: 1px solid #fecdd3;
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+        }
+
+        .warning-box-title {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #991b1b;
+            margin-bottom: 4px;
+        }
+
+        /* Шаги */
+        .step-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .step-item {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 10px 14px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            font-size: 13.5px;
+            color: #334155;
+        }
+
+        .step-badge {
+            background: #e2e8f0;
+            color: #475569;
+            font-size: 11px;
+            font-weight: 800;
+            padding: 2px 6px;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* Сравнение */
+        .compare-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 12px;
+        }
+
+        .intro-card {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .compare-list {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0 0;
+            font-size: 13px;
+            color: #475569;
+        }
+
+        .compare-list li {
+            margin-bottom: 6px;
+            position: relative;
+            padding-left: 14px;
+        }
+
+        .compare-list li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #64748b;
+            font-weight: bold;
+        }
+
+        /* Скрипты */
+        .speech-box {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 12px 14px;
+            margin: 16px 0;
+            font-size: 13.5px;
+            color: #1e293b;
+            font-style: italic;
+        }
+
+        .speech-title {
+            font-style: normal;
+            font-weight: 700;
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        /* ДОРАБОТАННЫЙ ВАРИАНТ 2 ТАБЛИЦЫ */
+        .v2-wrap {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #ffffff;
+            margin-bottom: 24px;
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.03);
+            transition: border-color 0.2s ease;
+        }
+
+        .v2-wrap:hover {
+            border-color: #cbd5e1;
+        }
+
+        .v2-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13.5px;
+            text-align: left;
+        }
+
+        .v2-table th {
+            background: #f8fafc;
+            color: #475569;
+            font-weight: 700;
+            padding: 12px 16px;
+            border-bottom: 1px solid #e2e8f0;
+            border-right: 1px solid #e2e8f0;
+            font-size: 11.5px;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .v2-table th:last-child {
+            border-right: none;
+        }
+
+        .v2-table td {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f1f5f9;
+            border-right: 1px solid #f1f5f9;
+            color: #334155;
+            vertical-align: top;
+            transition: all 0.15s ease;
+            position: relative;
+        }
+
+        .v2-table td:last-child {
+            border-right: none;
+        }
+
+        .v2-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Интерактивный Hover строки */
+        .v2-table tbody tr {
+            transition: background-color 0.15s ease;
+        }
+
+        .v2-table tbody tr:hover td {
+            background-color: #f8fafc;
+            color: #0f172a;
+        }
+
+        .v2-table tbody tr:hover td:first-child {
+            box-shadow: inset 3px 0 0 #475569;
+            padding-left: 19px;
+        }
+
+        /* Бейджи и подсказки */
+        .badge-ok {
+            display: inline-flex;
+            align-items: center;
+            background: #f0fdf4;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        .badge-tag {
+            display: inline-flex;
+            align-items: center;
+            background: #f1f5f9;
+            color: #475569;
+            border: 1px solid #e2e8f0;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 640px) {
+            .v2-wrap {
+                overflow-x: auto;
+            }
+            .v2-table {
+                min-width: 580px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="lead-docs-native">
+
+    <!-- Шапка -->
+    <div class="edu-header">
+        <div class="edu-header-top">
+            <h1 class="edu-title">Требования к лидам</h1>
+            <p class="edu-intro">
+                Регламент квалификации, критерии передачи заявок в отдел продаж и чек-листы по направлениям.
+            </p>
+        </div>
+    </div>
+
+    <!-- БЛОК 1: Базовые критерии -->
+    <div class="intro-section-clean">
+        <h2 class="section-title">Основные критерии передачи заявки</h2>
+        <p class="intro-text">
+            При квалификации и передаче обращения в отдел продаж учитываются 4 базовых параметра:
+        </p>
+        
+        <div class="criteria-grid">
+            <div class="criteria-card">
+                <div class="card-header-inline">
+                    <span class="criteria-num">1</span>
+                    <span class="card-title">Потребность и услуга</span>
+                </div>
+                <div class="card-desc">Соответствие предлагаемой услуги реальным задачам клиента.</div>
+            </div>
+            <div class="criteria-card">
+                <div class="card-header-inline">
+                    <span class="criteria-num">2</span>
+                    <span class="card-title">Бюджет компании</span>
+                </div>
+                <div class="card-desc">Подтвержденное согласие с минимальным ценовым порогом.</div>
+            </div>
+            <div class="criteria-card">
+                <div class="card-header-inline">
+                    <span class="criteria-num">3</span>
+                    <span class="card-title">Сроки запуска</span>
+                </div>
+                <div class="card-desc">Готовность стартовать работы в течение 1 месяца после КП.</div>
+            </div>
+            <div class="criteria-card">
+                <div class="card-header-inline">
+                    <span class="criteria-num">4</span>
+                    <span class="card-title">Сайт и CMS</span>
+                </div>
+                <div class="card-desc">Актуальность площадки и соответствие стек-требованиям.</div>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="info-box-title">📌 Выявление потребности</div>
+            <div class="info-box-text">Подробный разбор вопросов выявления потребности содержится в отдельном регламенте <b>«Выявление потребности»</b>.</div>
+        </div>
+    </div>
+
+    <!-- БЛОК 2: Сопоставление услуг -->
+    <div class="intro-section-clean">
+        <h2 class="section-title">1. Сопоставление услуги с задачами клиента</h2>
+        <p class="intro-text">
+            Наша задача — сопоставить реальную задачу клиента с предлагаемым продуктом. Если клиент соглашается на цель звонка, но описанные им проблемы относятся к другой услуге, формат предложения перестраивается.
+        </p>
+
+        <div class="warning-box">
+            <div class="warning-box-title">⚠️ Пример несоответствия</div>
+            <div class="info-box-text">Предложили контекстную рекламу. В ходе диалога выяснили, что на сайте нет корзины, съехала верстка и не работают формы. Запуск контекста в данном случае не решит проблему клиента, так как реклама ведет трафик, а не исправляет ошибки на площадке.</div>
+        </div>
+
+        <h3 class="subsection-title">Алгоритм действий менеджера:</h3>
+        <div class="step-list">
+            <div class="step-item">
+                <span class="step-badge">ШАГ 1</span>
+                <div>Стандартно произносим цель звонка и озвучиваем вводное предложение (SEO / Контекст).</div>
+            </div>
+            <div class="step-item">
+                <span class="step-badge">ШАГ 2</span>
+                <div>Задаем уточняющие вопросы и внимательно выслушиваем задачи клиента.</div>
+            </div>
+            <div class="step-item">
+                <span class="step-badge">ШАГ 3</span>
+                <div>Если задачи не совпадают с услугой, аргументированно объясняем несоответствие (например: <i>«Контекст не исправит ошибки конверсии на самом сайте»</i>).</div>
+            </div>
+            <div class="step-item">
+                <span class="step-badge">ШАГ 4</span>
+                <div>Предлагаем корректный продукт под фактическую задачу (SEO, Техподдержка, Разовые работы или Новый сайт).</div>
+            </div>
+        </div>
+
+        <h3 class="subsection-title">Определение услуги в процессе разговора:</h3>
+        <div class="compare-grid">
+            <div class="intro-card">
+                <div class="card-header-inline">
+                    <span class="card-title">Разработка / ТП / Разовые работы</span>
+                </div>
+                <ul class="compare-list">
+                    <li>Задачи <b>не связаны</b> с факторами ранжирования.</li>
+                    <li>Требуется: онлайн-оплата, интеграция 1С, доработка модулей, верстка или создание новых страниц.</li>
+                    <li>Клиент хочет лиды, но сайт технически не готов.</li>
+                </ul>
+            </div>
+            <div class="intro-card">
+                <div class="card-header-inline">
+                    <span class="card-title">SEO-продвижение</span>
+                </div>
+                <ul class="compare-list">
+                    <li>Задачи <b>прямо связаны</b> с факторами ранжирования (структура, тексты, перелинковка, оптимизация).</li>
+                    <li>Клиент заинтересован в регулярном росте органического трафика и позиций.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="compare-grid" style="margin-top: 12px;">
+            <div class="intro-card">
+                <div class="card-header-inline">
+                    <span class="card-title">Техническая поддержка (ТП)</span>
+                </div>
+                <ul class="compare-list">
+                    <li>Объемная задача или регулярный пул задач.</li>
+                    <li>Срок реализации — <b>от 3 месяцев</b>.</li>
+                    <li>Работы оплачиваются по тарифной сетке.</li>
+                </ul>
+            </div>
+            <div class="intro-card">
+                <div class="card-header-inline">
+                    <span class="card-title">Разовые работы</span>
+                </div>
+                <ul class="compare-list">
+                    <li>Точечная понятная задача.</li>
+                    <li>Срок выполнения — <b>до 1 месяца</b>.</li>
+                    <li>Расчет: <b>2 800 ₽/час</b> (минимальный пакет — 30 часов).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="info-box" style="margin-top: 12px;">
+            <div class="info-box-title">💡 Оценка задачи по часам</div>
+            <div class="info-box-text">
+                <b>1. При наличии ТЗ:</b> передаем документ на оценку техническим специалистам.<br>
+                <b>2. Без ТЗ:</b> согласуем вилку. Речевой модуль: <i>«Нам необходимо оценить точный объем задач. Я уточню данные у технического отдела и перезвоню вам с ориентировочным бюджетом»</i>.
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 3: Бюджет и Сроки -->
+    <div class="intro-section-clean">
+        <h2 class="section-title">2. Оценка бюджета и Сроки</h2>
+        <p class="intro-text">
+            Главный принцип квалификации: <b>клиент должен дать четкое согласие рассматривать наши бюджетные рамки</b>. «Вежливый уход от ответа» не является подтверждением критерия.
+        </p>
+
+        <div class="compare-grid">
+            <div class="intro-card" style="border-color: #fecdd3; background: #fff5f5;">
+                <div class="card-header-inline">
+                    <span class="card-title" style="color: #991b1b;">❌ Некорректные ответы (Лид НЕ прошёл)</span>
+                </div>
+                <ul class="compare-list">
+                    <li><i>«Рассмотрим в случае заинтересованности»</i> (нет готовности платить).</li>
+                    <li><i>«Ну вы пришлите, а мы подумаем»</i> (уход от ответа).</li>
+                    <li>Ответы от лиц, не принимающих финансовые решения.</li>
+                </ul>
+            </div>
+            <div class="intro-card" style="border-color: #bbf7d0; background: #f6fbf7;">
+                <div class="card-header-inline">
+                    <span class="card-title" style="color: #166534;">✅ Корректные ответы (Лид прошёл)</span>
+                </div>
+                <ul class="compare-list">
+                    <li><i>«Да, мы готовы закладывать такие бюджеты»</i>.</li>
+                    <li><i>«Готовы рассматривать указанные суммы»</i>.</li>
+                    <li><i>«Если предложите адекватный план, бюджет устроит»</i>.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="speech-box">
+            <div class="speech-title">💬 Дожим при уходе от ответа по бюджету:</div>
+            «Иван Иванович, чтобы я мог передать заявку в отдел продаж и подготовить индивидуальный расчет, мне необходимо подтвердить: вы готовы рассматривать наши стартовые бюджеты от [СУММА] рублей или этот диапазон вам заведомо не подходит?»
+        </div>
+
+        <h3 class="subsection-title">Сроки начала работ (Старт до 1 месяца):</h3>
+        <p class="intro-text">
+            Ключевой ориентир — готовность стартовать в течение 1 месяца после получения КП. Аргументация для клиента:
+        </p>
+        <div class="step-list">
+            <div class="step-item">
+                <span class="step-badge">1</span>
+                <div><b>Планирование загрузки:</b> Слоты специалистов бронируются под проект и не удерживаются бессрочно.</div>
+            </div>
+            <div class="step-item">
+                <span class="step-badge">2</span>
+                <div><b>Динамика рынка:</b> Алгоритмы поисковиков, аукционы рекламы и показатели конкурентов меняются ежемесячно.</div>
+            </div>
+            <div class="step-item">
+                <span class="step-badge">3</span>
+                <div><b>Актуальность расчетов:</b> Финансовая оценка и объем стратегии фиксируются ровно на 30 дней.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 4: Ограничения -->
+    <div class="intro-section-clean">
+        <h2 class="section-title">3. Ограничения по CMS и Должностям</h2>
+        <div class="warning-box">
+            <div class="warning-box-title">🚫 Ограничения по CMS и конструкторам</div>
+            <div class="info-box-text">
+                Мы не берем в работу проекты на конструкторах и Tilda (для ТП, Разовых и SEO).<br>
+                <b>Исключение для SEO:</b> Tilda с прозрачными ценами и низкой конкуренцией. Список разрешенных систем — в файле <b>«CMS»</b>.
+            </div>
+        </div>
+
+        <div class="info-box">
+            <div class="info-box-title">👔 Требования к должностям ЛПР</div>
+            <div class="info-box-text">
+                Размытые формулировки «Руководитель» или «Менеджер» <b>не принимаются</b>.<br>
+                <b>Принимаются:</b> Собственник, Генеральный директор, Коммерческий директор, Маркетолог, РОМ, Директор по развитию.
+            </div>
+        </div>
+    </div>
+
+    <!-- БЛОК 5: Таблицы (Вариант 2 с доработкой) -->
+    <div class="intro-section-clean">
+        <h2 class="section-title">Чек-листы требований по направлениям</h2>
+        <p class="intro-text">
+            Интерактивные таблицы проверки стандартов лида перед передачей в отдел продаж. Наведите курсор на строку для подсветки.
+        </p>
+
+        <!-- ТАБЛИЦА 1 -->
+        <h3 class="subsection-title">1. Требования к лиду: SEO и Контекстная реклама</h3>
+        <div class="v2-wrap">
+            <table class="v2-table">
+                <thead>
+                    <tr>
+                        <th style="width: 45px;">№</th>
+                        <th style="width: 180px;">Критерий</th>
+                        <th>Что должно быть подтверждено</th>
+                        <th style="width: 320px;">Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>1</b></td>
+                        <td><b>Заинтересованность</b></td>
+                        <td>Явная готовность изучить КП</td>
+                        <td>«Да, пришлите», «Готовы рассмотреть», «Давайте обсудим».</td>
+                    </tr>
+                    <tr>
+                        <td><b>2</b></td>
+                        <td><b>Сайт клиента</b></td>
+                        <td>Домен подтвержден в звонке</td>
+                        <td>Узнаем все домены. При необходимости выбираем наиболее перспективный.</td>
+                    </tr>
+                    <tr>
+                        <td><b>3</b></td>
+                        <td><b>Мотивация и задачи</b></td>
+                        <td>Сформулирована цель обращения</td>
+                        <td>Смена подрядчика, рост позиций, необходимость в лидах/трафике.</td>
+                    </tr>
+                    <tr>
+                        <td><b>4</b></td>
+                        <td><b>Презентация услуг</b></td>
+                        <td>Презентованы все смежные услуги</td>
+                        <td>Если клиент проявляет интерес к дополнительным направлениям — раскрываем их.</td>
+                    </tr>
+                    <tr>
+                        <td><b>5</b></td>
+                        <td><b>Бюджет</b></td>
+                        <td>Подтвержден минимальный чек</td>
+                        <td>Допустимо согласие по одной услуге и отказ по другой.</td>
+                    </tr>
+                    <tr>
+                        <td><b>6</b></td>
+                        <td><b>Контакты</b></td>
+                        <td>Два канала связи</td>
+                        <td>Телефон + Почта либо Телефон + Мессенджер.</td>
+                    </tr>
+                    <tr>
+                        <td><b>7</b></td>
+                        <td><b>Должность</b></td>
+                        <td>Конкретизированный статус ЛПР/ЛВПР</td>
+                        <td>Собственник, Маркетолог, Коммерческий директор и т.д. Формулировка «Руководитель» отклоняется.</td>
+                    </tr>
+                    <tr>
+                        <td><b>8</b></td>
+                        <td><b>ВКС</b></td>
+                        <td>Готовность к онлайн-встрече</td>
+                        <td>Выясняем принципиальную готовность обсудить КП по видеосвязи.</td>
+                    </tr>
+                    <tr>
+                        <td><b>9</b></td>
+                        <td><b>Сроки</b></td>
+                        <td>Старт работ в течение 1 месяца</td>
+                        <td>При отсутствии актуальности по срокам задача считается нецелевой.</td>
+                    </tr>
+                    <tr>
+                        <td><b>10</b></td>
+                        <td><b>Яндекс.Метрика</b></td>
+                        <td>Доступ к аналитике</td>
+                        <td><span class="badge-tag">Только SEO</span> Гостевой доступ, скриншоты или NDA. Без метрики КП по SEO не готовится.</td>
+                    </tr>
+                    <tr>
+                        <td><b>11</b></td>
+                        <td><b>CMS</b></td>
+                        <td>Поддерживаемая платформа</td>
+                        <td><span class="badge-tag">Только SEO</span> Проверка по списку из файла «CMS». Конструкторы — в отказе.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ТАБЛИЦА 2 -->
+        <h3 class="subsection-title">2. Требования к лиду: Техническая поддержка</h3>
+        <div class="v2-wrap">
+            <table class="v2-table">
+                <thead>
+                    <tr>
+                        <th style="width: 45px;">№</th>
+                        <th style="width: 180px;">Критерий</th>
+                        <th>Что должно быть подтверждено</th>
+                        <th style="width: 320px;">Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>1</b></td>
+                        <td><b>Заинтересованность</b></td>
+                        <td>Согласие на получение расчетов</td>
+                        <td>«Да, давайте посчитаем», «Присылайте условия».</td>
+                    </tr>
+                    <tr>
+                        <td><b>2</b></td>
+                        <td><b>Сайт клиента</b></td>
+                        <td>Домен зафиксирован</td>
+                        <td>Проверка платформы и текущего состояния проекта.</td>
+                    </tr>
+                    <tr>
+                        <td><b>3</b></td>
+                        <td><b>Мотивация</b></td>
+                        <td>Понимание цикличности задач</td>
+                        <td>Клиент осознает объемы и постоянный характер работ (от 3 мес.).</td>
+                    </tr>
+                    <tr>
+                        <td><b>4</b></td>
+                        <td><b>Презентация услуг</b></td>
+                        <td>Презентован формат ТП</td>
+                        <td>Работа по ТЗ, абонентский пакет часов. Разовые мелкие правки переводятся в иной формат.</td>
+                    </tr>
+                    <tr>
+                        <td><b>5</b></td>
+                        <td><b>Бюджет</b></td>
+                        <td>Согласие с тарифной сеткой</td>
+                        <td><span class="badge-ok">✓ Минимальный чек OK</span> Подтверждение ежемесячного платежа.</td>
+                    </tr>
+                    <tr>
+                        <td><b>6</b></td>
+                        <td><b>Контакты</b></td>
+                        <td>Минимум 2 контакта</td>
+                        <td>Телефон + Почта / Мессенджер.</td>
+                    </tr>
+                    <tr>
+                        <td><b>7</b></td>
+                        <td><b>Должность</b></td>
+                        <td>Точное наименование позиции</td>
+                        <td>Профиль ЛПР/ЛВПР зафиксирован корректно.</td>
+                    </tr>
+                    <tr>
+                        <td><b>8</b></td>
+                        <td><b>Сроки</b></td>
+                        <td>Готовность к старту</td>
+                        <td>Подтверждение актуальности задачи на ближайший месяц.</td>
+                    </tr>
+                    <tr>
+                        <td><b>9</b></td>
+                        <td><b>CMS</b></td>
+                        <td>Проверка по файлу «CMS»</td>
+                        <td>Соответствие технологическим требованиям компании.</td>
+                    </tr>
+                    <tr>
+                        <td><b>10</b></td>
+                        <td><b>ТЗ</b></td>
+                        <td>Договоренность о передаче ТЗ</td>
+                        <td>Необязательно, если клиент выкупает ТЗ у нас или подробно описал задачи на звонке.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ТАБЛИЦА 3 -->
+        <h3 class="subsection-title">3. Требования к лиду: Разработка сайтов</h3>
+        <div class="v2-wrap">
+            <table class="v2-table">
+                <thead>
+                    <tr>
+                        <th style="width: 45px;">№</th>
+                        <th style="width: 180px;">Критерий</th>
+                        <th>Что должно быть подтверждено</th>
+                        <th style="width: 320px;">Комментарий</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><b>1</b></td>
+                        <td><b>Заинтересованность</b></td>
+                        <td>Готовность к обсуждению КП</td>
+                        <td>Подтверждение запроса на коммерческое предложение.</td>
+                    </tr>
+                    <tr>
+                        <td><b>2</b></td>
+                        <td><b>Действующий сайт</b></td>
+                        <td>Фиксация текущего домена</td>
+                        <td>Если сайта нет — фиксируем разработку с нуля.</td>
+                    </tr>
+                    <tr>
+                        <td><b>3</b></td>
+                        <td><b>Направление бизнеса</b></td>
+                        <td>Сфера деятельности и ниша</td>
+                        <td>Понимание специфики товаров/услуг заказчика.</td>
+                    </tr>
+                    <tr>
+                        <td><b>4</b></td>
+                        <td><b>Тип сайта</b></td>
+                        <td>Формат площадки</td>
+                        <td>Интернет-магазин, корпоративный сайт, лендинг.</td>
+                    </tr>
+                    <tr>
+                        <td><b>5</b></td>
+                        <td><b>1С-Битрикс</b></td>
+                        <td>Готовность к CMS 1С-Битрикс</td>
+                        <td><span class="badge-tag">Основной стек</span> Клиент не против разработки на 1С-Битрикс.</td>
+                    </tr>
+                    <tr>
+                        <td><b>6</b></td>
+                        <td><b>Референсы</b></td>
+                        <td>Примеры и пожелания</td>
+                        <td>Домены понравившихся сайтов (необязательно при наличии сайта).</td>
+                    </tr>
+                    <tr>
+                        <td><b>7</b></td>
+                        <td><b>Бюджет</b></td>
+                        <td>Согласие с вилкой цен</td>
+                        <td><span class="badge-ok">✓ Вилка подтверждена</span> Подтверждение рамок стоимости разработки.</td>
+                    </tr>
+                    <tr>
+                        <td><b>8</b></td>
+                        <td><b>Контакты</b></td>
+                        <td>Два источника связи</td>
+                        <td>Телефон + Почта / Мессенджер.</td>
+                    </tr>
+                    <tr>
+                        <td><b>9</b></td>
+                        <td><b>Должность</b></td>
+                        <td>Профильная должность ЛПР</td>
+                        <td>Конкретизированный статус сотрудника.</td>
+                    </tr>
+                    <tr>
+                        <td><b>10</b></td>
+                        <td><b>Сроки</b></td>
+                        <td>Сроки запуска проекта</td>
+                        <td>Подтверждение плановых сроков старта.</td>
+                    </tr>
+                    <tr>
+                        <td><b>11</b></td>
+                        <td><b>ТЗ</b></td>
+                        <td>Наличие или необходимость ТЗ</td>
+                        <td>Наличие ТЗ ускоряет расчет, но не является строгим стоп-фактором.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

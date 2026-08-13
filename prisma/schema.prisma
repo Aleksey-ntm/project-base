@@ -1,0 +1,144 @@
+datasource db {
+  provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  admin
+  manager
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique @db.VarChar(50)
+  password  String   @db.VarChar(255)
+  firstName String?  @map("first_name") @db.VarChar(100)
+  lastName  String?  @map("last_name") @db.VarChar(100)
+  email     String?  @db.VarChar(100)
+  role      Role     @default(manager)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}
+
+model LessonMeta {
+  id        String   @id @default(cuid())
+  lessonKey String
+  tab       String
+  title     String
+  intro     String?  @db.Text
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([lessonKey, tab], name: "lessonKey_tab")
+  @@map("lesson_meta")
+}
+
+model LessonSection {
+  id        String   @id @default(cuid())
+  lessonKey String
+  tab       String
+  sectionId String?
+  title     String?
+  text      String?  @db.Text
+  boxType   String?
+  boxText   String?  @db.Text
+  textAfter String?  @db.Text
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([lessonKey, tab])
+  @@map("lesson_section")
+}
+
+model LessonTab {
+  id        Int    @id @default(autoincrement())
+  tabKey    String @unique @map("tab_key") @db.VarChar(50)
+  tabTitle  String @map("tab_title") @db.VarChar(100)
+  sortOrder Int    @default(0) @map("sort_order")
+
+  @@map("lesson_tabs") // <-- Здесь оставлен только один map!
+}
+
+model TmSlot {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+  position  Int      @default(0)
+  leads     TmLead[]
+
+  @@map("tm_slots")
+}
+
+model TmLead {
+  id        Int      @id @default(autoincrement())
+  slotId    Int      @map("slot_id")
+  phone     String   @db.VarChar(50)
+  name      String?  @default("") @db.VarChar(255)
+  site      String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  slot      TmSlot   @relation(fields: [slotId], references: [id], onDelete: Cascade)
+
+  @@map("tm_leads")
+}
+
+model MeetingFolder {
+  id        Int       @id @default(autoincrement())
+  userName  String    @map("user_name") @db.VarChar(255)
+  name      String    @db.VarChar(255)
+  createdAt DateTime? @default(now()) @map("created_at")
+
+  @@map("meeting_folders")
+}
+
+model Meeting {
+  id          Int          @id @default(autoincrement())
+  userName    String       @map("user_name") @db.VarChar(50)
+  title       String       @db.VarChar(255)
+  meetingDate DateTime     @map("meeting_date") @db.Date
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  folderId    Int?         @map("folder_id")
+  note        MeetingNote?
+
+  @@index([userName, meetingDate], name: "idx_user_date")
+  @@map("meetings")
+}
+
+model MeetingNote {
+  id        Int      @id @default(autoincrement())
+  meetingId Int      @unique @map("meeting_id")
+  content   String?  @db.Text
+  updatedAt DateTime @updatedAt @map("updated_at")
+  meeting   Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+
+  @@map("meeting_notes")
+}
+
+model Task {
+  id              Int     @id @default(autoincrement())
+  title           String  @db.VarChar(255)
+  description     String? @db.Text
+  dueDate         String? @default("") @map("due_date") @db.VarChar(100)
+  priority        String? @default("Средний") @db.VarChar(50)
+  status          String? @default("todo") @db.VarChar(50)
+  notifiedOverdue Int?    @default(0) @map("notified_overdue")
+
+  @@map("tasks")
+}
+
+model SearchIndex {
+  lessonKey String @id
+  tab       String
+  title     String
+  cleanText String @db.Text // Весь текст страницы без HTML-тегов
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("search_index")
+}

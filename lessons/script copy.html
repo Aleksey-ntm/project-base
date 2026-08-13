@@ -1,0 +1,791 @@
+[file name]: script.html
+[file content begin]
+<div class="edu-glossary-native">
+
+    <!-- ============================================================ -->
+    <!--                    ЗАГОЛОВОК (ОБЩИЙ)                          -->
+    <!-- ============================================================ -->
+    <div class="edu-header" style="width: 100% !important; display: flex !important; justify-content: center !important; margin-bottom: 2rem !important; padding-bottom: 0 !important; border-bottom: none !important;">
+        <div class="edu-header-top" style="display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 8px !important; width: 100% !important; max-width: 700px !important; margin: 0 auto !important;">
+            <h1 class="edu-title editable-node" data-global="title">Скрипт продаж: SEO и Контекстная реклама</h1>
+            <p class="edu-intro editable-node" data-global="intro" style="max-width: 580px !important; margin: 0 0 12px 0 !important; font-size: 15px !important; color: #475569 !important; line-height: 1.6 !important; text-align: center !important;">
+                Пошаговый регламент и речевые модули первого контакта с клиентом, квалификации, презентации продуктов (SEO / КР) и закрытия на следующий шаг.
+            </p>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 1. УСТАНОВЛЕНИЕ КОНТАКТА                                 -->
+    <!-- ============================================================ -->
+    <h2 style="margin: 0 0 1rem 0 !important; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Установление контакта, знакомство.</h2>
+    
+    <div style="margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif; padding: 0 1.25rem;">
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            
+            <!-- ================= ВАРИАНТ #1 (имя не известно) ================= -->
+            <div>
+                <div style="font-family: monospace; font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="background: #0f172a; color: #ffffff; padding: 2px 7px; border-radius: 4px; font-size: 10px;">Вариант #1</span>
+                    Если имя не известно
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                    <!-- Шаг 1 -->
+                    <div class="step-box" style="position: relative; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem 1.1rem 1rem;">
+                        <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
+                            1. Ищем ЛПР/ЛВПР
+                        </div>
+                        <p style="margin: 0; color: #0f172a; font-size: 14px; line-height: 1.5; font-weight: 600;">
+                            Добрый день. Подскажите, по сайту «___» с кем я могу поговорить?
+                        </p>
+
+                        <button 
+                            type="button" 
+                            onclick="
+                                var c = this.closest('.step-box').nextElementSibling;
+                                var iconExpand = this.querySelector('.icon-expand');
+                                var iconCollapse = this.querySelector('.icon-collapse');
+                                var inner = c.querySelector('.acc-inner');
+                                
+                                c.style.transitionDuration = '0.7s';
+                                
+                                if (c.style.maxHeight && c.style.maxHeight !== '0px') {
+                                    c.style.maxHeight = '0px';
+                                    c.style.opacity = '0';
+                                    
+                                    iconExpand.style.opacity = '1';
+                                    iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                                    iconCollapse.style.opacity = '0';
+                                    iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+                                } else {
+                                    c.style.maxHeight = inner.scrollHeight + 'px';
+                                    c.style.opacity = '1';
+                                    
+                                    iconExpand.style.opacity = '0';
+                                    iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                                    iconCollapse.style.opacity = '1';
+                                    iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+                                }
+                            "
+                            style="position: absolute; bottom: -15px; right: 15px; height: 35px; width: 130px; box-sizing: border-box; font-family: inherit; font-size: 11.5px; font-weight: 600; color: #334155; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 3px 6px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 0 12px; cursor: pointer; user-select: none; display: inline-flex; justify-content: flex-start; align-items: center; gap: 6px; transition: all 0.2s ease; z-index: 2;"
+                        >
+                            <span style="position: relative; width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <span class="icon-expand" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                                <span class="icon-collapse" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+                            </span>
+                            <span class="acc-text">ещё варианты</span>
+                        </button>
+                    </div>
+
+                    <!-- Выпадающие варианты (ИСПРАВЛЕНО) -->
+                    <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; margin-top: 0px; padding: 0;">
+                        <div class="acc-inner" style="display: flex; flex-direction: column; gap: 0.4rem; padding: 24px 0 0 0;">
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                                <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 1 (Прямой подход)</div>
+                                <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Здравствуйте! Сориентируйте, пожалуйста, кто у вас занимается вопросами рекламы и развития сайта?</p>
+                            </div>
+
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                                <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 2 (Через интернет-маркетинг)</div>
+                                <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Добрый день! Подскажите, с кем могу пообщаться по поводу интернет-продвижения вашего сайта?</p>
+                            </div>
+
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                                <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 3 (Выход на руководство)</div>
+                                <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Приветствую! Подскажите, пожалуйста, руководителя или маркетолога к телефону можно попросить?</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Переход -->
+                    <div style="text-align: center; color: #0284c7; font-size: 15px; font-weight: 900; line-height: 1; margin: 0.4rem 0 0.1rem 0;">↓</div>
+
+                    <!-- Шаг 2 -->
+                    <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 0.85rem 1rem;">
+                        <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
+                            2. Нашли? Знакомимся!
+                        </div>
+                        <p style="margin: 0; color: #0f172a; font-size: 14px; line-height: 1.5; font-weight: 600;">
+                            Замечательно, меня зовут ___, звоню из компании ЮниВеб, а Вас как зовут?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= ВАРИАНТ #2 (имя известно) ================= -->
+            <div>
+                <div style="font-family: monospace; font-size: 12px; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="background: #0f172a; color: #ffffff; padding: 2px 7px; border-radius: 4px; font-size: 10px;">Вариант #2</span>
+                    Если имя известно
+                </div>
+
+                <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                    <!-- Шаг 1 -->
+                    <div class="step-box" style="position: relative; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem 1.1rem 1rem;">
+                        <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
+                            1. Выход на имя
+                        </div>
+                        <p style="margin: 0; color: #0f172a; font-size: 14px; line-height: 1.5; font-weight: 600;">
+                            Добрый день. Как &lt;ИМЯ&gt; могу услышать?
+                        </p>
+
+                        <button 
+                            type="button" 
+                            onclick="
+                                var c = this.closest('.step-box').nextElementSibling;
+                                var iconExpand = this.querySelector('.icon-expand');
+                                var iconCollapse = this.querySelector('.icon-collapse');
+                                var inner = c.querySelector('.acc-inner');
+                                
+                                c.style.transitionDuration = '0.7s';
+                                
+                                if (c.style.maxHeight && c.style.maxHeight !== '0px') {
+                                    c.style.maxHeight = '0px';
+                                    c.style.opacity = '0';
+                                    
+                                    iconExpand.style.opacity = '1';
+                                    iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                                    iconCollapse.style.opacity = '0';
+                                    iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+                                } else {
+                                    c.style.maxHeight = inner.scrollHeight + 'px';
+                                    c.style.opacity = '1';
+                                    
+                                    iconExpand.style.opacity = '0';
+                                    iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                                    iconCollapse.style.opacity = '1';
+                                    iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+                                }
+                            "
+                            style="position: absolute; bottom: -15px; right: 15px; height: 35px; width: 130px; box-sizing: border-box; font-family: inherit; font-size: 11.5px; font-weight: 600; color: #334155; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 3px 6px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 0 12px; cursor: pointer; user-select: none; display: inline-flex; justify-content: flex-start; align-items: center; gap: 6px; transition: all 0.2s ease; z-index: 2;"
+                        >
+                            <span style="position: relative; width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                                <span class="icon-expand" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                                <span class="icon-collapse" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+                            </span>
+                            <span class="acc-text">ещё варианты</span>
+                        </button>
+                    </div>
+
+                    <!-- Выпадающие варианты (ИСПРАВЛЕНО) -->
+                    <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; margin-top: 0px; padding: 0;">
+                        <div class="acc-inner" style="display: flex; flex-direction: column; gap: 0.4rem; padding: 24px 0 0 0;">
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                                <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 1 (Прямой по имени)</div>
+                                <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Здравствуйте! Соедините, пожалуйста, с &lt;ИМЯ&gt;.</p>
+                            </div>
+
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                                <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 2 (Уточнение присутствия)</div>
+                                <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Добрый день! Подскажите, &lt;ИМЯ&gt; сейчас на месте, можно пригласить к телефону?</p>
+                            </div>
+
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                                <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 3 (Деловой подход)</div>
+                                <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Приветствую! Будьте добры &lt;ИМЯ&gt; к телефону по рабочему вопросу.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Переход -->
+                    <div style="text-align: center; color: #0284c7; font-size: 15px; font-weight: 900; line-height: 1; margin: 0.4rem 0 0.1rem 0;">↓</div>
+
+                    <!-- Шаг 2 -->
+                    <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 0.85rem 1rem;">
+                        <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem;">
+                            2. Соединили? Представляемся!
+                        </div>
+                        <p style="margin: 0; color: #0f172a; font-size: 14px; line-height: 1.5; font-weight: 600;">
+                            Замечательно, это ___, из ЮниВеб, есть у Вас минутка по сайту поговорить?
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 2. ОФФЕР                                               -->
+    <!-- ============================================================ -->
+    <h2 style="margin: 0 0 1rem 0 !important; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Оффер.</h2>
+
+    <div style="margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif;">
+    
+    <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+        
+        <!-- ================= ОФФЕР SEO ================= -->
+        <div class="step-box" style="position: relative; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem 1.1rem 1rem;">
+            <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">🔍 Оффер SEO</strong>
+            <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6;">Дело в том, что мы занимаемся продвижением сайтов в ТОП-10 и работаем строго на результат, который фиксируем в договоре. Можем вам конкретное коммерческое предложение под сайт подготовить: проанализируем, покажем точки роста, предложим решение от нас — как на это смотрите?</p>
+
+            <button 
+                type="button" 
+                onclick="
+                    var c = this.closest('.step-box').nextElementSibling;
+                    var iconExpand = this.querySelector('.icon-expand');
+                    var iconCollapse = this.querySelector('.icon-collapse');
+                    var inner = c.querySelector('.acc-inner');
+                    
+                    c.style.transitionDuration = '0.7s';
+                    
+                    if (c.style.maxHeight && c.style.maxHeight !== '0px') {
+                        c.style.maxHeight = '0px';
+                        c.style.opacity = '0';
+                        
+                        iconExpand.style.opacity = '1';
+                        iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                        iconCollapse.style.opacity = '0';
+                        iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+                    } else {
+                        c.style.maxHeight = inner.scrollHeight + 'px';
+                        c.style.opacity = '1';
+                        
+                        iconExpand.style.opacity = '0';
+                        iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                        iconCollapse.style.opacity = '1';
+                        iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+                    }
+                "
+                style="position: absolute; bottom: -15px; right: 15px; height: 35px; width: 130px; box-sizing: border-box; font-family: inherit; font-size: 11.5px; font-weight: 600; color: #334155; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 3px 6px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 0 12px; cursor: pointer; user-select: none; display: inline-flex; justify-content: flex-start; align-items: center; gap: 6px; transition: all 0.2s ease; z-index: 2;"
+            >
+                <span style="position: relative; width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <span class="icon-expand" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                    <span class="icon-collapse" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+                </span>
+                <span class="acc-text">ещё варианты</span>
+            </button>
+        </div>
+
+        <!-- Варианты SEO (ИСПРАВЛЕНО) -->
+        <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; margin-top: 0px; padding: 0;">
+            <div class="acc-inner" style="display: flex; flex-direction: column; gap: 0.4rem; padding: 24px 0 0 0;">
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                    <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 1 (Замена)</div>
+                    <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Тестовый вариант SEO №1 — здесь напишешь свой текст речевого модуля.</p>
+                </div>
+
+                <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                    <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #64748b; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 2 (Замена)</div>
+                    <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Тестовый вариант SEO №2 — здесь напишешь свой текст речевого модуля.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Переход -->
+        <div style="text-align: center; color: #0284c7; font-size: 15px; font-weight: 900; line-height: 1; margin: 0.4rem 0 0.1rem 0;">↓</div>
+
+        <!-- ================= ОФФЕР КОНТЕКСТ ================= -->
+        <div class="step-box" style="position: relative; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 0.85rem 1rem 1.1rem 1rem;">
+            <strong style="color: #0369a1; font-size: 15px; display: block; margin-bottom: 0.25rem;">🚀 Оффер Контекстная реклама (КР)</strong>
+            <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.6;">Дело в том, что мы занимаемся рекламой сайтов в Яндексе, имеем большой опыт. Можем вам предложение подготовить: покажем список запросов для рекламы, просчитаем вам сколько заявок и трафика можно с этого получить и в какой срок, посчитаем их стоимость — как на это смотрите?</p>
+
+            <button 
+                type="button" 
+                onclick="
+                    var c = this.closest('.step-box').nextElementSibling;
+                    var iconExpand = this.querySelector('.icon-expand');
+                    var iconCollapse = this.querySelector('.icon-collapse');
+                    var inner = c.querySelector('.acc-inner');
+                    
+                    c.style.transitionDuration = '0.7s';
+                    
+                    if (c.style.maxHeight && c.style.maxHeight !== '0px') {
+                        c.style.maxHeight = '0px';
+                        c.style.opacity = '0';
+                        
+                        iconExpand.style.opacity = '1';
+                        iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                        iconCollapse.style.opacity = '0';
+                        iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+                    } else {
+                        c.style.maxHeight = inner.scrollHeight + 'px';
+                        c.style.opacity = '1';
+                        
+                        iconExpand.style.opacity = '0';
+                        iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                        iconCollapse.style.opacity = '1';
+                        iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+                    }
+                "
+                style="position: absolute; bottom: -15px; right: 15px; height: 35px; width: 130px; box-sizing: border-box; font-family: inherit; font-size: 11.5px; font-weight: 600; color: #334155; background: #ffffff; border: 1px solid #cbd5e1; box-shadow: 0 3px 6px rgba(15, 23, 42, 0.1), 0 1px 3px rgba(15, 23, 42, 0.06); border-radius: 14px; padding: 0 12px; cursor: pointer; user-select: none; display: inline-flex; justify-content: flex-start; align-items: center; gap: 6px; transition: all 0.2s ease; z-index: 2;"
+            >
+                <span style="position: relative; width: 12px; height: 12px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <span class="icon-expand" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                    <span class="icon-collapse" style="position: absolute; font-size: 13px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+                </span>
+                <span class="acc-text">ещё варианты</span>
+            </button>
+        </div>
+
+        <!-- Варианты Контекста (ИСПРАВЛЕНО) -->
+        <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; margin-top: 0px; padding: 0;">
+            <div class="acc-inner" style="display: flex; flex-direction: column; gap: 0.4rem; padding: 24px 0 0 0;">
+                <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                    <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #0369a1; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 1 (Замена)</div>
+                    <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Тестовый вариант КР №1 — здесь напишешь свой текст речевого модуля.</p>
+                </div>
+
+                <div style="background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 6px; padding: 0.65rem 0.85rem;">
+                    <div style="font-family: monospace; font-size: 10px; font-weight: 700; color: #0369a1; text-transform: uppercase; margin-bottom: 0.1rem;">Вариант 2 (Замена)</div>
+                    <p style="margin: 0; color: #0f172a; font-size: 13.5px; line-height: 1.45; font-weight: 600;">Тестовый вариант КР №2 — здесь напишешь свой текст речевого модуля.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 3. ПЕРЕХОД                                              -->
+    <!-- ============================================================ -->
+    <h2 style="margin: 0 0 1rem 0 !important; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Переход.</h2>
+
+<div style="margin: 0 0 1.5rem 0; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+        <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.2rem; display: flex; align-items: center; gap: 0.4rem;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#0284c7" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+            Переходим к вопросам:
+        </div>
+        <p style="margin: 0; color: #0f172a; font-size: 14px; line-height: 1.5; font-weight: 600;">
+            Хорошо, расчеты мы делаем индивидуально, поэтому мне несколько вопросов нужно уточнить. Скажите, а как сейчас вообще сайт продвигаете (рекламируете), работаете может быть с кем-то?
+        </p>
+    </div>
+</div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 4. КВАЛИФИКАЦИЯ (ТРИ СИТУАЦИИ) — ИСПРАВЛЕННЫЕ СПОЙЛЕРЫ -->
+    <!-- ============================================================ -->
+
+    <h2 style="margin: 0 0 1rem 0 !important; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">БРИФ.</h2>
+
+<div style="display: flex; flex-direction: column; gap: 1.5rem; margin: 0 0 3rem 0; font-family: system-ui, -apple-system, sans-serif; padding: 0 1.25rem;">
+
+    <!-- ========================================================== -->
+    <!--  СИТУАЦИЯ 01. НЕ ПРОДВИГАЮТСЯ                              -->
+    <!-- ========================================================== -->
+    <div style="border: 1px solid #e2e8f0; border-radius: 10px; background: #ffffff; overflow: hidden;">
+
+        <div onclick="
+            var body = this.nextElementSibling;
+            var iconExpand = this.querySelector('.spoiler-icon-expand');
+            var iconCollapse = this.querySelector('.spoiler-icon-collapse');
+            var inner = body.querySelector('.spoiler-inner');
+            
+            body.style.transitionDuration = '0.7s';
+            
+            if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+                body.style.maxHeight = '0px';
+                body.style.opacity = '0';
+                iconExpand.style.opacity = '1';
+                iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                iconCollapse.style.opacity = '0';
+                iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+            } else {
+                body.style.maxHeight = inner.scrollHeight + 'px';
+                body.style.opacity = '1';
+                iconExpand.style.opacity = '0';
+                iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                iconCollapse.style.opacity = '1';
+                iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+            }
+        " style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.25rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; cursor: pointer; user-select: none;">
+            
+            <span style="font-family: monospace; font-size: 18px; font-weight: 900; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 6px; line-height: 1.4;">01</span>
+            
+            <strong style="color: #0f172a; font-size: 16px; flex: 1;">Сценарий: Не продвигаются сейчас</strong>
+            
+            <span style="position: relative; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <span class="spoiler-icon-expand" style="position: absolute; font-size: 18px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                <span class="spoiler-icon-collapse" style="position: absolute; font-size: 18px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+            </span>
+        </div>
+
+        <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; padding: 0;">
+            
+            <div class="spoiler-inner" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                    <p style="margin: 0; color: #0f172a; font-size: 14.5px; line-height: 1.5; font-weight: 600;">
+                        Поняла. А раньше пробовали заниматься или пока вообще не запускали?
+                    </p>
+                </div>
+
+                <div style="position: relative; margin-left: 1.5rem; padding-top: 0.5rem;">
+                    <div style="position: absolute; left: 0; top: 0; bottom: -0.5rem; width: 2px; background: #cbd5e1;"></div>
+
+                    <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                        <div style="position: absolute; left: 0; top: 1.25rem; width: 1.5rem; height: 2px; background: #cbd5e1;"></div>
+                        <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                            <span style="display: inline-block; font-size: 11px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em;">Клиент: Пробовали</span>
+                            <p style="margin: 0 0 0.5rem 0; color: #0f172a; font-size: 14px; line-height: 1.5;">
+                                <i>Подскажите, почему перестали работать? <br><br> Что пошло не так?</i>
+                            </p>
+                            <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                <b>Зачем спрашиваем:</b> Выявить негативный опыт, может быть слили бюджеты, недоверие подрядчикам или что-то другое.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                        <div style="position: absolute; left: 0; top: 1.25rem; width: 1.5rem; height: 2px; background: #cbd5e1;"></div>
+                        <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                            <span style="display: inline-block; font-size: 11px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em;">Клиент: Не пробовали</span>
+                            <p style="margin: 0 0 0.5rem 0; color: #0f172a; font-size: 14px; line-height: 1.5;">
+                                <i>Подскажите, а почему пока не запускали рекламу / продвижение?</i>
+                            </p>
+                            <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                <b>Зачем спрашиваем:</b> Понять причину: нет бюджета, хватало сарафана, новый сайт.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="position: relative; margin-left: 1.5rem; padding-left: 1.5rem; padding-bottom: 0.5rem;">
+                    <div style="position: absolute; left: -4px; top: -1rem; color: #cbd5e1; font-size: 16px; font-weight: 900; line-height: 1; background: #ffffff;">↓</div>
+                    <div style="display: inline-flex; align-items: center; gap: 0.5rem; color: #0f172a; font-size: 13.5px; font-weight: 700; background: #f1f5f9; padding: 0.6rem 0.85rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                        <span style="color: #0284c7; font-size: 16px; line-height: 1;">➔</span> Переходи к вопросу потребности, приоритетов.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!--  СИТУАЦИЯ 02. РАБОТАЮТ С ПОДРЯДЧИКОМ / ФРИЛАНСЕРОМ       -->
+    <!-- ========================================================== -->
+    <div style="border: 1px solid #e2e8f0; border-radius: 10px; background: #ffffff; overflow: hidden;">
+
+        <div onclick="
+            var body = this.nextElementSibling;
+            var iconExpand = this.querySelector('.spoiler-icon-expand');
+            var iconCollapse = this.querySelector('.spoiler-icon-collapse');
+            var inner = body.querySelector('.spoiler-inner');
+            
+            body.style.transitionDuration = '0.7s';
+            
+            if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+                body.style.maxHeight = '0px';
+                body.style.opacity = '0';
+                iconExpand.style.opacity = '1';
+                iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                iconCollapse.style.opacity = '0';
+                iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+            } else {
+                body.style.maxHeight = inner.scrollHeight + 'px';
+                body.style.opacity = '1';
+                iconExpand.style.opacity = '0';
+                iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                iconCollapse.style.opacity = '1';
+                iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+            }
+        " style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.25rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; cursor: pointer; user-select: none;">
+            
+            <span style="font-family: monospace; font-size: 18px; font-weight: 900; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 6px; line-height: 1.4;">02</span>
+            
+            <strong style="color: #0f172a; font-size: 16px; flex: 1;">Сценарий: Работают с подрядчиком / фрилансером</strong>
+            
+            <span style="position: relative; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <span class="spoiler-icon-expand" style="position: absolute; font-size: 18px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                <span class="spoiler-icon-collapse" style="position: absolute; font-size: 18px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+            </span>
+        </div>
+
+        <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; padding: 0;">
+            
+            <div class="spoiler-inner" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                    <p style="margin: 0; color: #0f172a; font-size: 14.5px; line-height: 1.5; font-weight: 600;">
+                        Поняла. А с кем именно работаете: подрядчик или фрилансер? По какому инструменту продвигаетесь (SEO / Контекст)? Как давно уже сотрудничаете?
+                    </p>
+                </div>
+
+                <div style="position: relative; margin-left: 1.5rem; padding-top: 0.5rem;">
+                    <div style="position: absolute; left: 0; top: 0; bottom: -0.5rem; width: 2px; background: #cbd5e1;"></div>
+
+                    <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                        <div style="position: absolute; left: 0; top: 1.25rem; width: 1.5rem; height: 2px; background: #cbd5e1;"></div>
+                        <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                            <span style="display: inline-block; font-size: 11px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em;">Клиент: Всё ок, но готов рассмотреть</span>
+                            <p style="margin: 0 0 0.5rem 0; color: #0f172a; font-size: 14px; line-height: 1.5;">
+                                <i>Подскажите, есть ли что-то, что хотелось бы улучшить или что сейчас не совсем устраивает в работе? Вы же не просто так готовы рассмотреть альтернативы?</i>
+                            </p>
+                            <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                <b>Зачем спрашиваем:</b> Даже если говорит, что всё ок, но готов рассмотреть — выясняем истинную причину.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                        <div style="position: absolute; left: 0; top: 1.25rem; width: 1.5rem; height: 2px; background: #cbd5e1;"></div>
+                        <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                            <span style="display: inline-block; font-size: 11px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em;">Клиент: Не доволен</span>
+                            <p style="margin: 0 0 0.5rem 0; color: #0f172a; font-size: 14px; line-height: 1.5;">
+                                <i>Подскажите, а что именно не устраивает? <br><br> Что бы вы хотели изменить в текущей работе подрядчика?</i>
+                            </p>
+                            <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                <b>Зачем спрашиваем:</b> Выявить болевые точки, чтобы в КП закрыть их нашими преимуществами.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="position: relative; margin-left: 1.5rem; padding-left: 1.5rem; padding-bottom: 0.5rem;">
+                    <div style="position: absolute; left: -4px; top: -1rem; color: #cbd5e1; font-size: 16px; font-weight: 900; line-height: 1; background: #ffffff;">↓</div>
+                    <div style="display: inline-flex; align-items: center; gap: 0.5rem; color: #0f172a; font-size: 13.5px; font-weight: 700; background: #f1f5f9; padding: 0.6rem 0.85rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                        <span style="color: #0284c7; font-size: 16px; line-height: 1;">➔</span> Переходи к выбранному Продуктовому блоку (SEO или КР)
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================================== -->
+    <!--  СИТУАЦИЯ 03. ЕСТЬ ШТАТ / СВОЙ СПЕЦИАЛИСТ                 -->
+    <!-- ========================================================== -->
+    <div style="border: 1px solid #e2e8f0; border-radius: 10px; background: #ffffff; overflow: hidden;">
+
+        <div onclick="
+            var body = this.nextElementSibling;
+            var iconExpand = this.querySelector('.spoiler-icon-expand');
+            var iconCollapse = this.querySelector('.spoiler-icon-collapse');
+            var inner = body.querySelector('.spoiler-inner');
+            
+            body.style.transitionDuration = '0.7s';
+            
+            if (body.style.maxHeight && body.style.maxHeight !== '0px') {
+                body.style.maxHeight = '0px';
+                body.style.opacity = '0';
+                iconExpand.style.opacity = '1';
+                iconExpand.style.transform = 'rotate(0deg) scale(1)';
+                iconCollapse.style.opacity = '0';
+                iconCollapse.style.transform = 'rotate(-90deg) scale(0.5)';
+            } else {
+                body.style.maxHeight = inner.scrollHeight + 'px';
+                body.style.opacity = '1';
+                iconExpand.style.opacity = '0';
+                iconExpand.style.transform = 'rotate(90deg) scale(0.5)';
+                iconCollapse.style.opacity = '1';
+                iconCollapse.style.transform = 'rotate(0deg) scale(1)';
+            }
+        " style="display: flex; align-items: center; gap: 0.75rem; padding: 0.85rem 1.25rem; background: #f8fafc; border-bottom: 1px solid #e2e8f0; cursor: pointer; user-select: none;">
+            
+            <span style="font-family: monospace; font-size: 18px; font-weight: 900; color: #0284c7; background: #e0f2fe; padding: 2px 8px; border-radius: 6px; line-height: 1.4;">03</span>
+            
+            <strong style="color: #0f172a; font-size: 16px; flex: 1;">Сценарий: Есть штат / свой специалист</strong>
+            
+            <span style="position: relative; width: 18px; height: 18px; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                <span class="spoiler-icon-expand" style="position: absolute; font-size: 18px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 1; transform: rotate(0deg) scale(1); line-height: 1;">+</span>
+                <span class="spoiler-icon-collapse" style="position: absolute; font-size: 18px; font-weight: 700; color: #0284c7; transition: all 0.4s ease; opacity: 0; transform: rotate(-90deg) scale(0.5); line-height: 1;">−</span>
+            </span>
+        </div>
+
+        <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease-in-out; padding: 0;">
+            
+            <div class="spoiler-inner" style="padding: 1.25rem; display: flex; flex-direction: column; gap: 1rem;">
+
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                    <p style="margin: 0; color: #0f172a; font-size: 14.5px; line-height: 1.5; font-weight: 600;">
+                        Поняла. Подскажите, SEO или рекламой занимаетесь?
+                    </p>
+                </div>
+
+                <div style="position: relative; margin-left: 1.5rem; padding-top: 0.5rem;">
+                    <div style="position: absolute; left: 0; top: 0; bottom: -0.5rem; width: 2px; background: #cbd5e1;"></div>
+
+                    <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                        <div style="position: absolute; left: 0; top: 1.25rem; width: 1.5rem; height: 2px; background: #cbd5e1;"></div>
+                        <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                            <span style="display: inline-block; font-size: 11px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em;">Клиент: Занимаются тем же инструментом</span>
+                            <p style="margin: 0 0 0.5rem 0; color: #0f172a; font-size: 14px; line-height: 1.5;">
+                                <i>Если будете подключать подрядчика, как удобнее: чтобы мы забрали задачи на себя или ваш специалист курировал?</i>
+                            </p>
+                            <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                <b>Зачем спрашиваем:</b> Понять формат сотрудничества, чтобы не создавать конфликта с внутренним специалистом.
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="position: relative; padding-left: 1.5rem; margin-bottom: 1.25rem;">
+                        <div style="position: absolute; left: 0; top: 1.25rem; width: 1.5rem; height: 2px; background: #cbd5e1;"></div>
+                        <div style="position: absolute; left: -4px; top: 1rem; width: 10px; height: 10px; border-radius: 50%; background: #0ea5e9; border: 2px solid #ffffff;"></div>
+
+                        <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                            <span style="display: inline-block; font-size: 11px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 4px; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.05em;">Клиент: Занимаются другим инструментом</span>
+                            <p style="margin: 0 0 0.5rem 0; color: #0f172a; font-size: 14px; line-height: 1.5;">
+                                <i>Подскажите, а почему пока не запускали [предлагаемый инструмент]?</i>
+                            </p>
+                            <div style="font-size: 12.5px; color: #64748b; border-top: 1px dashed #e2e8f0; padding-top: 0.5rem; margin-top: 0.5rem;">
+                                <b>Зачем спрашиваем:</b> Выяснить причину: нехватка бюджета, нет компетенций, не видели необходимости.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="position: relative; margin-left: 1.5rem; padding-left: 1.5rem; padding-bottom: 0.5rem;">
+                    <div style="position: absolute; left: -4px; top: -1rem; color: #cbd5e1; font-size: 16px; font-weight: 900; line-height: 1; background: #ffffff;">↓</div>
+                    <div style="display: inline-flex; align-items: center; gap: 0.5rem; color: #0f172a; font-size: 13.5px; font-weight: 700; background: #f1f5f9; padding: 0.6rem 0.85rem; border-radius: 6px; border: 1px solid #e2e8f0;">
+                        <span style="color: #0284c7; font-size: 16px; line-height: 1;">➔</span> Переходи к выбранному Продуктовому блоку (SEO или КР)
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 5. ПРОДУКТОВАЯ ПРЕЗЕНТАЦИЯ: SEO                        -->
+    <!-- ============================================================ -->
+    <h2 style="margin: 0 0 1rem 0 !important; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Блок 5. Продуктовая презентация: SEO</h2>
+
+    <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+        <b>Выявление приоритетов:</b> <i>«А какие именно задачи по сайту стоят в первую очередь? Чтобы мы в коммерческом предложении сделали на них упор. (Подсказка: вам важнее рост позиций в ТОП-10, увеличение общего трафика на сайт или работа над конверсией и удобством — больше заявок?)»</i>
+    </p>
+
+    <div style="margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif; padding: 0 1.25rem;">
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">🎯 Приоритет: Позиции в ТОП-10 / Трафик</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.55;">Как раз под задачу вывода сайта в ТОП и привлечения целевого трафика мы и выстраиваем работу. Мы не просто выводим сайт в ТОП-10 Яндекса и Гугла, а делаем упор на увеличение конверсии, чтобы позиции превращались в заявки. Мы берем на себя весь комплекс под ключ: наши оптимизаторы собирают эффективные ключевые слова, а наши разработчики сами внедряют все правки на сайт. То есть вам не придется искать программистов на стороне. При этом мы работаем строго на результат, а все ключевые показатели и KPI мы заранее обсуждаем с вами и фиксируем в договоре.</p>
+            </div>
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">📈 Приоритет: Конверсия / Заявки / Удобство</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.55;">Отлично, мы как раз делаем упор не на пустые заходы, а на увеличение конверсии, чтобы сайт приносил реальные звонки и продажи. Также мы заранее согласуем с вами, что будем считать лидом, и скажем, сколько таких лидов и в какой срок можно получить с SEO. По SEO мы делаем все работы под ключ — вам не придется искать дополнительных специалистов на стороне. Работаем на результат и все наши договоренности фиксируем договором с гарантиями.</p>
+            </div>
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">🔥 Приоритет: Всё вместе</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.55;">Абсолютно правильный подход, ведь продвижение работает только в комплексе. У нас как раз предложение именно такого формата, где мы работаем и над ростом позиций в ТОП-10, и над заявками с SEO. Также по SEO мы делаем все работы под ключ, вам не придется искать дополнительных специалистов на стороне. Работаем на результат и все наши договоренности фиксируем договором с гарантиями.</p>
+            </div>
+        </div>
+    </div>
+
+    <div style="margin: 0 0 2.5rem 0; padding: 1.25rem; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: system-ui, -apple-system, sans-serif;">
+        <p style="margin: 0 0 0.75rem 0; color: #334155; font-size: 14.5px; line-height: 1.65;">
+            <b>📊 Запрос Яндекс.Метрики:</b> <i>«Подскажите, сможете открыть гостевой доступ нашему специалисту, чтобы мы перед созвоном посмотрели текущую ситуацию по целям и подготовили более точный аудит?»</i>
+        </p>
+        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.65;">
+            <b>💰 Озвучивание бюджета SEO:</b> <i>«По бюджету тоже сориентирую. То, про что я рассказала, у нас стоит 80–100 тысяч рублей в месяц в зависимости от объема работ. В целом готовы ориентироваться на такие бюджеты, подскажите?»</i>
+        </p>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 6. ПРОДУКТОВАЯ ПРЕЗЕНТАЦИЯ: КР                         -->
+    <!-- ============================================================ -->
+    <h2 style="margin: 0 0 1rem 0 !important; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Блок 6. Продуктовая презентация: Контекстная реклама (КР)</h2>
+
+    <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+        <b>Вопрос-триггер:</b> <i>«Подскажите, когда будете рассматривать коммерческое предложение, на что будете обращать внимание, что для вас важно? Возможно, есть что-то, о чем нам стоит знать заранее?»</i>
+    </p>
+
+    <div style="margin: 0 0 2.5rem 0; padding: 1.25rem; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: system-ui, -apple-system, sans-serif;">
+        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.65;">
+            <b>🚀 Презентация ценности:</b> «Контекст сейчас требует тонкой настройки ставок. Расскажу кратко, как мы ведем кампании, чтобы не сливать бюджет. Мы настраиваем и полностью ведем кампании в Яндексе под ключ. Наша главная задача — приводить не просто трафик, а реальные заявки и продажи, постоянно снижая стоимость привлечения клиента. Мы берем на себя абсолютно всё: от анализа конкурентов и написания объявлений до ежедневного контроля ставок. Чтобы вы не тратили бюджет вслепую, мы перед запуском всегда готовим детальный расчет: прогнозируем бюджет, количество целевых обращений и их ориентировочную стоимость конкретно в вашей нише.»
+        </p>
+    </div>
+
+    <div style="margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif; padding: 0 1.25rem;">
+        <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem;">Озвучивание бюджета КР и отработка сомнений:</div>
+        
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.85rem 1rem;">
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">💰 Базовый бюджет КР</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.55;">«По бюджету тоже сориентирую. Наша работа стоит 50 тысяч рублей в месяц за настройку и ведение, плюс рекламный бюджет на показы обычно от 100–150 тысяч. В сумме это примерно от 150–200 тысяч в месяц. В целом готовы ориентироваться на такие бюджеты, подскажите?»</p>
+            </div>
+
+            <div style="background: #fffaf0; border: 1px solid #feebc8; border-radius: 8px; padding: 0.85rem 1rem;">
+                <strong style="color: #dd6b20; font-size: 15px; display: block; margin-bottom: 0.25rem;">💰 Если клиент сомневается / бюджет кажется высоким</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.55;">«Бюджет формируется исходя из спроса, стоимости клика и количества ключевых слов в показе рекламы. Мы рассчитаем индивидуально, но обычно менее 50–70 тысяч на рекламный бюджет не получается. Подскажите, готовы такие бюджеты закладывать в рекламу? (Наша комиссия при этом не меняется).»</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- БЛОК 7. СБОР КОНТАКТОВ И ЗАКРЫТИЕ                           -->
+    <!-- ============================================================ -->
+    <h2 style="margin: 0 0 1rem 0 !important; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Блок 7. Сбор контактов и закрытие на шаг</h2>
+
+    <div style="margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif; padding: 0 1.25rem;">
+        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;">
+                <span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span>
+                <span><b>Должность:</b> <i>«&lt;Имя клиента&gt;, как корректно могу записать Вашу должность?»</i></span>
+            </span>
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;">
+                <span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span>
+                <span><b>Прямой контакт:</b> <i>«Для связи с Вами можно этот номер телефона использовать или есть какой-то добавочный/личный?»</i> (Цель: получить личный номер мобильного).</span>
+            </span>
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;">
+                <span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span>
+                <span><b>Плановые сроки:</b> <i>«А по срокам подскажите, есть ли какие-то ориентиры? Как думаете, если понравится наше предложение, за месяц сможем начать работать?»</i></span>
+            </span>
+        </div>
+    </div>
+
+    <div style="margin: 0; padding: 1.25rem; background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: system-ui, -apple-system, sans-serif;">
+        <p style="margin: 0; color: #334155; font-size: 14.5px; line-height: 1.65;">
+            <b>⏳ Финальное закрытие на созвон:</b> <i>«Информацию я направлю, коллега свяжется с Вами, чтобы детально все обсудить. Это займет буквально 5–7 минут. Подскажите, завтра в течение дня будет удобно с ним пообщаться?»</i>
+        </p>
+    </div>
+
+</div>
+
+<!-- Стили -->
+<style>
+.edu-glossary-native {
+    width: 100%;
+}
+
+.edu-glossary-native h1 {
+    margin: 0 0 12px 0 !important;
+    font-size: 32px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    text-align: center !important;
+}
+
+.edu-glossary-native h2 {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    letter-spacing: normal !important;
+    margin: 0 0 1rem 0 !important;
+    padding: 0 !important;
+    border-bottom: none !important;
+    font-family: system-ui, -apple-system, sans-serif !important;
+    line-height: 1.25 !important;
+    text-align: left !important;
+    display: block !important;
+}
+
+.edu-glossary-native h3 {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 0 0 12px 0 !important;
+}
+
+.edu-glossary-native p {
+    font-size: 14.5px !important;
+    color: #334155 !important;
+    line-height: 1.65 !important;
+    margin: 0 0 1.25rem 0 !important;
+}
+</style>
+[file content end]

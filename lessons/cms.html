@@ -1,0 +1,269 @@
+<div class="edu-glossary-native">
+
+    <div class="edu-header" style="width: 100% !important; display: flex !important; justify-content: center !important; margin-bottom: 2.5rem !important; padding-bottom: 0 !important; border-bottom: none !important;">
+        <div class="edu-header-top" style="display: flex !important; flex-direction: column !important; align-items: center !important; text-align: center !important; gap: 8px !important; width: 100% !important; max-width: 700px !important; margin: 0 auto !important;">
+            <h1 class="edu-title editable-node" data-global="title">Сайты, CMS и стеки разработки</h1>
+            <p class="edu-intro editable-node" data-global="intro" style="max-width: 580px !important; margin: 0 0 12px 0 !important; font-size: 15px !important; color: #475569 !important; line-height: 1.6 !important; text-align: center !important;">
+                В этом уроке мы разберем, как устроены сайты, чем движки отличаются от конструкторов и с какими платформами/стеками можно работать, а какие закрыты для продвижения или поддержки.
+            </p>
+        </div>
+    </div>
+
+    <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Базовое устройство любого сайта</h2>
+    
+    <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+        Каждый сайт в интернете состоит из трех обязательных элементов. Если убрать хотя бы один — сайт перестанет работать.
+    </p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.2rem; margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem;">
+            <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🖥️</div>
+            <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Хостинг (Сервер)</strong>
+            <span style="color: #475569; font-size: 13.5px; line-height: 1.5;">Мощный компьютер, который постоянно включен. Там хранятся все файлы, картинки и базы данных сайта.</span>
+        </div>
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem;">
+            <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">🔗</div>
+            <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Домен (Адрес)</strong>
+            <span style="color: #475569; font-size: 13.5px; line-height: 1.5;">Имя сайта в строке браузера (например, google.com). По нему пользователи находят сервер в сети.</span>
+        </div>
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem;">
+            <div style="font-size: 1.2rem; margin-bottom: 0.5rem;">📦</div>
+            <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Код и контент</strong>
+            <span style="color: #475569; font-size: 13.5px; line-height: 1.5;">Файлы (HTML, CSS, JS), которые объясняют браузеру, как именно должна выглядеть и работать страница.</span>
+        </div>
+    </div>
+
+    <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Три типа сайтов по способу разработки</h2>
+    
+    <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+        То, как именно создан сайт, напрямую определяет: сможем ли мы продвинуть его в поиске (SEO) или нет.
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 1rem; margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: flex; gap: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem;">
+            <div style="flex-shrink: 0; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; margin-top: 0.6rem;"></div>
+            <div>
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Конструкторы (Tilda, Wix)</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+                    Собираются из готовых блоков, как Lego. Код закрыт, изменить его нельзя. <span style="color: #ef4444; font-weight: 700;">Для SEO непригодны</span> (подходят только для контекстной рекламы).
+                </p>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem;">
+            <div style="flex-shrink: 0; width: 8px; height: 8px; background: #16a34a; border-radius: 50%; margin-top: 0.6rem;"></div>
+            <div>
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Сайты на CMS / «Движках» (WordPress, Битрикс)</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+                    Системы, где код полностью открыт. Мы можем менять структуру сайтов как угодно. <span style="color: #16a34a; font-weight: 700;">Идеально для SEO</span>.
+                </p>
+            </div>
+        </div>
+
+        <div style="display: flex; gap: 1rem; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.25rem;">
+            <div style="flex-shrink: 0; width: 8px; height: 8px; background: #ea580c; border-radius: 50%; margin-top: 0.6rem;"></div>
+            <div>
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Самописные сайты и фреймворки (Чистый код / SPA / SSR)</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+                    Создаются программистами с нуля. Продвижение таких сайтов зависит от стека: современные JS-фреймворки мы берем в работу, но устаревшие или узкоспециализированные стеки требуют предварительного технического аудита.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Что такое CMS и зачем она нужна</h2>
+    
+    <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+        <b>CMS (Content Management System)</b> или «движок» — это операционная система сайта. Она дает удобную панель администратора (админку), чтобы управлять контентом без знания кода.
+    </p>
+
+    <div style="margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem;">Как движок влияет на скорость нашей работы:</div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; padding: 1.25rem;">
+                <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #ef4444; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+                    ✕ Медленно и дорого
+                </div>
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Сайт без CMS (Самопис)</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+                    У сайта нет админки. Чтобы поменять один заголовок или мета-тег, специалисту нужно лезть в файлы на сервере и вручную править код. Это долго, опасно и требует постоянных затрат на программистов.
+                </p>
+            </div>
+
+            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 12px; padding: 1.25rem;">
+                <div style="font-family: monospace; font-size: 11px; font-weight: 700; color: #16a34a; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+                    ✓ Быстро и эффективно
+                </div>
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Сайт на CMS (Движок)</strong>
+                <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+                    Есть понятный веб-интерфейс. Специалист или менеджер через плагины может за пару минут массово изменить заголовки, добавить новые страницы или оптимизировать тексты без помощи разработчиков.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">С чем мы работаем?</h2>
+    
+    <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+        Эти платформы и стеки имеют открытую архитектуру, отлично подходят для продвижения и легко масштабируются:
+    </p>
+
+    <div style="margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;"><span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span> <span><b>1С-Битрикс</b> — главная коммерческая система в РФ. Идеальна для крупных интернет-магазинов.</span></span>
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;"><span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span> <span><b>WordPress</b> — самый популярный движок в мире. Отлично подходит для сайтов услуг и блогов.</span></span>
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;"><span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span> <span><b>OpenCart / PrestaShop</b> — специализированные движки для интернет-магазинов среднего размера.</span></span>
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;"><span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span> <span><b>MODX / Joomla</b> — стандартные классические движки, работаем стандартно.</span></span>
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;"><span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span> <span><b>Современный JS-стек (React, Next.js, Vue.js, Nuxt.js, Svelte, Angular)</b> — работаем с этими фреймворками.</span></span>
+        </div>
+    </div>
+
+    <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">С чем мы не работаем?</h2>
+    
+    <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+        Если на этапе знакомства с клиентом вы обнаружили одну из этих систем или специфический стек, <b>в работу по тех.поддержке, SEO не берем</b>:
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 0.85rem; margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif;">
+    
+    <!-- Python -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem 1.25rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.35rem;">
+            <strong style="color: #0f172a; font-size: 15px; font-weight: 700;">Сайты на Python (Django, Flask, FastAPI)</strong>
+            <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">Не Работаем</span>
+        </div>
+        <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+            Проекты с бэкендом на Python не принимаются в разработку, доработку и техническое сопровождение.
+        </p>
+    </div>
+
+    <!-- Megagroup -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem 1.25rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.35rem;">
+            <strong style="color: #0f172a; font-size: 15px; font-weight: 700;">Мегагрупп (Megagroup)</strong>
+            <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">Не Работаем</span>
+        </div>
+        <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+            Закрытый исходный код. Внедрение технических и SEO-правок физически невозможно.
+        </p>
+    </div>
+
+    <!-- Облачные конструкторы -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem 1.25rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.35rem;">
+            <strong style="color: #0f172a; font-size: 15px; font-weight: 700;">Wix / Nethouse / Advantshop</strong>
+            <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #dc2626; background: #fef2f2; border: 1px solid #fecaca; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">Не Работаем</span>
+        </div>
+        <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+            Облачные конструкторы с закрытой разметкой и медленной загрузкой. Оптимизация под поиск неэффективна.
+        </p>
+    </div>
+
+    <!-- Tilda -->
+    <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem 1.25rem;">
+        <div style="display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-bottom: 0.35rem;">
+            <strong style="color: #0f172a; font-size: 15px; font-weight: 700;">Tilda (Тильда)</strong>
+            <span style="font-family: monospace; font-size: 11px; font-weight: 700; color: #d97706; background: #fffbe0; border: 1px solid #fef08a; padding: 2px 8px; border-radius: 4px; white-space: nowrap;">По регламенту</span>
+        </div>
+        <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+            Продвижение только по согласованию и строгому внутреннему регламенту. Приоритетный продукт — контекстная реклама.
+        </p>
+    </div>
+
+</div>
+
+    <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Как определить CMS?</h2>
+    
+    <p style="margin: 0 0 2rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+        Для оперативного анализа платформы перед подготовкой КП используйте три простых шага:
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 2rem; margin: 0 0 1.5rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+            <span style="font-family: monospace; font-size: 20px; font-weight: 900; color: #0284c7; line-height: 1; background: #e0f2fe; padding: 4px 8px; border-radius: 6px; user-select: none;">01</span>
+            <div>
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Расширение Wappalyzer</strong>
+                <span style="color: #475569; font-size: 14.5px; line-height: 1.6;">Ставим плагин в Chrome. Открываем сайт клиента, кликаем на иконку плагина — он сам покажет движок и стек (React, Vue, CMS и т.д.).</span>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+            <span style="font-family: monospace; font-size: 20px; font-weight: 900; color: #0284c7; line-height: 1; background: #e0f2fe; padding: 4px 8px; border-radius: 6px; user-select: none;">02</span>
+            <div>
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Проверка через адресную строку</strong>
+                <span style="color: #475569; font-size: 14.5px; line-height: 1.6;">Допишите к адресу сайта <code>/wp-admin</code> (для WordPress) или <code>/bitrix</code> (для Битрикса). Если откроется окно входа в админку — движок найден.</span>
+            </div>
+        </div>
+
+        <div style="display: flex; align-items: flex-start; gap: 1.25rem;">
+            <span style="font-family: monospace; font-size: 20px; font-weight: 900; color: #0284c7; line-height: 1; background: #e0f2fe; padding: 4px 8px; border-radius: 6px; user-select: none;">03</span>
+            <div>
+                <strong style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 0.25rem;">Онлайн-сервисы</strong>
+<span style="color: #475569; font-size: 14.5px; line-height: 1.6;">Вбиваем домен сайта на сервисе <a href="https://2ip.ru/cms/" target="_blank" style="color: #0284c7; text-decoration: none; font-weight: 600; border-bottom: 1.5px dashed #bae6fd;">2ip.ru/cms</a>.</span>
+            </div>
+        </div>
+    </div>
+
+    <p style="margin: 0 0 2.5rem 0; color: #64748b; font-size: 14px; line-height: 1.6; font-style: italic; font-family: system-ui, -apple-system, sans-serif;">
+        Если ни один способ не определил CMS — сайт скорее всего <b>самописный</b> или собран на фреймворке. Такой проект отправляем на предварительный технический аудит нашим разработчикам перед расчетом стоимости.
+    </p>
+
+    <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Примеры:</h2>
+    
+    <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+        Откройте эти сайты, чтобы визуально понять разницу в архитектуре:
+    </p>
+
+    <div style="margin: 0 0 2.5rem 0; font-family: system-ui, -apple-system, sans-serif;">
+        <div style="display: flex; flex-direction: column; gap: 0.8rem;">
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;"><span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span> <span><a href="https://sezar-industrial.ru" target="_blank" style="color: #0284c7; text-decoration: none; font-weight: 600; border-bottom: 1.5px dashed #bae6fd;">sezar-industrial.ru</a> — Лендинг (одностраничник). SEO делать не на чем, настраиваем только контекст.</span></span>
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;"><span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span> <span><a href="https://uniofweb.ru" target="_blank" style="color: #0284c7; text-decoration: none; font-weight: 600; border-bottom: 1.5px dashed #bae6fd;">uniofweb.ru</a> / <a href="https://tehnar.ru" target="_blank" style="color: #0284c7; text-decoration: none; font-weight: 600; border-bottom: 1.5px dashed #bae6fd;">tehnar.ru</a> — Огромные порталы на 1С-Битрикс. Наш идеальный целевой сегмент под SEO.</span></span>
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;"><span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span> <span><a href="https://highline-hr.ru" target="_blank" style="color: #0284c7; text-decoration: none; font-weight: 600; border-bottom: 1.5px dashed #bae6fd;">highline-hr.ru</a> — Сайт на заблокированной платформе Мегагрупп. Сразу отказываем в SEO-продвижении.</span></span>
+            <span style="color: #334155; font-size: 14.5px; line-height: 1.65; display: flex; align-items: flex-start; gap: 0.6rem;"><span style="color: #0284c7; font-size: 18px; line-height: 1; user-select: none;">•</span> <span><a href="https://store-ip.ru" target="_blank" style="color: #0284c7; text-decoration: none; font-weight: 600; border-bottom: 1.5px dashed #bae6fd;">store-ip.ru</a> — Классический коммерческий сайт на WordPress. Отлично подходит для продвижения.</span></span>
+        </div>
+    </div>
+
+</div>
+
+<style>
+.edu-glossary-native {
+    width: 100%;
+}
+
+.edu-glossary-native h1 {
+    margin: 0 0 12px 0 !important;
+    font-size: 32px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    text-align: center !important;
+}
+
+.edu-glossary-native h2 {
+    font-size: 24px !important;
+    font-weight: 800 !important;
+    color: #0f172a !important;
+    letter-spacing: normal !important;
+    margin: 0 0 1.25rem 0 !important;
+    padding: 0 !important;
+    border-bottom: none !important;
+    font-family: system-ui, -apple-system, sans-serif !important;
+    line-height: 1.25 !important;
+    text-align: left !important;
+    display: block !important;
+}
+
+.edu-glossary-native h3 {
+    font-size: 18px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+    margin: 0 0 12px 0 !important;
+}
+
+.edu-glossary-native p {
+    font-size: 14.5px !important;
+    color: #334155 !important;
+    line-height: 1.65 !important;
+    margin: 0 0 1.25rem 0 !important;
+}
+</style>

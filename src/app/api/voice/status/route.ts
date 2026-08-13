@@ -26,34 +26,60 @@ export async function GET(req: NextRequest) {
     const folderId = process.env.YANDEX_FOLDER_ID;
 
     // 1. Проверяем статус операции Yandex
+    console.log(`[STT Status] 🔍 Проверка Operation ID: ${opId}`);
     const opRes = await fetch(`https://operation.api.cloud.yandex.net/operations/${encodeURIComponent(opId)}`, {
       headers: { 'Authorization': `Api-Key ${apiKey}` },
     });
+
+    if (!opRes.ok) {
+      const errBody = await opRes.text();
+      console.error(`[STT Status] ❌ Ошибка проверки операции (${opRes.status}):`, errBody);
+      return NextResponse.json({ error: `Operation API error ${opRes.status}` }, { status: 500 });
+    }
+
     const opData = await opRes.json();
 
+    // Если операция еще выполняется
     if (!opData.done) {
+      console.log(`[STT Status] ⏳ Операция ${opId} еще выполняется...`);
       return NextResponse.json({ done: false });
     }
 
-    // 2. Забираем JSON Lines стрим распознавания
-    const recRes = await fetch(`https://stt.api.cloud.yandex.net/stt/v3/getRecognition?operation_id=${encodeURIComponent(opId)}`, {
-      headers: {
-        'Authorization': `Api-Key ${apiKey}`,
-        'x-folder-id': folderId || '',
-      },
-    });
-
-    const textStream = await recRes.text();
-    const rawLines = textStream.split(/[\r\n]+/).map(l => l.trim()).filter(Boolean);
-
-    const events: any[] = [];
-    for (const line of rawLines) {
-      try {
-        events.push(JSON.parse(line));
-      } catch (e) {}
+    // Если в Яндекс Операции возникла ошибка
+    if (opData.error) {
+      console.error(`[STT Status] ❌ Яндекс вернул ошибку транскрипции:`, opData.error);
+      return NextResponse.json({ done: true, error: opData.error.message || 'STT Operation Error' });
     }
 
-    // 3. Извлекаем и восстанавливаем сегменты (из status.php)
+    // 2. Достаем события из ответа операции Yandex STT v3
+    let events: any[] = [];
+
+    // Читаем из результата ответа операции
+    if (opData.response?.chunks) {
+      events = opData.response.chunks;
+    } else if (Array.isArray(opData.response?.events)) {
+      events = opData.response.events;
+    } else {
+      // Запасной фоллбэк: пробуем запросить выгрузку
+      const recRes = await fetch(`https://stt.api.cloud.yandex.net/stt/v3/getRecognition?operation_id=${encodeURIComponent(opId)}`, {
+        headers: {
+          'Authorization': `Api-Key ${apiKey}`,
+          'x-folder-id': folderId || '',
+        },
+      });
+
+      if (recRes.ok) {
+        const textStream = await recRes.text();
+        const rawLines = textStream.split(/[\r\n]+/).map(l => l.trim()).filter(Boolean);
+        for (const line of rawLines) {
+          try { events.push(JSON.parse(line)); } catch (e) {}
+        }
+      }
+    }
+
+    console.log(`[STT Status] 📦 Найдено событий/чанков для обработки: ${events.length}`);
+
+    // 3. Извлекаем и восстанавливаем сегменты
     let segments = extractSegmentsFromEvents(events);
 
     // Сортировка по времени начала/конца
@@ -67,7 +93,7 @@ export async function GET(req: NextRequest) {
       return a.start - b.start;
     });
 
-    // Дедупликация и слияние лучшего сегмента
+    // Дедупликация и слияние
     const finalSegments: Segment[] = [];
     for (const current of segments) {
       if (finalSegments.length === 0) {
@@ -93,31 +119,37 @@ export async function GET(req: NextRequest) {
       formattedLines.push(`[${formatTime(seg.start)}-${formatTime(seg.end)}] ${seg.text}`);
     }
 
+    const resultText = formattedLines.join('\n');
+    console.log(`[STT Status] ✅ Успешно сформирована стенограмма (${resultText.length} символов)`);
+
     return NextResponse.json({
       done: true,
-      text: formattedLines.join('\n')
+      text: resultText
     });
 
   } catch (error: any) {
+    console.error('[STT Status] 💥 Критическая ошибка:', error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }
 
-// --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ (ПОРТИРОВАНЫ ИЗ PHP 1 в 1) ---
+// --- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ---
 
 function extractSegmentsFromEvents(events: any[]): Segment[] {
   const segments: Segment[] = [];
 
   for (const event of events) {
-    const result = event.result;
+    // Поддержка разной вложенности ответа Yandex STT v3
+    const result = event.result || event;
     if (!result) continue;
 
     const nodes: any[] = [];
     if (result.final) nodes.push(result.final);
     if (result.finalRefinement?.normalizedText) nodes.push(result.finalRefinement.normalizedText);
+    if (result.alternatives) nodes.push(result);
 
     for (const node of nodes) {
-      const alts = node.alternatives;
+      const alts = node.alternatives || [node];
       if (!Array.isArray(alts) || !alts[0]) continue;
 
       const alt = alts[0];
@@ -147,8 +179,8 @@ function extractSegmentsFromEvents(events: any[]): Segment[] {
       }
 
       const text = cleanText(alt.text || '');
-      const start = parseMsOrDuration(alt.startTimeMs || alt.startTime);
-      const end = parseMsOrDuration(alt.endTimeMs || alt.endTime);
+      const start = parseMsOrDuration(alt.startTimeMs || alt.startTime || 0);
+      const end = parseMsOrDuration(alt.endTimeMs || alt.endTime || 0);
 
       if (text && start !== null && end !== null) {
         segments.push(normalizeSegment({
@@ -166,7 +198,7 @@ function extractSegmentsFromEvents(events: any[]): Segment[] {
 
 function parseMsOrDuration(val: any): number | null {
   if (val === null || val === undefined) return null;
-  if (typeof val === 'number') return val / 1000.0;
+  if (typeof val === 'number') return val > 100000 ? val / 1000.0 : val;
   
   const str = String(val).trim();
   if (!str) return null;
@@ -293,7 +325,6 @@ function textSimilarity(a: string, b: string): number {
   if (!a || !b) return 0;
   if (a === b) return 100;
   
-  // Простая сходность по коэффициенту Левенштейна / совпадению подстрок
   const longer = a.length > b.length ? a : b;
   const shorter = a.length > b.length ? b : a;
   if (longer.length === 0) return 100.0;

@@ -1,0 +1,750 @@
+<style>
+  .edu-glossary-native {
+    width: 100%;
+  }
+
+  /* Обертка для термина */
+  .seo-tooltip-modern {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: inherit;
+    font-weight: 600;
+    cursor: help;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #94a3b8;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: all 0.2s ease;
+    vertical-align: baseline;
+  }
+
+  /* Эффект при наведении на термин */
+  .seo-tooltip-modern:hover {
+    color: #0284c7;
+    text-decoration-color: #0284c7;
+  }
+
+  /* Кружочек со знаком вопроса */
+  .seo-tooltip-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    border: 1.5px solid #64748b;
+    color: #64748b;
+    font-size: 10px;
+    font-weight: 700;
+    font-family: system-ui, -apple-system, sans-serif;
+    line-height: 1;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+    transform: translateY(-1px);
+  }
+
+  .seo-tooltip-modern:hover .seo-tooltip-badge {
+    border-color: #0284c7;
+    color: #0284c7;
+    background: #e0f2fe;
+  }
+
+  /* Сама всплывающая подсказка (ЧЕРНЫЙ ФОН) */
+  .seo-tooltip-box-modern {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
+    background: #0f172a; 
+    color: #f1f5f9; 
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 12.5px;
+    font-weight: 400;
+    white-space: normal;
+    width: max-content;
+    max-width: 260px;
+    text-align: left;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+    border: 1px solid #1e293b;
+    z-index: 100;
+    line-height: 1.5;
+  }
+
+  .seo-tooltip-modern:hover .seo-tooltip-box-modern {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  .seo-tooltip-box-modern::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 6px;
+    border-style: solid;
+    border-color: #0f172a transparent transparent transparent;
+  }
+</style>
+
+<div class="edu-glossary-native">
+
+  <h2 style="margin: 0 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Введение в Контекстную Рекламу</h2>
+
+  <!-- Памятка Премиум -->
+  <div style="margin: 0 0 1.5rem 0; padding: 1.15rem 1.25rem; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.03); font-family: system-ui, -apple-system, sans-serif; display: flex; align-items: flex-start; gap: 1rem;">
+    <span style="font-size: 18px; line-height: 1.2; color: #334155;">
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: block;">
+        <path d="M10 0C4.48 0 0 4.48 0 10C0 15.52 4.48 20 10 20C15.52 20 20 15.52 20 10C20 4.48 15.52 0 10 0ZM11 15H9V9H11V15ZM11 7H9V5H11V7Z" fill="currentColor"/>
+      </svg>
+    </span>
+    <div>
+      <div style="font-size: 14px; font-weight: 700; color: #0f172a; margin-bottom: 0.25rem; letter-spacing: -0.01em;">Важно:</div>
+      <div style="font-size: 13.5px; line-height: 1.55; color: #475569; font-weight: 400;">
+        На этой странице описана механика работы самого инструмента контекстной рекламы. О том, как конкретно <strong style="color: #0f172a; font-weight: 600;">МЫ</strong> ведем работу над проектами, детально рассказано ниже в разделе тарифов.
+      </div>
+    </div>
+  </div>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    <b>Контекстная реклама</b> — это платная реклама в Яндексе, которая показывается пользователям в зависимости от их поисковых запросов, интересов, поведения или содержания страницы, которую они просматривают. Часто её также называют: Яндекс Директ, контекст, КР.
+  </p>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    Простыми словами: она показывает объявления тем людям, которые уже что-то ищут в интернете или потенциально интересуются похожей темой. Главная задача — быстро привлечь целевых пользователей на сайт, получить заявки и протестировать спрос 
+    <span class="seo-tooltip-modern">
+      сразу после запуска
+      <span class="seo-tooltip-badge">?</span>
+      <span class="seo-tooltip-box-modern">В отличие от SEO, контекст дает трафик в день запуска кампании.</span>
+    </span>.
+  </p>
+
+  <!-- БЛОКИ ПОИСК И РСЯ -->
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin: 28px 0; font-family: system-ui, -apple-system, sans-serif;">
+    
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: #fef9c3; color: #ca8a04;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        </div>
+        <h3 style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.3;">Поиск Яндекса</h3>
+      </div>
+      <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0;">
+        Реклама, которая показывается в результатах поиска по конкретному запросу (например: <i>«купить диван»</i>). Эти объявления помечаются значком «Реклама» или «Промо» и нацелены на самую горячую аудиторию, которая ищет товар прямо сейчас.
+      </p>
+    </div>
+
+    <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+      <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 14px;">
+        <div style="width: 42px; height: 42px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: #f0fdf4; color: #166534;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 13V6a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h8"/><path d="m16 22 6-6"/></svg>
+        </div>
+        <h3 style="font-size: 17px; font-weight: 700; color: #0f172a; margin: 0; line-height: 1.3;">Сети (РСЯ)</h3>
+      </div>
+      <p style="font-size: 14px; color: #475569; line-height: 1.6; margin: 0;">
+        <b>Рекламная сеть Яндекса</b> — это тысячи сайтов-партнеров, где человек видит баннеры и объявления на основе своих недавних интересов. Если вы недавно искали туры в Италию, РСЯ покажет вам рекламу отелей на других сайтах.
+      </p>
+    </div>
+
+  </div>
+
+  <h2 style="margin: 2.5rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Принцип работы: 3 шага до показа рекламы</h2>
+
+  <p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+    В отличие от SEO, где позиция сайта зарабатывается месяцами, в контекстной рекламе распределение мест происходит за миллисекунды. Этот процесс делится на три этапа:
+  </p>
+
+  <div style="display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 10px; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="background: #f1f5f9; color: #0284c7; font-weight: 700; font-size: 14px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">1</div>
+    <div style="color: #334155; font-size: 14.5px; line-height: 1.5;">
+      <b>Формирование запроса</b><br>
+      Пользователь вводит поисковую фразу или заходит на партнерский сайт. Система мгновенно считывает его геопозицию, устройство и интересы.
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 16px; align-items: flex-start; margin-bottom: 16px; background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 10px; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="background: #f1f5f9; color: #0284c7; font-weight: 700; font-size: 14px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">2</div>
+    <div style="color: #334155; font-size: 14.5px; line-height: 1.5;">
+      <b>Автоматический аукцион</b><br>
+      Рекламодатели конкурируют между собой за показ. Алгоритм сравнивает их 
+      <span class="seo-tooltip-modern">
+        ставки
+        <span class="seo-tooltip-badge">?</span>
+        <span class="seo-tooltip-box-modern">Сумма, которую рекламодатель готов заплатить за клик.</span>
+      </span>, релевантность объявлений и качество посадочной страницы.
+    </div>
+  </div>
+
+  <div style="display: flex; gap: 16px; align-items: flex-start; margin-bottom: 2rem; background: #ffffff; border: 1px solid #e2e8f0; padding: 16px; border-radius: 10px; font-family: system-ui, -apple-system, sans-serif;">
+    <div style="background: #f1f5f9; color: #0284c7; font-weight: 700; font-size: 14px; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">3</div>
+    <div style="color: #334155; font-size: 14.5px; line-height: 1.5;">
+      <b>Показ и клик</b><br>
+      Победители аукциона показываются на лучших местах. Деньги списываются с рекламного кабинета только в том случае, если пользователь кликнет по рекламе и перейдет на сайт.
+    </div>
+  </div>
+
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px; margin: 32px 0; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02); font-family: system-ui, -apple-system, sans-serif;">
+    <div style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #f1f5f9;">
+      <span style="display: inline-block; background: #e0f2fe; color: #0369a1; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px;">Таргетинг</span>
+      <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 700; color: #0f172a; line-height: 1.3;">Как система находит «свою» аудиторию?</h3>
+      <p style="font-size: 14px; color: #475569; margin: 0; line-height: 1.5;">
+        Настройки таргетинга помогают не показывать рекламу всем подряд и не сливать бюджет, а выбирать только потенциально заинтересованных людей:
+      </p>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; background: #f8fafc; border: 1px solid #f1f5f9; padding: 16px 20px; border-radius: 12px;">
+        <div style="flex: 0 0 220px; font-weight: 700; font-size: 14px; color: #0f172a; display: flex; align-items: center; gap: 12px; margin: 0;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #e0f2fe; color: #0284c7;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <span>Регион и Город</span>
+        </div>
+        <p style="flex: 1; font-size: 13.5px; color: #334155; margin: 0; line-height: 1.55; text-align: left;">
+          Показ рекламы услуг (например, «ремонт квартир») только жителям Москвы или конкретного радиуса от вашего офиса.
+        </p>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; background: #f8fafc; border: 1px solid #f1f5f9; padding: 16px 20px; border-radius: 12px;">
+        <div style="flex: 0 0 220px; font-weight: 700; font-size: 14px; color: #0f172a; display: flex; align-items: center; gap: 12px; margin: 0;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #fef3c7; color: #d97706;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span>Интересы и Поведение</span>
+        </div>
+        <p style="flex: 1; font-size: 13.5px; color: #334155; margin: 0; line-height: 1.55; text-align: left;">
+          Система знает, кто недавно искал покупку автомобиля или интересуется недвижимостью, и показывает им нужные баннеры.
+        </p>
+      </div>
+
+      <div style="display: flex; justify-content: space-between; align-items: center; gap: 24px; background: #f8fafc; border: 1px solid #f1f5f9; padding: 16px 20px; border-radius: 12px;">
+        <div style="flex: 0 0 220px; font-weight: 700; font-size: 14px; color: #0f172a; display: flex; align-items: center; gap: 12px; margin: 0;">
+          <div style="width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; background: #f3e8ff; color: #7e22ce;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"/><line x1="12" x2="12.01" y1="18" y2="18"/></svg>
+          </div>
+          <span>Устройства и Время</span>
+        </div>
+        <p style="flex: 1; font-size: 13.5px; color: #334155; margin: 0; line-height: 1.55; text-align: left;">
+          Можно настроить показы, например, только на мобильных телефонах или отключить показы рекламы в ночное время.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <h2 style="margin: 2.5rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Основные виды и форматы рекламы</h2>
+
+  <div style="width: 100%; margin: 32px 0; font-family: system-ui, -apple-system, sans-serif;">
+    <p style="font-size: 15.5px; line-height: 1.6; color: #475569; margin: 0 0 28px 0;">
+      Контекстную рекламу условно делят на три главных направления, каждое из которых решает свои коммерческие задачи:
+    </p>
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+      
+      <!-- 01. Поисковая -->
+<article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px;">
+  <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">01</span>
+      <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Поисковая реклама</h3>
+    </div>
+    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #f0f9ff; color: #0369a1;">
+      Горячий спрос
+    </span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px; margin-bottom: 24px;">
+    <div>
+      <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Что это?</span>
+      <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #334155;">
+        Текстовые объявления, которые показываются прямо в результатах поиска Яндекса над органической выдачей. Человек вводит «заказать ремонт под ключ» — и видит ваше предложение. Сюда же относится заметный <b>«Баннер в поиске»</b>.
+      </p>
+    </div>
+    
+    <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+      <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Задачи</span>
+      <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #0f172a; font-weight: 500;">
+        Перехват клиента, у которого уже сформирована потребность. Дает самую высокую конверсию в заявку.
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Примеры</span>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+      
+      <!-- Картинка 1 -->
+      <div class="img-preview-wrapper" data-src="/img/kontext-1.png">
+        <img src="/img/kontext-1.png" alt="Пример поисковой рекламы 1" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid #e2e8f0; display: block;" />
+        <div class="zoom-overlay">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <line x1="11" y1="8" x2="11" y2="14"></line>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+          </svg>
+        </div>
+      </div>
+
+      <!-- Картинка 2 -->
+      <div class="img-preview-wrapper" data-src="/img/kontext-2.png">
+        <img src="/img/kontext-2.png" alt="Пример поисковой рекламы 2" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid #e2e8f0; display: block;" />
+        <div class="zoom-overlay">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            <line x1="11" y1="8" x2="11" y2="14"></line>
+            <line x1="8" y1="11" x2="14" y2="11"></line>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</article>
+
+<!-- Полноэкранное модальное окно -->
+<div id="lightbox-modal">
+  <span class="lightbox-close">&times;</span>
+  <img id="lightbox-img" src="" alt="Увеличенное изображение" />
+</div>
+
+<style>
+  .img-preview-wrapper {
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .zoom-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.2s ease-in-out;
+    border-radius: 12px;
+  }
+
+  .img-preview-wrapper:hover .zoom-overlay {
+    opacity: 1;
+  }
+
+  #lightbox-modal {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(15, 23, 42, 0.85);
+    backdrop-filter: blur(4px);
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+
+  #lightbox-modal.active {
+    display: flex;
+  }
+
+  #lightbox-img {
+    max-width: 90%;
+    max-height: 90vh;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    object-fit: contain;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 20px;
+    right: 28px;
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 300;
+    cursor: pointer;
+    user-select: none;
+  }
+</style>
+
+      <!-- 02. РСЯ -->
+<article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px; display: flex; flex-direction: column; gap: 24px;">
+  <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">02</span>
+      <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Рекламная сеть (РСЯ)</h3>
+    </div>
+    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #f0fdf4; color: #15803d;">
+      Охват и Узнаваемость
+    </span>
+  </div>
+
+  <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+    <div>
+      <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Что это?</span>
+      <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #334155;">
+        Показ баннеров с картинкой и текстом на десятках тысяч сайтов-партнеров, в сервисах Яндекса, мобильных приложениях и Smart TV. Показ базируется на истории интересов.
+      </p>
+    </div>
+    
+    <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+      <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Задачи</span>
+      <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #0f172a; font-weight: 500;">
+        Привлечение более дешевого трафика, формирование спроса на новые товары и повышение узнаваемости бренда.
+      </p>
+    </div>
+  </div>
+
+  <div>
+    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Пример</span>
+    <img src="/img/rsya.png" alt="Пример РСЯ" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid #e2e8f0; display: block;" />
+  </div>
+</article>
+
+      <!-- 03. Ретаргетинг -->
+      <article style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 28px 32px; display: flex; flex-direction: column; gap: 24px;">
+  <!-- Верхняя шапка -->
+  <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 18px; border-bottom: 1px solid #f1f5f9;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <span style="font-size: 13px; font-weight: 800; color: #94a3b8;">03</span>
+      <h3 style="margin: 0; font-size: 19px; font-weight: 700; color: #0f172a;">Ретаргетинг</h3>
+    </div>
+    <span style="display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 100px; background: #faf5ff; color: #7e22ce;">
+      Возврат пользователей
+    </span>
+  </div>
+
+  <!-- Оригинальный двухколоночный блок -->
+  <div style="display: grid; grid-template-columns: 1.25fr 0.75fr; gap: 36px;">
+    <div>
+      <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Что это?</span>
+      <p style="margin: 0 0 16px 0; font-size: 14px; line-height: 1.6; color: #334155;">
+        Реклама-«догонялка». Показывается только тем, кто уже заходил на сайт клиента или сайт конкурентов, смотрел каталог, положил товар в корзину, но ушел без покупки.
+      </p>
+    </div>
+    
+    <div style="background: #f8fafc; border: 1px solid #f1f5f9; padding: 18px 22px; border-radius: 12px; height: fit-content;">
+      <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Задачи</span>
+      <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #0f172a; font-weight: 500;">
+        Рассказать или напомнить о себе, предложить дополнительную скидку или вернуть «брошенную корзину», чтобы довести клиента до продажи.
+      </p>
+    </div>
+  </div>
+
+  <!-- Нижний блок с изображением во всю ширину -->
+  <div>
+    <span style="font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 8px; display: block;">Пример</span>
+    <img src="/img/retargeting_exapmple.jpeg" alt="Пример ретаргетинга" style="width: 100%; height: auto; border-radius: 12px; border: 1px solid #e2e8f0; display: block;" />
+  </div>
+</article>
+
+    </div>
+  </div>
+
+  <h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">6 базовых элементов настройки Директа</h2>
+
+<p style="margin: 0 0 2rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+  Грамотная настройка контекстной рекламы состоит из связки 6 элементов. Если хотя бы один из них настроен неверно, бюджет будет расходоваться неэффективно.
+</p>
+
+<!-- СЕТКА ИЗ 6 ЭЛЕМЕНТОВ -->
+<div style="display: flex; flex-direction: column; gap: 24px; margin-bottom: 3rem; font-family: system-ui, -apple-system, sans-serif;">
+
+  <!-- 1. Ключи -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">01</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Ключевые слова и фразы</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Семантика</span>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Запросы, по которым реклама будет показана. Помогают рекламной системе понять интент пользователя (например: <i>ремонт квартир цена, заказать ремонт</i>).
+    </p>
+  </div>
+
+  <!-- 2. Таргет -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">02</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Таргетинги</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Аудитория</span>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Фильтрация тех, кому мы <b>не хотим</b> показывать рекламу. Ограничения по гео, времени, интересам, чтобы не тратить бюджет на нецелевых кликеров.
+    </p>
+  </div>
+
+  <!-- 3. Объявления -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">03</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Рекламные объявления</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Креативы</span>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      То, что видит человек. Состоит из цепляющего заголовка, текста, баннера/видео, быстрых ссылок и контактной информации. Должно пробивать баннерную слепоту.
+    </p>
+  </div>
+
+  <!-- 4. Посадочные -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">04</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Посадочные страницы</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Сайт (Landing)</span>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Страница сайта, на которую попадает посетитель. Если реклама обещает скидку на ремонт ванной, сайт должен быть именно про ванную, а не перекидывать на главную страницу.
+    </p>
+  </div>
+
+  <!-- 5. Аукцион -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">05</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Аукцион Яндекса</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Конкуренция</span>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Внутренний механизм, который учитывает ставки, качество объявлений и релевантность сайта, чтобы решить, чью рекламу показать на первом месте.
+    </p>
+  </div>
+
+  <!-- 6. Аналитика -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; padding: 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #f1f5f9;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="font-family: monospace; font-size: 13px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 4px 8px; border-radius: 6px;">06</span>
+        <h3 style="margin: 0; font-size: 18px; font-weight: 700; color: #0f172a;">Аналитика</h3>
+      </div>
+      <span style="font-size: 12px; font-weight: 600; color: #64748b; background: #f8fafc; padding: 4px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">Контроль</span>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Отслеживание результатов (расход, клики, цена лида). Без аналитики вы не поймете, работает ли реклама или вы просто тратите бюджет впустую.
+    </p>
+  </div>
+
+</div>
+
+
+<!-- ОШИБКИ И СЛАБЫЕ МЕСТА -->
+<h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Когда контекстная реклама не работает?</h2>
+
+<p style="margin: 0 0 1.5rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+  Реклама может идеально приводить людей, но результата в виде продаж не будет, если бизнес спотыкается на одном из этих факторов:
+</p>
+
+<div style="display: flex; flex-direction: column; gap: 16px; margin-bottom: 3rem; font-family: system-ui, -apple-system, sans-serif;">
+
+  <!-- 1 -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-family: monospace; font-size: 12px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 6px;">01</span>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Слабый сайт (Плохая конверсия)</h3>
+      </div>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      Если у сайта устаревший дизайн, он долго грузится, или посадочная страница не соответствует обещаниям из объявления, посетитель уйдет к конкурентам.
+    </p>
+  </div>
+
+  <!-- 2 -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-family: monospace; font-size: 12px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 6px;">02</span>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Слабое предложение на фоне конкурентов</h3>
+      </div>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      В контексте пользователь открывает сразу 3-5 вкладок. Если ваши цены сильно выше рынка, условия доставки хуже, а оффер не цепляет — клики будут, а покупок нет.
+    </p>
+  </div>
+
+  <!-- 3 -->
+  <div style="background: #ffffff; border: 1px solid #e2e8f0; border-radius: 14px; padding: 20px 24px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <span style="font-family: monospace; font-size: 12px; font-weight: 800; color: #0284c7; background: #e0f2fe; padding: 3px 8px; border-radius: 6px;">03</span>
+        <h3 style="font-size: 16px; font-weight: 700; color: #0f172a; margin: 0;">Проблемы с отделом продаж (Обработка лидов)</h3>
+      </div>
+    </div>
+    <p style="margin: 0; color: #334155; font-size: 14px; line-height: 1.6;">
+      На сайте сломаны формы, не работает телефон, либо менеджер перезванивает клиенту через двое суток, когда тот уже заказал в другом месте.
+    </p>
+  </div>
+
+</div>
+
+
+<!-- ПЛЮСЫ И МИНУСЫ КОНТЕКСТА -->
+<h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Плюсы и минусы Контекстной рекламы (vs SEO)</h2>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; margin: 20px 0 3rem 0; font-family: system-ui, -apple-system, sans-serif;">
+  
+  <!-- ПЛЮСЫ -->
+  <div style="background: #ffffff; border: 1px solid #dcfce7; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px -2px rgba(22, 101, 52, 0.04);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #f0fdf4;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; border-radius: 10px; background: #dcfce7; color: #15803d; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px;">✓</div>
+        <h3 style="color: #14532d; margin: 0; font-size: 18px; font-weight: 700;">Преимущества</h3>
+      </div>
+      <span style="font-size: 11px; font-weight: 800; color: #15803d; background: #dcfce7; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em;">Плюсы</span>
+    </div>
+    
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      
+      <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #166534; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #16a34a; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #14532d;">Быстрый запуск:</b> Трафик и первые заявки можно получить в день модерации рекламной кампании (в отличие от месяцев ожидания в SEO).
+        </div>
+      </div>
+
+      <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #166534; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #16a34a; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #14532d;">Идеально для теста спроса:</b> Позволяет моментально проверить, нужен ли рынку ваш новый товар или услуга, без долгих вложений в доработку сайта.
+        </div>
+      </div>
+
+      <div style="background: #f0fdf4; border: 1px solid #dcfce7; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #166534; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #16a34a; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #14532d;">Гибкость:</b> Можно быстро менять текст объявлений, добавлять акции и управлять расходами в реальном времени.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- МИНУСЫ -->
+  <div style="background: #ffffff; border: 1px solid #fee2e2; border-radius: 16px; padding: 24px; box-shadow: 0 4px 12px -2px rgba(153, 27, 27, 0.04);">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 12px; border-bottom: 1px solid #fef2f2;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="width: 32px; height: 32px; border-radius: 10px; background: #fee2e2; color: #b91c1c; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 14px;">✕</div>
+        <h3 style="color: #7f1d1d; margin: 0; font-size: 18px; font-weight: 700;">Ограничения</h3>
+      </div>
+      <span style="font-size: 11px; font-weight: 800; color: #b91c1c; background: #fee2e2; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em;">Минусы</span>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+
+      <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #991b1b; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #ef4444; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #7f1d1d;">Полная зависимость от бюджета:</b> Трафик идет только пока вы платите за клики. Закончились деньги на балансе — заявки мгновенно прекращаются.
+        </div>
+      </div>
+
+      <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #991b1b; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #ef4444; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #7f1d1d;">Высокая стоимость клика (Перегрев):</b> В конкурентных нишах (недвижимость, ремонт, юристы) аукцион перегрет, и за один клик можно отдать от нескольких сотен до тысяч рублей.
+        </div>
+      </div>
+
+      <div style="background: #fef2f2; border: 1px solid #fee2e2; padding: 12px 14px; border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: #991b1b; display: flex; align-items: flex-start; gap: 10px;">
+        <span style="color: #ef4444; font-weight: 800; font-size: 14px; line-height: 1;">•</span>
+        <div>
+          <b style="color: #7f1d1d;">Не формирует фундаментальный актив:</b> Оплата идет Яндексу, а сам сайт технически и качественно от этого не улучшается в глазах органического поиска.
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+
+<!-- КАК ОЦЕНИВАЮТ РЕЗУЛЬТАТЫ -->
+<h2 style="margin: 3rem 0 1.25rem 0; font-size: 24px; color: #0f172a; font-weight: 800; line-height: 1.25; font-family: system-ui, -apple-system, sans-serif;">Как оценивают результаты Рекламы?</h2>
+
+<p style="margin: 0 0 1.25rem 0; color: #334155; font-size: 14.5px; line-height: 1.65; font-family: system-ui, -apple-system, sans-serif;">
+  Чтобы понимать, работает ли реклама в плюс, или вы просто "сливаете" бюджет, в Метрике и Директе отслеживают следующие показатели:
+</p>
+
+<div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 2rem; font-family: system-ui, -apple-system, sans-serif;">
+  
+  <!-- 01. Показы и клики -->
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px;">
+    <span style="font-family: monospace; font-size: 18px; font-weight: 900; color: #0284c7; background: #e0f2fe; padding: 4px 10px; border-radius: 8px;">01</span>
+    <div>
+      <b style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 2px;">Трафик и Кликабельность 
+        <span class="seo-tooltip-modern">
+          CTR
+          <span class="seo-tooltip-badge">?</span>
+          <span class="seo-tooltip-box-modern">
+            <b style="color: #38bdf8; display: block; margin-bottom: 4px;">Кликабельность (CTR)</b>
+            Отношение числа кликов к числу показов в процентах.
+          </span>
+        </span>
+      </b>
+      <span style="color: #475569; font-size: 13.5px; line-height: 1.5;">Оценка того, сколько раз пользователи увидели ваше объявление и какой процент из них перешел на сайт.</span>
+    </div>
+  </div>
+
+  <!-- 02. Лиды -->
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px;">
+    <span style="font-family: monospace; font-size: 18px; font-weight: 900; color: #0284c7; background: #e0f2fe; padding: 4px 10px; border-radius: 8px;">02</span>
+    <div>
+      <b style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 2px;">
+        Конверсии и стоимость лида
+        <span class="seo-tooltip-modern">
+          CPA
+          <span class="seo-tooltip-badge">?</span>
+          <span class="seo-tooltip-box-modern">
+            <b style="color: #38bdf8; display: block; margin-bottom: 4px;">CPA (Cost Per Action)</b>
+            Цена, которую вы заплатили за получение одной заявки или звонка.
+          </span>
+        </span>
+      </b>
+      <span style="color: #475569; font-size: 13.5px; line-height: 1.5;">
+        Количество оставленных заявок, звонков и заполненных форм, а также сколько стоило привлечение каждого потенциального клиента.
+      </span>
+    </div>
+  </div>
+
+  <!-- 03. Окупаемость -->
+  <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px 20px; display: flex; align-items: flex-start; gap: 16px;">
+    <span style="font-family: monospace; font-size: 18px; font-weight: 900; color: #0284c7; background: #e0f2fe; padding: 4px 10px; border-radius: 8px;">03</span>
+    <div>
+      <b style="color: #0f172a; font-size: 15px; display: block; margin-bottom: 2px;">Продажи и Окупаемость</b>
+      <span style="color: #475569; font-size: 13.5px; line-height: 1.5;">
+        Сведение данных с отделом продаж. Сколько денег потратили на рекламу и сколько реальной прибыли заработали с закрытых сделок.
+      </span>
+    </div>
+  </div>
+
+</div>
+
+
+</div>
