@@ -9,8 +9,7 @@ if (
   pathname.startsWith('/login') ||
   pathname.startsWith('/_next') ||
   pathname.startsWith('/favicon.ico') ||
-  pathname.startsWith('/api/auth') ||
-  pathname.startsWith('/api/reset-pass') // <--- Добавьте эту строку!
+  pathname.startsWith('/api/auth')
 ) {
   return NextResponse.next();
 }
