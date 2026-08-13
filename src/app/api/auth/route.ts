@@ -8,6 +8,9 @@ export async function POST(req: NextRequest) {
   try {
     const { username, password, remember } = await req.json();
 
+    console.log('--- ПОПЫТКА ВХОДА ---');
+    console.log('Отправленные данные:', { username, passwordLength: password?.length });
+
     if (!username || !password) {
       return NextResponse.json({ error: 'Заполните все поля' }, { status: 400 });
     }
@@ -17,12 +20,17 @@ export async function POST(req: NextRequest) {
       where: { username: username.trim() },
     });
 
+    console.log('Пользователь найден в БД?:', user ? 'ДА' : 'НЕТ');
+
     if (!user) {
+      console.log(`Пользователь с username "${username.trim()}" не существует.`);
       return NextResponse.json({ error: 'Неверный логин или пароль' }, { status: 401 });
     }
 
     // Проверяем пароль (поддерживает хеши bcrypt из PHP)
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log('Пароль совпал?:', isPasswordValid ? 'ДА' : 'НЕТ');
+
     if (!isPasswordValid) {
       return NextResponse.json({ error: 'Неверный логин или пароль' }, { status: 401 });
     }
