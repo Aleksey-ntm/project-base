@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { ReactSortable } from 'react-sortablejs';
+import { useRouter } from 'next/navigation';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 
@@ -28,6 +29,7 @@ interface CategoryItem {
 }
 
 export default function LinksPage() {
+    const router = useRouter();
     const [links, setLinks] = useState<LinkItem[]>([]);
     const [categoriesList, setCategoriesList] = useState<CategoryItem[]>([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -69,6 +71,30 @@ export default function LinksPage() {
         setToastMessage(msg);
         setTimeout(() => setToastMessage(null), 3000);
     };
+
+    useEffect(() => {
+        const checkUserRole = async () => {
+            try {
+                const res = await fetch('/api/auth');
+                const data = await res.json();
+
+                // Если не авторизован -> на логин
+                if (!res.ok || !data.authenticated) {
+                    router.replace('/login');
+                    return;
+                }
+
+                // Если авторизован, но роль не 'admin' (например 'manager') -> на /education
+                if (data.user?.role !== 'admin') {
+                    router.replace('/education');
+                }
+            } catch (error) {
+                console.error('Ошибка проверки прав:', error);
+            }
+        };
+
+        checkUserRole();
+    }, [router]);
 
     useEffect(() => {
         if (typeof window !== 'undefined') {
