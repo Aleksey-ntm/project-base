@@ -253,7 +253,7 @@
   background: transparent; 
   border: none; 
   cursor: pointer;
-  overflow: hidden !important; 
+  overflow: visible !important; /* 👈 Было hidden, меняем на visible */
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -792,23 +792,27 @@
 /* ИКОНКИ БЕЙДЖЕЙ C ВСПЛЫВАЮЩИМ ТУЛТИПОМ                              */
 /* ================================================================== */
 
-.devIconWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
+.devIconWrapper,
+.newUpdateWrapper {
+  position: relative !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important;
+  height: 24px !important;
+  min-width: 24px !important;
   border-radius: 6px;
-  background: #f1f5f9;
-  color: #64748b;
-  border: 1px solid #e2e8f0;
   font-size: 11px;
   flex-shrink: 0 !important;
   margin-left: auto;
   cursor: pointer;
   transition: all 0.2s ease;
+}
+
+.devIconWrapper {
+  background: #f1f5f9;
+  color: #64748b;
+  border: 1px solid #e2e8f0;
 }
 
 .navLink:hover .devIconWrapper {
@@ -824,22 +828,10 @@
 }
 
 .newUpdateWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 24px;
-  height: 24px;
-  min-width: 24px;
-  border-radius: 6px;
   background: #fefce8;
   color: #d97706;
   border: 1px solid #fef08a;
   font-size: 12px;
-  flex-shrink: 0 !important;
-  margin-left: auto;
-  cursor: pointer;
-  transition: all 0.2s ease;
 }
 
 .navLink:hover .newUpdateWrapper {
@@ -854,12 +846,15 @@
   border-color: #fde047;
 }
 
+/* 🎯 Сам тултип: позиционируется слева от иконки или прямо над ней */
 .newUpdateWrapper[data-update-tooltip]:hover::after,
 .devIconWrapper[data-update-tooltip]:hover::after {
   content: attr(data-update-tooltip);
-  position: fixed !important;
-  top: var(--tooltip-top, 0);
-  left: var(--tooltip-left, 0);
+  position: absolute !important;
+  bottom: calc(100% + 8px) !important;
+  right: 0 !important;
+  top: auto !important;
+  left: auto !important;
   background: #0f172a;
   color: #ffffff;
   padding: 5px 10px;
@@ -873,12 +868,15 @@
   animation: tooltipFadeIn 0.15s ease-out;
 }
 
+/* 🎯 Стрелочка тултипа */
 .newUpdateWrapper[data-update-tooltip]:hover::before,
 .devIconWrapper[data-update-tooltip]:hover::before {
   content: '';
-  position: fixed !important;
-  top: calc(var(--tooltip-top, 0) + 24px);
-  left: calc(var(--tooltip-left, 0) + 7px);
+  position: absolute !important;
+  bottom: calc(100% + 2px) !important;
+  right: 7px !important;
+  top: auto !important;
+  left: auto !important;
   border-width: 5px;
   border-style: solid;
   border-color: #0f172a transparent transparent transparent;
@@ -1180,4 +1178,14 @@
   font-weight: 600;
   cursor: pointer;
   margin-bottom: 28px;
+}
+
+/* Полупрозрачный вид для пунктов в разработке */
+.navLink.devItem {
+  opacity: 0.5;
+  transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+
+.navLink.devItem:hover {
+  opacity: 0.85;
 }

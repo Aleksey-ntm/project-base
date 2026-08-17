@@ -102,7 +102,7 @@ const SECTIONS_CONFIG: Record<string, { title: string; groups: Record<string, { 
         lessons: {
           other: { title: 'Остальные вопросы', icon: 'patch-question', noSidebar: true },
           docs: { title: 'Заявления, документы', icon: 'file-earmark-text', noSidebar: true },
-          tilda_work: { title: 'Работа с Тильдой', icon: 'layers' },
+          tilda_work: { title: 'Работа с Тильдой', icon: 'layers', noSidebar: true },
           leads_table: { title: 'Таблица с заявками', icon: 'table', noSidebar: true }, 
         },
       },
@@ -494,23 +494,23 @@ function EducationPortalContent() {
                 <ul className={styles.navList}>
                   {Object.entries(group.lessons).map(([lessonKey, lesson]) => (
                     <li key={lessonKey} className={styles.navItem}>
-                      <button
-                        onClick={() => handleSelectLesson(lessonKey)}
-                        className={`${styles.navLink} ${currentLesson === lessonKey && !isSettingsOpen ? styles.active : ''}`}
-                        data-tooltip={lesson.title}
-                      >
-                        <i className={`bi bi-${lesson.icon} ${styles.navIconFa}`}></i>
-                        <span className={styles.navItemText}>{lesson.title}</span>
-                        {lesson.badge && (
-                          <div 
-                            className={lesson.badge !== 'В разработке' ? styles.newUpdateWrapper : styles.devIconWrapper}
-                            data-update-tooltip={lesson.badge !== 'В разработке' ? `Обновлено: ${lesson.badge}` : 'Раздел в разработке'}
-                          >
-                            <i className={`bi ${lesson.badge !== 'В разработке' ? 'bi-stars' : 'bi-tools'}`}></i>
-                          </div>
-                        )}
-                      </button>
-                    </li>
+                    <button
+                      onClick={() => handleSelectLesson(lessonKey)}
+                      className={`${styles.navLink} ${currentLesson === lessonKey && !isSettingsOpen ? styles.active : ''} ${lesson.badge === 'В разработке' ? styles.devItem : ''}`}
+                      data-tooltip={lesson.title}
+                    >
+                      <i className={`bi bi-${lesson.icon} ${styles.navIconFa}`}></i>
+                      <span className={styles.navItemText}>{lesson.title}</span>
+                      {lesson.badge && (
+                        <div 
+                          className={lesson.badge !== 'В разработке' ? styles.newUpdateWrapper : styles.devIconWrapper}
+                          data-update-tooltip={lesson.badge !== 'В разработке' ? `Обновлено: ${lesson.badge}` : 'Раздел в разработке'}
+                        >
+                          <i className={`bi ${lesson.badge !== 'В разработке' ? 'bi-stars' : 'bi-tools'}`}></i>
+                        </div>
+                      )}
+                    </button>
+                  </li>
                   ))}
                 </ul>
               </React.Fragment>

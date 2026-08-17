@@ -4,8 +4,13 @@ import "./globals.css";
 
 const inter = Inter({ subsets: ["latin", "cyrillic"] });
 
+const isDev = process.env.NODE_ENV === "development";
+
 export const metadata: Metadata = {
   title: "NTM",
+  icons: {
+    icon: isDev ? "/favicon-dev.ico" : "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -16,9 +21,14 @@ export default function RootLayout({
   return (
     <html lang="ru">
       <head>
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
+        <link
+          rel="stylesheet"
+          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+        />
       </head>
-      <body className={`${inter.className} bg-[#f8fafc] text-slate-900 antialiased relative overflow-x-hidden`}>
+      <body
+        className={`${inter.className} bg-[#f8fafc] text-slate-900 antialiased relative overflow-x-hidden`}
+      >
         {children}
       </body>
     </html>
