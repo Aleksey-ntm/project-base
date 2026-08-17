@@ -102,28 +102,20 @@
   margin-top: 0 !important;
   align-items: start !important; 
   min-height: 100vh;
-  transition: none !important; /* Убираем рассинхрон грида */
+  transition: none !important;
 }
 
 .navSidebar,
 .rightSidebar {
-  transition: none !important; /* Убираем растягивание сайдбаров */
+  transition: none !important;
 }
 
 .contentInner {
-  transition: none !important; /* Убираем плавное расплывание текста */
+  transition: none !important;
 }
 
-/* КНОПКА СВОРАЧИВАНИЯ ТОЖЕ ПЕРЕНОСИТСЯ МГНОВЕННО ПО КООРДИНАТАМ */
 .sidebarBottomToggleBtn {
   transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
-}
-
-/* МИКРО-ФЕЙД ДЛЯ СГЛАЖИВАНИЯ МГНОВЕННОГО РЕНДЕРА КОНТЕНТА */
-.sidebarRe-rendering {
-  opacity: 0.1;
-  pointer-events: none;
-  transition: opacity 0.08s ease-in-out;
 }
 
 .leftCollapsed .mainWrapper {
@@ -180,7 +172,7 @@
   overflow: visible !important; 
   display: flex !important;
   flex-direction: column !important;
-  padding: 15px max(20px, calc((100vw - 1600px) / 2)) 40px 16px !important; /* Установили 15px сверху */
+  padding: 15px max(20px, calc((100vw - 1600px) / 2)) 40px 16px !important;
   border-left: none !important;
   background: #ffffff !important;
   z-index: 90 !important;
@@ -251,7 +243,7 @@
   gap: 12px !important; 
   width: 100%; 
   min-height: 40px; 
-  padding: 8px 12px !important; /* Было 8px 14px, меняем на 8px 12px */
+  padding: 8px 12px !important; 
   color: #475569;
   text-decoration: none; 
   border-radius: 10px; 
@@ -301,11 +293,9 @@
 }
 
 /* ================================================================== */
-/* КНОПКА СВОРАЧИВАНИЯ ЛЕВОГО САЙДБАРА (НА РАЗДЕЛИТЕЛЕ)              */
+/* КНОПКА СВОРАЧИВАНИЯ ЛЕВОГО САЙДБАРА                                */
 /* ================================================================== */
 
-/* КНОПКА СВОРАЧИВАНИЯ ЛЕВОГО САЙДБАРА (В ТОЧНОМ ДИЗАЙНЕ ПРАВОЙ СТРЕЛКИ) */
-/* КНОПКА СВОРАЧИВАНИЯ ЛЕВОГО САЙДБАРА */
 .sidebarBottomToggleBtn {
   position: fixed !important;
   bottom: 24px;
@@ -324,8 +314,6 @@
   cursor: pointer !important;
   z-index: 1000 !important;
   box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
-  
-  /* ИЗМЕНЕНО: Синхронизируем с 0.8s cubic-bezier(0.16, 1, 0.3, 1) левого меню */
   transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
               background-color 0.2s ease, 
               border-color 0.2s ease, 
@@ -346,7 +334,7 @@
 }
 
 /* ================================================================== */
-/* СВЕРНУТОЕ СОСТОЯНИЕ (ПЛАВНЫЙ СДВИГ БУКВ ВЛЕВО И ТЕМНЫЙ ВЕРХ)        */
+/* СВЕРНУТОЕ СОСТОЯНИЕ ЛЕВОГО МЕНЮ                                   */
 /* ================================================================== */
 
 .leftCollapsed .navSidebarTitle { 
@@ -581,6 +569,65 @@
 }
 
 /* ================================================================== */
+/* ИЕРАРХИЯ H2 И H3 В ПРАВОМ МЕНЮ                                     */
+/* ================================================================== */
+
+.anchorItem .anchorLink.active {
+  color: #0284c7 !important;
+  font-weight: 700 !important;
+}
+
+.anchorLink.levelH2 {
+  padding-left: 12px;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: #0f172a;
+}
+
+.anchorLink.levelH3 {
+  padding-left: 28px;
+  font-weight: 400;
+  font-size: 12.5px;
+  color: #64748b;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Маркер-точка перед каждым H3 */
+.anchorLink.levelH3::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #cbd5e1;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.anchorLink.levelH3:hover::before {
+  background-color: #0284c7;
+  transform: translateY(-50%) scale(1.25);
+}
+
+.anchorLink.levelH3.active::before {
+  background-color: #0284c7;
+  transform: translateY(-50%) scale(1.25);
+}
+
+.anchorLink.levelH3 .anchorText {
+  width: 194px;
+  min-width: 194px;
+}
+
+.anchorLink.levelH3:hover {
+  color: #0f172a;
+}
+
+/* ================================================================== */
 /* ШАПКА И КОНТЕНТ УРОКОВ                                            */
 /* ================================================================== */
 
@@ -623,7 +670,6 @@
   transition: opacity 0.25s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), right 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease !important;
 }
 
-/* 🎯 Прижимаем стрелку к правому краю, если меню свернуто или страница без правого меню */
 .rightCollapsed .scrollToTopBtn,
 .noRightSidebar .scrollToTopBtn { 
   right: calc(max(20px, calc((100vw - 1600px) / 2)) + 25px) !important; 
@@ -850,25 +896,21 @@
 /* РАСТЯЖЕНИЕ КОНТЕНТА И СТРАНИЦ БЕЗ ПРАВОГО САЙДБАРА                */
 /* ================================================================== */
 
-/* Базовое состояние */
 .contentInner { 
   max-width: 1000px; 
   margin: 0 auto; 
   transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* Расширение при сворачивании левого или правого меню */
 .leftCollapsed .contentInner,
 .rightCollapsed .contentInner {
   max-width: 1280px !important;
 }
 
-/* Расширение при сворачивании обоих меню */
 .leftCollapsed.rightCollapsed .contentInner {
   max-width: 1440px !important;
 }
 
-/* СТРАНИЦЫ БЕЗ ПРАВОГО САЙДБАРА И НАСТРОЙКИ (ИТОГО ПО УМОЛЧАНИЮ РАСТЯНУТЫ НА 1280px / 1440px) */
 .noRightSidebar .contentInner,
 .settingsOpen .contentInner {
   max-width: 1280px !important;
@@ -881,7 +923,6 @@
   width: 100% !important;
 }
 
-/* Сетка для страниц без правого сайдбара (Тарифы, Скрипты, Настройки) */
 .noRightSidebar.educationPortalContainer .mainWrapper,
 .settingsOpen.educationPortalContainer .mainWrapper {
   grid-template-columns: 
@@ -906,12 +947,237 @@
 .sidebarReRendering {
   opacity: 0.15;
   pointer-events: none;
-  transition: opacity 5.28s ease-in-out !important; /* <--- Плавное проявление на 0.18s */
+  transition: opacity 5.28s ease-in-out !important;
 }
 
-/* === ДОБАВЬТЕ ЭТИ СТИЛИ ДЛЯ АКТИВНОГО ПУНКТА В РАЗВЕРНУТОМ МЕНЮ === */
-.anchorLink.active {
-  color: #0284c7 !important;
-  font-weight: 600 !important;
+/* ================================================================== */
+/* ОПТИМИЗИРОВАННЫЕ СТИЛИ НАСТРОЕК И СТАТУСОВ БД                      */
+/* ================================================================== */
+
+.settingsModalScreen {
+  display: none;
+  flex-direction: column;
+  height: calc(100vh - 140px);
+  max-height: 100vh;
+  overflow-y: auto;
+  box-sizing: border-box;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
 }
 
+.settingsModalScreen.active {
+  display: flex;
+}
+
+.settingsHeaderRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+  flex-shrink: 0;
+}
+
+.settingsBackBtn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #0f172a;
+  font-size: 16px;
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.settingsBackBtn:hover {
+  background: #e2e8f0;
+}
+
+.settingsTitleText {
+  font-size: 28px;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0;
+}
+
+.settingsGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+.settingsGridAdmin {
+  grid-template-columns: 1fr 1fr;
+}
+
+.settingsCard {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.settingsCardInner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.settingsCardTitle {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.settingsCardDesc {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 2px;
+}
+
+/* Переключатели (Toggle switches) */
+.switchLabel {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.switchInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switchSlider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: 0.2s;
+  border-radius: 24px;
+}
+
+.switchSlider.active {
+  background-color: #0f172a;
+}
+
+.switchSlider::before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #ffffff;
+  transition: 0.2s;
+  border-radius: 50%;
+}
+
+.switchSlider.active::before {
+  transform: translateX(20px);
+}
+
+/* Панели источника БД */
+.dbStatusBanner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  padding: 12px 18px;
+  border-radius: 14px;
+  margin-bottom: 28px;
+}
+
+.dbStatusTextGroup {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #0f172a;
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.dbSaveBtn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid #0f172a;
+  background: #0f172a;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.dbDeleteBtn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  color: #0f172a;
+  font-weight: 700;
+  font-size: 12.5px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s ease;
+}
+
+.dbBadgeDb {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #166534;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.dbBadgeDraft {
+  background: #fff1f2;
+  border: 1px solid #fecdd3;
+  color: #991b1b;
+  padding: 6px 14px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btnNewSection {
+  width: 100%;
+  padding: 12px;
+  border: 2px dashed #94a3b8;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #475569;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 28px;
+}
