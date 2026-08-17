@@ -445,6 +445,24 @@ function EducationPortalContent() {
 
   const currentTabConfig = SECTIONS_CONFIG[activeTab] || SECTIONS_CONFIG['doc'];
 
+  const { prevLesson, nextLesson } = useMemo(() => {
+    const currentTab = SECTIONS_CONFIG[activeTab] || SECTIONS_CONFIG['doc'];
+    const flatLessons: { key: string; title: string }[] = [];
+
+    Object.values(currentTab.groups).forEach((group) => {
+      Object.entries(group.lessons).forEach(([key, lesson]) => {
+        flatLessons.push({ key, title: lesson.title });
+      });
+    });
+
+    const currentIndex = flatLessons.findIndex((item) => item.key === currentLesson);
+
+    return {
+      prevLesson: currentIndex > 0 ? flatLessons[currentIndex - 1] : null,
+      nextLesson: currentIndex >= 0 && currentIndex < flatLessons.length - 1 ? flatLessons[currentIndex + 1] : null,
+    };
+  }, [activeTab, currentLesson]);
+
   const containerClasses = [
     styles.educationPortalContainer,
     leftCollapsed ? styles.leftCollapsed : '',
@@ -671,6 +689,35 @@ function EducationPortalContent() {
               </>
             )}
           </div>
+
+<div className={styles.eduNextPrevPanel}>
+                  <div className={styles.enppContainer}>
+                    {prevLesson ? (
+                      <button className={`${styles.enppBtn} ${styles.enppBtnPrev}`} onClick={() => handleSelectLesson(prevLesson.key)}>
+                        <i className="bi bi-arrow-left"></i>
+                        <div className={styles.enppBtnText}>
+                          <span>Предыдущая страница</span>
+                          <div className={styles.enppBtnTitle}>{prevLesson.title}</div>
+                        </div>
+                      </button>
+                    ) : (
+                      <div style={{ flex: 1 }} />
+                    )}
+
+                    {nextLesson ? (
+                      <button className={`${styles.enppBtn} ${styles.enppBtnNext}`} onClick={() => handleSelectLesson(nextLesson.key)}>
+                        <div className={styles.enppBtnText}>
+                          <span>Следующая страница</span>
+                          <div className={styles.enppBtnTitle}>{nextLesson.title}</div>
+                        </div>
+                        <i className="bi bi-arrow-right"></i>
+                      </button>
+                    ) : (
+                      <div style={{ flex: 1 }} />
+                    )}
+                  </div>
+                </div>
+
         </main>
 
         {!isNoRightSidebar && !isSettingsOpen && (
