@@ -426,12 +426,6 @@ function EducationPortalContent() {
   }, [activeAnchorId]);
 
   useEffect(() => {
-    // Добавляем leads_table в исключения
-    if (currentLesson === 'price' || currentLesson === 'script' || currentLesson === 'leads_table') {
-      setShowScrollTop(false);
-      return;
-    }
-
     const handleScroll = () => {
       setShowScrollTop(window.scrollY > 300);
       
@@ -722,7 +716,8 @@ useEffect(() => {
         currentLesson === 'script' || 
         currentLesson === 'price' || 
         currentLesson === 'call_examples' ||
-        currentLesson === 'leads_table'
+        currentLesson === 'leads_table' || 
+        currentLesson === 'about_platform'
       ) {
         setAnchors([]);
         return;
@@ -856,7 +851,9 @@ useEffect(() => {
     currentLesson === 'call_structure' ||
     currentLesson === 'call_examples' ||
     currentLesson === 'docs' ||
-    currentLesson === 'leads_table'; // <-- Скроет правый сайдбар и развернет ширину
+    currentLesson === 'leads_table'|| 
+    currentLesson === 'welcome'||
+    currentLesson === 'about_platform';
 
   const isNoRightSidebar = 
     currentLesson === 'price' || 
@@ -864,7 +861,9 @@ useEffect(() => {
     currentLesson === 'call_structure' ||
     currentLesson === 'call_examples' ||
     currentLesson === 'docs' ||
-    currentLesson === 'leads_table'; // <-- Скроет правый сайдбар и развернет ширину
+    currentLesson === 'leads_table'||
+    currentLesson === 'welcome'||
+    currentLesson === 'about_platform';
 
   const containerClasses = [
     styles.educationPortalContainer,

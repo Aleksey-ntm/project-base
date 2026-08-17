@@ -602,16 +602,49 @@
 .scrollToTopBtn {
   position: fixed; 
   right: calc(max(20px, calc((100vw - 1600px) / 2)) + 257px) !important;
-  bottom: 32px; width: 50px; height: 50px; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-  color: #0f172a; border: 1px solid #e2e8f0; border-radius: 14px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px;
-  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 4px 6px -2px rgba(15, 23, 42, 0.05); opacity: 0; visibility: hidden; z-index: 900;
+  bottom: 32px; 
+  width: 50px; 
+  height: 50px; 
+  background: rgba(255, 255, 255, 0.9); 
+  backdrop-filter: blur(12px); 
+  -webkit-backdrop-filter: blur(12px);
+  color: #0f172a; 
+  border: 1px solid #e2e8f0; 
+  border-radius: 14px; 
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
+  cursor: pointer; 
+  font-size: 20px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.1), 0 4px 6px -2px rgba(15, 23, 42, 0.05); 
+  opacity: 0; 
+  visibility: hidden; 
+  z-index: 900;
   transition: opacity 0.25s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), right 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.2s ease !important;
 }
 
-.rightCollapsed .scrollToTopBtn { right: calc(max(20px, calc((100vw - 1600px) / 2)) + 25px) !important; }
-.scrollToTopBtn.show { opacity: 1; visibility: visible; }
-.scrollToTopBtn:hover { background: #0284c7; border-color: #0284c7; color: #ffffff; transform: translateY(-3px); box-shadow: 0 14px 28px -6px rgba(2, 132, 199, 0.35); }
-.scrollToTopBtn:active { transform: translateY(-1px) scale(0.96) !important; }
+/* 🎯 Прижимаем стрелку к правому краю, если меню свернуто или страница без правого меню */
+.rightCollapsed .scrollToTopBtn,
+.noRightSidebar .scrollToTopBtn { 
+  right: calc(max(20px, calc((100vw - 1600px) / 2)) + 25px) !important; 
+}
+
+.scrollToTopBtn.show { 
+  opacity: 1; 
+  visibility: visible; 
+}
+
+.scrollToTopBtn:hover { 
+  background: #0284c7; 
+  border-color: #0284c7; 
+  color: #ffffff; 
+  transform: translateY(-3px); 
+  box-shadow: 0 14px 28px -6px rgba(2, 132, 199, 0.35); 
+}
+
+.scrollToTopBtn:active { 
+  transform: translateY(-1px) scale(0.96) !important; 
+}
 
 /* ТУЛТИПЫ ПРИ НАВЕДЕНИИ */
 .leftCollapsed .navLink[data-tooltip]:hover::after {
