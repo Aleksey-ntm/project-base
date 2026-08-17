@@ -26,6 +26,9 @@
             <a href="#faq-3" onclick="openAndHighlightFaq('faq-3');" style="color: #0284c7; font-size: 14px; font-weight: 600; text-decoration: none; transition: color 0.2s ease;">
                 3. Что там с моими заявками?
             </a>
+            <a href="#faq-4" onclick="openAndHighlightFaq('faq-4');" style="color: #0284c7; font-size: 14px; font-weight: 600; text-decoration: none; transition: color 0.2s ease;">
+                4. Клиент хочет тестовый запуск услуги.
+            </a>
         </div>
     </div>
 
@@ -90,6 +93,26 @@
             </div>
         </div>
     </div>
+
+    <!-- ВОПРОС 4 -->
+    <div id="faq-4" class="faq-item-card" style="border: 1px solid #e2e8f0; border-radius: 10px; background: #ffffff; overflow: hidden; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02); transition: all 0.4s ease; scroll-margin-top: 80px;">
+        <div onclick="toggleAccordion(this);" style="display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; padding: 0.85rem 1rem; background: #ffffff; cursor: pointer; user-select: none;">
+            <div style="display: flex; align-items: center; gap: 0.65rem;">
+                <span class="acc-badge" style="width: 22px; height: 22px; border-radius: 50%; background: #f1f5f9; color: #64748b; font-size: 12px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.3s ease;">?</span>
+                <span style="color: #0f172a; font-size: 14.5px; font-weight: 600;">Клиент хочет тестовый запуск услуги.</span>
+            </div>
+            <svg class="acc-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="transition: transform 0.8s ease; flex-shrink: 0;">
+                <polyline points="6 9 12 15 18 9"></polyline>
+            </svg>
+        </div>
+
+        <div style="max-height: 0px; opacity: 0; overflow: hidden; transition: max-height 0.8s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.8s ease-in-out; border-top: 1px solid #f1f5f9;">
+            <div class="spoiler-inner" style="padding: 1rem 1.25rem; color: #334155; font-size: 14.5px; line-height: 1.6; font-weight: 400;">
+                Клиент в разговоре говорит, что уже несколько раз пробовал работать по инструменту и результата не дало и он готов начинать работать только в пилотном варианте (тестовый запуск) в рамках 1 месяца и далее готов продлевать договор, если это даст результат. В контекстой рекламе мы так можем делать. Без проблем, но это будут уже не абонентские услуги, а разовые работы по настройке рекламы. В других услугах - Seo или ТП - мы так не работаем. В ТП таких вопросов скорее всего не будет, а в Seo из-за логики работы поисковых систем нет смысла работать 1 месяц. Минималка 3 месяца и то по согласованию с тех. отделом.
+            </div>
+        </div>
+    </div>
+
 
 </div>
 
