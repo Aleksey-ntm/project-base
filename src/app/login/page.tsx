@@ -47,8 +47,8 @@ export default function LoginPage() {
           <div className="w-14 h-14 bg-slate-900 text-white mx-auto flex items-center justify-center mb-4 shadow-xl rounded-2xl">
             <i className="bi bi-shield-lock-fill text-2xl text-sky-400"></i>
           </div>
-          <h1 className="text-2xl font-black tracking-tight text-slate-900 uppercase">База данных ТМ</h1>
-          <p className="text-xs text-slate-400 font-bold tracking-wider uppercase mt-1"></p>
+          <h1 className="text-2xl font-black tracking-tight text-slate-900 uppercase">Войти в систему</h1>
+          <p className="text-xs text-slate-400 font-bold tracking-wider uppercase mt-1">База данных ТМ</p>
         </div>
 
         {errorMessage && (
