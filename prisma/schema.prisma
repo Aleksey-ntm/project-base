@@ -13,11 +13,10 @@ enum Role {
 
 model User {
   id        Int      @id @default(autoincrement())
-  username  String   @unique @db.VarChar(50)
+  email     String   @unique @db.VarChar(100)
   password  String   @db.VarChar(255)
   firstName String?  @map("first_name") @db.VarChar(100)
   lastName  String?  @map("last_name") @db.VarChar(100)
-  email     String?  @db.VarChar(100)
   role      Role     @default(manager)
   createdAt DateTime @default(now()) @map("created_at")
 
@@ -141,4 +140,28 @@ model SearchIndex {
   updatedAt DateTime @updatedAt
 
   @@map("search_index")
+}
+
+model QuickCategory {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique @db.VarChar(255)
+  position  Int      @default(0)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("categories")
+}
+
+model QuickButton {
+  id            String   @id
+  title         String   @db.VarChar(255)
+  url           String   @db.Text
+  category      String   @default("Разное") @db.VarChar(255)
+  isHidden      Boolean  @default(false) @map("is_hidden")
+  hideUrl       Boolean  @default(false) @map("hide_url")
+  openInNewTab  Boolean  @default(false) @map("open_in_new_tab")
+  customFavicon String?  @default("") @map("custom_favicon") @db.VarChar(255)
+  position      Int      @default(0)
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("buttons")
 }

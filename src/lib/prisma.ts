@@ -4,15 +4,27 @@ import { Pool } from 'pg';
 
 const connectionString = process.env.DATABASE_URL;
 
-// Создаем пул соединений PostgreSQL
-const pool = new Pool({ connectionString });
-const adapter = new PrismaPg(pool);
-
 const globalForPrisma = globalThis as unknown as {
   prisma: PrismaClient | undefined;
+  pool: Pool | undefined;
 };
 
-// Передаем адаптер в конструктор PrismaClient
+// Создаем пул соединений с явными параметрами SSL для Neon
+const pool =
+  globalForPrisma.pool ??
+  new Pool({
+    connectionString,
+    ssl: {
+      rejectUnauthorized: false,
+    },
+  });
+
+if (process.env.NODE_ENV !== 'production') {
+  globalForPrisma.pool = pool;
+}
+
+const adapter = new PrismaPg(pool);
+
 export const prisma =
   globalForPrisma.prisma ??
   new PrismaClient({

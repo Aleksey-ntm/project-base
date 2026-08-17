@@ -1,133 +1,136 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || '';
-
-const supabase = createClient(supabaseUrl, supabaseKey, {
-  auth: { persistSession: false }
-});
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma';
 
 export async function GET() {
   try {
-    // Получаем сразу и ссылки, и категории с правильной сортировкой
-    const [linksRes, catsRes] = await Promise.all([
-      supabase.from('buttons').select('*').order('position', { ascending: true, nullsFirst: false }),
-      supabase.from('categories').select('*').order('position', { ascending: true, nullsFirst: false })
+    const [links, categories] = await Promise.all([
+      prisma.quickButton.findMany({
+        orderBy: { position: 'asc' },
+      }),
+      prisma.quickCategory.findMany({
+        orderBy: { position: 'asc' },
+      }),
     ]);
 
-    return NextResponse.json({
-      links: linksRes.data || [],
-      categories: catsRes.data || []
-    });
-  } catch (e: any) {
-    return NextResponse.json({ error: e.message }, { status: 500 });
+    const formattedLinks = links.map((l) => ({
+      id: l.id,
+      title: l.title,
+      url: l.url,
+      category: l.category,
+      is_hidden: l.isHidden,
+      hide_url: l.hideUrl,
+      open_in_new_tab: l.openInNewTab,
+      custom_favicon: l.customFavicon || '',
+      position: l.position,
+    }));
+
+    return NextResponse.json({ links: formattedLinks, categories });
+  } catch (error: any) {
+    console.error('Ошибка GET /api/links:', error);
+    return NextResponse.json({ error: error.message || 'Ошибка базы данных' }, { status: 500 });
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { action, payload } = body;
 
-    // 1. СОХРАНЕНИЕ / ОБНОВЛЕНИЕ ОДНОЙ ПЛИТКИ
+    // --- ТОЧЕЧНОЕ СОХРАНЕНИЕ ССЫЛКИ СО ВСЕМИ ПОЛЯМИ ---
     if (action === 'save_link') {
       const link = payload;
-      const recordToSave = {
-        id: link.id || `b_${Date.now()}`,
-        title: link.title || '',
-        url: link.url || '',
-        category: link.category || 'Основное',
-        is_hidden: Boolean(link.is_hidden),
-        hide_url: Boolean(link.hide_url),
-        open_in_new_tab: Boolean(link.open_in_new_tab),
-        custom_favicon: link.custom_favicon || '',
+      const dataToSave = {
+        title: String(link.title || '').trim(),
+        url: String(link.url || '').trim(),
+        category: String(link.category || 'Разное').trim(),
+        isHidden: Boolean(link.is_hidden),
+        hideUrl: Boolean(link.hide_url),
+        openInNewTab: Boolean(link.open_in_new_tab),
+        customFavicon: String(link.custom_favicon || ''),
+        position: typeof link.position === 'number' ? link.position : 0,
       };
 
-      const { data, error } = await supabase
-        .from('buttons')
-        .upsert(recordToSave, { onConflict: 'id' })
-        .select();
+      const saved = await prisma.quickButton.upsert({
+        where: { id: String(link.id) },
+        update: dataToSave,
+        create: {
+          id: String(link.id),
+          ...dataToSave,
+        },
+      });
 
-      if (error) throw error;
-      return NextResponse.json({ success: true, link: data?.[0] || recordToSave });
+      return NextResponse.json({ success: true, link: saved });
     }
 
-    // 2. МАССОВОЕ СОХРАНЕНИЕ ПОРЯДКА ПЛИТОК (Drag & Drop)
-    if (action === 'save_links') {
-      const links = payload.links || [];
-      const formattedLinks = links.map((l: any, index: number) => ({
-        id: l.id,
-        title: l.title || '',
-        url: l.url || '',
-        category: l.category || 'Основное',
-        is_hidden: Boolean(l.is_hidden),
-        hide_url: Boolean(l.hide_url),
-        open_in_new_tab: Boolean(l.open_in_new_tab),
-        position: index, // Сохраняем физическую позицию
-      }));
-
-      const { error } = await supabase.from('buttons').upsert(formattedLinks, { onConflict: 'id' });
-      if (error) throw error;
-
-      return NextResponse.json({ success: true });
-    }
-
-    // В route.ts замените обработку save_categories на:
-
-// 3. МАССОВОЕ СОХРАНЕНИЕ ПОРЯДКА РАЗДЕЛОВ (Drag & Drop)
-if (action === 'save_categories') {
-    const categories = payload.categories || [];
-    
-    // categories может быть либо массивом строк, либо массивом объектов {name, position}
-    const formattedCats = categories.map((item: any, index: number) => {
-        if (typeof item === 'string') {
-            return { name: item, position: index };
-        }
-        return {
-            name: item.name,
-            position: item.position !== undefined ? item.position : index
-        };
-    });
-
-    // Для каждой категории делаем upsert
-    for (const cat of formattedCats) {
-        const { error } = await supabase
-            .from('categories')
-            .upsert({ name: cat.name, position: cat.position }, { onConflict: 'name' });
-        if (error) throw error;
-    }
-
-    return NextResponse.json({ success: true });
-}
-
-    // 4. УДАЛЕНИЕ ПЛИТКИ
+    // --- УДАЛЕНИЕ ССЫЛКИ ---
     if (action === 'delete_link') {
-      const { id } = payload;
-      const { error } = await supabase.from('buttons').delete().eq('id', id);
-      if (error) throw error;
+      await prisma.quickButton.delete({
+        where: { id: String(payload.id) },
+      });
       return NextResponse.json({ success: true });
     }
 
-    // 5. ПЕРЕИМЕНОВАНИЕ КАТЕГОРИИ
+    // --- СОХРАНЕНИЕ ПОРЯДКА И РАСПРЕДЕЛЕНИЯ ПОСЛЕ DRAG & DROP ---
+    if (action === 'save_links_order') {
+      const links = payload.links || [];
+      await prisma.$transaction(
+        links.map((link: any, index: number) =>
+          prisma.quickButton.update({
+            where: { id: String(link.id) },
+            data: {
+              category: link.category,
+              position: index,
+            },
+          })
+        )
+      );
+      return NextResponse.json({ success: true });
+    }
+
+    // --- СОХРАНЕНИЕ / ПОРЯДОК КАТЕГОРИЙ ---
+    if (action === 'save_categories') {
+      const cats = payload.categories || [];
+      await prisma.$transaction(
+        cats.map((cat: any, index: number) =>
+          prisma.quickCategory.upsert({
+            where: { name: cat.name },
+            update: { position: index },
+            create: { name: cat.name, position: index },
+          })
+        )
+      );
+      return NextResponse.json({ success: true });
+    }
+
+    // --- УДАЛЕНИЕ КАТЕГОРИИ СО ВСЕМИ ПЛИТКАМИ ---
+    if (action === 'delete_category') {
+      const catName = payload.category;
+      await prisma.$transaction([
+        prisma.quickButton.deleteMany({ where: { category: catName } }),
+        prisma.quickCategory.deleteMany({ where: { name: catName } }),
+      ]);
+      return NextResponse.json({ success: true });
+    }
+
+    // --- ПЕРЕИМЕНОВАНИЕ КАТЕГОРИИ ---
     if (action === 'edit_category') {
       const { old_category, new_category } = payload;
-      const { error } = await supabase.from('buttons').update({ category: new_category }).eq('category', old_category);
-      if (error) throw error;
+      await prisma.$transaction([
+        prisma.quickCategory.update({
+          where: { name: old_category },
+          data: { name: new_category },
+        }),
+        prisma.quickButton.updateMany({
+          where: { category: old_category },
+          data: { category: new_category },
+        }),
+      ]);
       return NextResponse.json({ success: true });
     }
 
-    // 6. УДАЛЕНИЕ КАТЕГОРИИ
-    if (action === 'delete_category') {
-      const { category } = payload;
-      const { error } = await supabase.from('buttons').delete().eq('category', category);
-      if (error) throw error;
-      return NextResponse.json({ success: true });
-    }
-
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ error: 'Неизвестное действие' }, { status: 400 });
   } catch (error: any) {
-    console.error('API links error:', error);
-    return NextResponse.json({ success: false, error: error.message }, { status: 500 });
+    console.error('Ошибка POST /api/links:', error);
+    return NextResponse.json({ error: error.message || 'Ошибка сервера' }, { status: 500 });
   }
 }

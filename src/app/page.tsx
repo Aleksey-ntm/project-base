@@ -14,36 +14,30 @@ interface LinkItem {
     is_hidden: boolean;
     hide_url: boolean;
     open_in_new_tab: boolean;
+    position?: number;
     custom_favicon?: string;
-    mtime?: number;
-    chosen?: boolean;
-    selected?: boolean;
 }
 
 interface CategoryItem {
     id: string;
     name: string;
     position?: number;
-    chosen?: boolean;
-    selected?: boolean;
 }
 
 export default function LinksPage() {
     const router = useRouter();
-    const [links, setLinks] = useState<LinkItem[]>([]);
-    const [categoriesList, setCategoriesList] = useState<CategoryItem[]>([]);
+    
+    const [isAuthChecking, setIsAuthChecking] = useState(true);
     const [isLoading, setIsLoading] = useState(true);
     const [isSavingLink, setIsSavingLink] = useState(false);
     
-    const [isEditMode, setIsEditMode] = useState(false); 
+    const [links, setLinks] = useState<LinkItem[]>([]);
+    const [categoriesList, setCategoriesList] = useState<CategoryItem[]>([]);
     
-    // Модалка для одиночного добавления/редактирования
+    const [isEditMode, setIsEditMode] = useState(false); 
     const [isModalOpen, setIsModalOpen] = useState(false);
-    // Модалка "Редактировать все ссылки и разделы"
-    const [isAllLinksModalOpen, setIsAllLinksModalOpen] = useState(false);
-    const [allLinksBuffer, setAllLinksBuffer] = useState<LinkItem[]>([]);
-    const [selectedCategoryFilter, setSelectedCategoryFilter] = useState<string>('ALL');
-    const [newCatInManager, setNewCatInManager] = useState('');
+
+    const handleToggleEditMode = () => setIsEditMode(prev => !prev);
 
     const [isConfirmDeleteOpen, setIsConfirmDeleteOpen] = useState(false);
     const [categoryToDelete, setCategoryToDelete] = useState('');
@@ -58,215 +52,155 @@ export default function LinksPage() {
     const [toastMessage, setToastMessage] = useState<string | null>(null);
 
     const [formData, setFormData] = useState<LinkItem>({
-        id: '', title: '', url: '', category: 'Разное',
-        is_hidden: false, hide_url: false, open_in_new_tab: false, custom_favicon: ''
+        id: '', 
+        title: '', 
+        url: '', 
+        category: 'Разное',
+        is_hidden: false, 
+        hide_url: false, 
+        open_in_new_tab: false, 
+        custom_favicon: ''
     });
 
     const saveCatTimeoutRef = useRef<NodeJS.Timeout | null>(null);
     const pendingUpdatesRef = useRef<Record<string, LinkItem[]>>({});
     const applyTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-    const isInitialLoadRef = useRef(true);
 
     const showToast = (msg: string) => {
         setToastMessage(msg);
-        setTimeout(() => setToastMessage(null), 3000);
+        setTimeout(() => setToastMessage(null), 3500);
     };
 
     useEffect(() => {
         const checkUserRole = async () => {
             try {
                 const res = await fetch('/api/auth');
+                if (!res.ok) { router.replace('/login'); return; }
                 const data = await res.json();
-
-                // Если не авторизован -> на логин
-                if (!res.ok || !data.authenticated) {
-                    router.replace('/login');
-                    return;
-                }
-
-                // Если авторизован, но роль не 'admin' (например 'manager') -> на /education
-                if (data.user?.role !== 'admin') {
-                    router.replace('/education');
-                }
+                if (!data.authenticated) { router.replace('/login'); return; }
+                if (data.user?.role !== 'admin') { router.replace('/education'); return; }
+                setIsAuthChecking(false);
             } catch (error) {
-                console.error('Ошибка проверки прав:', error);
+                router.replace('/login');
             }
         };
-
         checkUserRole();
     }, [router]);
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            setCurrentDomain(window.location.host);
-        }
+        if (typeof window !== 'undefined') setCurrentDomain(window.location.host);
     }, []);
 
-    const fetchLinks = async (isBackground = false, skipCategories = false) => {
+    const fetchLinks = async (isBackground = false) => {
         if (!isBackground) setIsLoading(true);
         try {
-            const res = await fetch('/api/links').then(r => r.json());
+            const res = await fetch('/api/links', {
+                cache: 'no-store',
+                headers: { 'Pragma': 'no-cache', 'Cache-Control': 'no-cache' }
+            });
             
-            const cleanCategoryName = (val: any): string => {
-                if (!val) return 'Разное';
-                let str = String(val).trim();
-                if (str.startsWith('{') && str.endsWith('}')) {
-                    try {
-                        const parsed = JSON.parse(str);
-                        return parsed.NAME || parsed.name || str;
-                    } catch { return str; }
-                }
-                return str;
-            };
-
-            const rawLinks = res.links || [];
-            const cleanLinks = rawLinks
-                .filter((link: any) => link !== null && link !== undefined)
-                .map((rest: any) => ({
-                    ...rest,
-                    is_hidden: Boolean(Number(rest.is_hidden) === 1 || rest.is_hidden === true || rest.is_hidden === 'true'),
-                    hide_url: Boolean(Number(rest.hide_url) === 1 || rest.hide_url === true || rest.hide_url === 'true'),
-                    open_in_new_tab: Boolean(Number(rest.open_in_new_tab) === 1 || rest.open_in_new_tab === true || rest.open_in_new_tab === 'true'),
-                    category: cleanCategoryName(rest.category)
-                }));
+            if (!res.ok) throw new Error(`HTTP error ${res.status}`);
+            const data = await res.json();
+            
+            const rawLinks = Array.isArray(data.links) ? data.links : [];
+            const cleanLinks = rawLinks.map((rest: any) => ({
+                id: String(rest.id),
+                title: String(rest.title || ''),
+                url: String(rest.url || ''),
+                is_hidden: Boolean(rest.is_hidden),
+                hide_url: Boolean(rest.hide_url),
+                open_in_new_tab: Boolean(rest.open_in_new_tab),
+                category: String(rest.category || 'Разное'),
+                custom_favicon: rest.custom_favicon || '',
+                position: typeof rest.position === 'number' ? rest.position : 0
+            }));
             
             setLinks(cleanLinks);
 
-            if (!skipCategories) {
-                const rawCats = res.categories || [];
-                
-                if (rawCats.length > 0) {
-                    const sortedCats = [...rawCats].sort((a: any, b: any) => (a.position || 0) - (b.position || 0));
-                    setCategoriesList(
-                        sortedCats.map((cat: any) => ({ 
-                            id: `cat_${encodeURIComponent(cat.name)}`, 
-                            name: cat.name,
-                            position: cat.position || 0
-                        }))
-                    );
-                } else {
-                    const categoriesFromLinks = new Set<string>();
-                    cleanLinks.forEach((link: LinkItem) => {
-                        if (link.category) categoriesFromLinks.add(link.category);
-                    });
-                    
-                    const finalOrder = Array.from(categoriesFromLinks).sort();
-                    setCategoriesList(
-                        finalOrder.map((cat, idx) => ({ 
-                            id: `cat_${encodeURIComponent(cat)}`, 
-                            name: cat,
-                            position: idx
-                        }))
-                    );
-                    
-                    if (isInitialLoadRef.current && finalOrder.length > 0) {
-                        isInitialLoadRef.current = false;
-                        await saveCategoriesOrder(finalOrder);
-                    }
-                }
+            const rawCats = Array.isArray(data.categories) ? data.categories : [];
+            if (rawCats.length > 0) {
+                const sortedCats = [...rawCats].sort((a: any, b: any) => (a.position || 0) - (b.position || 0));
+                setCategoriesList(sortedCats.map((cat: any) => ({ 
+                    id: String(cat.id || cat.name), name: String(cat.name), position: cat.position 
+                })));
+            } else {
+                const categoriesFromLinks = new Set<string>();
+                cleanLinks.forEach((link: LinkItem) => categoriesFromLinks.add(link.category));
+                setCategoriesList(Array.from(categoriesFromLinks).sort().map((name, idx) => ({ 
+                    id: `cat_${idx}`, name, position: idx 
+                })));
             }
         } catch (error) {
-            console.error('❌ Ошибка загрузки:', error);
+            console.error('Ошибка загрузки данных:', error);
+            showToast('Не удалось загрузить данные');
         } finally {
-            if (!isBackground) setIsLoading(false);
+            setIsLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchLinks();
-    }, []);
+        if (!isAuthChecking) fetchLinks();
+    }, [isAuthChecking]);
 
     const getGroupedLinks = useCallback(() => {
         const grouped: Record<string, LinkItem[]> = {};
         categoriesList.forEach(cat => { grouped[cat.name] = []; });
-        links
-            .filter(link => link !== null && link !== undefined)
-            .forEach(link => {
-                const catName = link.category || 'Разное';
-                if (!grouped[catName]) grouped[catName] = [];
-                if (isEditMode || !link.is_hidden) {
-                    grouped[catName].push(link);
-                }
-            });
+        links.forEach(link => {
+            const catName = link.category || 'Разное';
+            if (!grouped[catName]) grouped[catName] = [];
+            if (isEditMode || !link.is_hidden) grouped[catName].push(link);
+        });
         return grouped;
     }, [links, categoriesList, isEditMode]);
 
     const saveCategoriesOrder = useCallback(async (newOrder: string[]) => {
         try {
-            const categoriesWithPosition = newOrder.map((name, index) => ({
-                name,
-                position: index
-            }));
-            
-            const res = await fetch('/api/links', {
+            const payload = newOrder.map((name, index) => ({ name, position: index }));
+            await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ 
-                    action: 'save_categories', 
-                    payload: { categories: categoriesWithPosition } 
-                })
+                body: JSON.stringify({ action: 'save_categories', payload: { categories: payload } })
             });
-            
-            if (!res.ok) {
-                console.error('❌ Ошибка сохранения порядка категорий:', await res.text());
-            }
         } catch (error) {
-            console.error('❌ Ошибка сети при сохранении категорий:', error);
+            console.error('Ошибка сохранения категорий:', error);
         }
     }, []);
 
     const saveLinksOrder = useCallback(async (newLinks: LinkItem[]) => {
-        const clean = newLinks.map(({ chosen, selected, ...rest }) => rest);
         try {
             await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'save_links', payload: { links: clean } })
+                body: JSON.stringify({ action: 'save_links_order', payload: { links: newLinks } })
             });
         } catch (error) {
-            console.error('❌ Ошибка сохранения порядка ссылок:', error);
+            console.error('Ошибка сохранения порядка:', error);
         }
     }, []);
 
     useEffect(() => {
         if (isEditMode) {
-            document.body.classList.add('admin-panel-active');
-            document.body.classList.add('drag-mode-active');
+            document.body.classList.add('admin-panel-active', 'drag-mode-active');
         } else {
-            document.body.classList.remove('admin-panel-active');
-            document.body.classList.remove('drag-mode-active');
+            document.body.classList.remove('admin-panel-active', 'drag-mode-active');
         }
     }, [isEditMode]);
 
-    const handleToggleEditMode = () => {
-        setIsEditMode(!isEditMode);
-    };
-
     const handleCategoriesSort = (newList: CategoryItem[]) => {
         setCategoriesList(newList);
-
         if (saveCatTimeoutRef.current) clearTimeout(saveCatTimeoutRef.current);
         saveCatTimeoutRef.current = setTimeout(() => {
-            const newOrder = newList.map(item => item.name);
-            saveCategoriesOrder(newOrder);
+            saveCategoriesOrder(newList.map(item => item.name));
             saveCatTimeoutRef.current = null;
         }, 500);
     };
 
     const handleTilesSort = (newList: LinkItem[], categoryName: string) => {
-        const filteredList = newList.filter(link => link !== null && link !== undefined);
-        
-        pendingUpdatesRef.current[categoryName] = filteredList.map(link => ({
-            ...link,
-            category: categoryName
-        }));
-
+        pendingUpdatesRef.current[categoryName] = newList.map(link => ({ ...link, category: categoryName }));
         if (applyTimeoutRef.current) clearTimeout(applyTimeoutRef.current);
-
         applyTimeoutRef.current = setTimeout(() => {
             const updates = pendingUpdatesRef.current;
             pendingUpdatesRef.current = {};
-
             setLinks(prev => {
                 let newLinks = [...prev];
                 for (const [cat, items] of Object.entries(updates)) {
@@ -276,61 +210,56 @@ export default function LinksPage() {
                 saveLinksOrder(newLinks);
                 return newLinks;
             });
-
             applyTimeoutRef.current = null;
         }, 100);
     };
 
+    // Точечное сохранение ссылки
     const handleSaveLink = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSavingLink(true);
 
         let cleanPathOrUrl = rawUrlInput.trim().replace(/^https?:\/\//i, '');
         const host = currentDomain || 'ntmbase.ru';
-
-        let finalUrl = '';
-        if (isInternalDomain) {
-            const cleanPath = cleanPathOrUrl.replace(new RegExp(`^${host}/?`), '').replace(/^\//, '');
-            finalUrl = `${protocol}${host}/${cleanPath}`;
-        } else {
-            finalUrl = `${protocol}${cleanPathOrUrl}`;
-        }
+        let finalUrl = isInternalDomain 
+            ? `${protocol}${host}/${cleanPathOrUrl.replace(new RegExp(`^${host}/?`), '').replace(/^\//, '')}`
+            : `${protocol}${cleanPathOrUrl}`;
 
         const payloadToSave: LinkItem = {
-            id: formData.id || `b_${Date.now()}`,
-            title: formData.title,
+            id: formData.id || `b_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
+            title: formData.title.trim(),
             url: finalUrl,
             category: formData.category || 'Разное',
             is_hidden: Boolean(formData.is_hidden),
             hide_url: Boolean(formData.hide_url),
             open_in_new_tab: Boolean(formData.open_in_new_tab),
-            custom_favicon: formData.custom_favicon || ''
+            custom_favicon: formData.custom_favicon || '',
+            position: typeof formData.position === 'number' ? formData.position : links.length
         };
-
-        setLinks(prev => {
-            const exists = prev.some(l => l.id === payloadToSave.id);
-            if (exists) return prev.map(l => l.id === payloadToSave.id ? payloadToSave : l);
-            return [...prev, payloadToSave];
-        });
-
-        setIsModalOpen(false);
 
         try {
             const res = await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'save_link', payload: payloadToSave })
+                body: JSON.stringify({ action: 'save_link', payload: payloadToSave }),
+                signal: AbortSignal.timeout(4000)
             });
 
-            if (res.ok) {
-                showToast('✅ Плитка успешно сохранена');
-                await fetchLinks(true, true);
-            } else {
-                showToast('⚠️ Ошибка сохранения');
+            const resData = await res.json().catch(() => ({}));
+            if (!res.ok || resData.success === false) {
+                throw new Error(resData.error || 'Ошибка сервера при сохранении');
             }
-        } catch (error) {
-            console.error('Error saving link:', error);
-            showToast('❌ Ошибка сети');
+            
+            setIsModalOpen(false);
+            showToast('Плитка успешно сохранена');
+            await fetchLinks(true);
+        } catch (error: any) {
+            console.error('Ошибка сохранения:', error);
+            if (error.name === 'TimeoutError' || error.name === 'AbortError') {
+                showToast('Таймаут: сервер базы данных не ответил за 4 сек');
+            } else {
+                showToast(error.message || 'Ошибка сети');
+            }
         } finally {
             setIsSavingLink(false);
         }
@@ -338,15 +267,14 @@ export default function LinksPage() {
 
     const deleteLink = async (id: string) => {
         if (!confirm('Удалить эту ссылку?')) return;
-        setLinks(prev => prev.filter(l => l.id !== id));
         try {
             await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'delete_link', payload: { id } })
             });
-            showToast('🗑️ Ссылка удалена');
-            await fetchLinks(true, true);
+            showToast('Ссылка удалена');
+            await fetchLinks(true);
         } catch (error) {
             console.error('Error deleting link:', error);
         }
@@ -360,14 +288,9 @@ export default function LinksPage() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'delete_category', payload: { category } })
             });
-            
-            const updatedList = categoriesList.filter(c => c.name !== category);
-            setCategoriesList(updatedList);
-            await saveCategoriesOrder(updatedList.map(c => c.name));
-
             setIsConfirmDeleteOpen(false);
-            showToast('🗑️ Раздел удален');
-            await fetchLinks(true, true);
+            showToast('Раздел удален');
+            await fetchLinks(true);
         } catch (error) {
             console.error('Error deleting category:', error);
         }
@@ -377,33 +300,18 @@ export default function LinksPage() {
         if (!isEditMode) return;
         const catName = customCatName || prompt('Введите название нового раздела:');
         if (!catName || !catName.trim()) return;
-        const cleanCatName = catName.trim();
         
-        const newLink: LinkItem = {
-            id: `b_${Date.now()}`,
-            title: 'Новая ссылка',
-            url: '#',
-            category: cleanCatName,
-            is_hidden: true,
-            hide_url: false,
-            open_in_new_tab: false
-        };
-
         try {
             await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ action: 'save_link', payload: newLink })
+                body: JSON.stringify({ 
+                    action: 'save_categories', 
+                    payload: { categories: [...categoriesList, { name: catName.trim(), position: categoriesList.length }] }
+                })
             });
-
-            if (!categoriesList.find(c => c.name === cleanCatName)) {
-                const newList = [...categoriesList, { id: `cat_${encodeURIComponent(cleanCatName)}`, name: cleanCatName }];
-                setCategoriesList(newList);
-                await saveCategoriesOrder(newList.map(c => c.name));
-            }
-
-            showToast('📁 Раздел создан');
-            await fetchLinks(true, true);
+            showToast('Раздел создан');
+            await fetchLinks(true);
         } catch (error) {
             console.error('Error adding category:', error);
         }
@@ -411,24 +319,16 @@ export default function LinksPage() {
 
     const renameCategory = async (oldName: string, newName: string) => {
         if (!isEditMode) return;
-        if (!newName || newName === oldName) {
-            setEditingCategoryName(null);
-            return;
-        }
+        if (!newName || newName === oldName) { setEditingCategoryName(null); return; }
         try {
             await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ action: 'edit_category', payload: { old_category: oldName, new_category: newName } })
             });
-
-            const newList = categoriesList.map(c => c.name === oldName ? { ...c, name: newName } : c);
-            setCategoriesList(newList);
-            await saveCategoriesOrder(newList.map(c => c.name));
-
             setEditingCategoryName(null);
-            showToast('✏️ Раздел переименован');
-            await fetchLinks(true, true);
+            showToast('Раздел переименован');
+            await fetchLinks(true);
         } catch (error) {
             console.error('Error renaming category:', error);
         }
@@ -437,8 +337,14 @@ export default function LinksPage() {
     const openAddLinkModal = (preselectedCategory = 'Разное') => {
         if (!isEditMode) return;
         setFormData({
-            id: `b_${Date.now()}`, title: '', url: '', category: preselectedCategory,
-            is_hidden: false, hide_url: false, open_in_new_tab: false, custom_favicon: ''
+            id: '', 
+            title: '', 
+            url: '', 
+            category: preselectedCategory,
+            is_hidden: false, 
+            hide_url: false, 
+            open_in_new_tab: false, 
+            custom_favicon: ''
         });
         setProtocol('https://');
         setRawUrlInput('');
@@ -451,92 +357,21 @@ export default function LinksPage() {
         e.stopPropagation();
         if (!isEditMode) return;
 
-        const normalizedLink: LinkItem = {
-            ...link,
-            is_hidden: Boolean(Number(link.is_hidden) === 1 || link.is_hidden === true || (link.is_hidden as any) === 'true'),
-            hide_url: Boolean(Number(link.hide_url) === 1 || link.hide_url === true || (link.hide_url as any) === 'true'),
-            open_in_new_tab: Boolean(Number(link.open_in_new_tab) === 1 || link.open_in_new_tab === true || (link.open_in_new_tab as any) === 'true'),
-        };
-        
-        setFormData(normalizedLink);
-        
+        setFormData({ ...link });
         const linkUrl = link.url || '';
-        if (linkUrl.startsWith('http://')) {
-            setProtocol('http://');
-        } else {
-            setProtocol('https://');
-        }
-
+        setProtocol(linkUrl.startsWith('http://') ? 'http://' : 'https://');
         const host = currentDomain || (typeof window !== 'undefined' ? window.location.host : 'ntmbase.ru');
+        
         if (linkUrl && (linkUrl.includes(host) || linkUrl.startsWith('/') || !linkUrl.startsWith('http'))) {
             setIsInternalDomain(true);
-            const path = linkUrl.replace(/^https?:\/\/[^\/]+\/?/, '').replace(/^\//, '');
-            setRawUrlInput(path);
+            setRawUrlInput(linkUrl.replace(/^https?:\/\/[^\/]+\/?/, '').replace(/^\//, ''));
         } else {
             setIsInternalDomain(false);
             setRawUrlInput(linkUrl ? linkUrl.replace(/^https?:\/\//i, '') : '');
         }
         setIsModalOpen(true);
     };
-
-    // Открытие модалки с отключением админки
-    const handleOpenAllLinksManager = () => {
-        setIsEditMode(false); // Закрываем режим редактирования/плашку админки
-        setAllLinksBuffer(JSON.parse(JSON.stringify(links)));
-        setSelectedCategoryFilter('ALL');
-        setIsAllLinksModalOpen(true); // Открываем только модалку
-    };
-
-    const handleBufferLinkChange = (id: string, field: keyof LinkItem, value: any) => {
-        setAllLinksBuffer(prev => prev.map(item => item.id === id ? { ...item, [field]: value } : item));
-    };
-
-    const handleAddBufferLink = () => {
-        const defaultCat = selectedCategoryFilter !== 'ALL' ? selectedCategoryFilter : (categoriesList[0]?.name || 'Разное');
-        const newLink: LinkItem = {
-            id: `b_${Date.now()}_${Math.random().toString(36).substr(2, 4)}`,
-            title: 'Новая ссылка',
-            url: 'https://',
-            category: defaultCat,
-            is_hidden: false,
-            hide_url: false,
-            open_in_new_tab: true
-        };
-        setAllLinksBuffer(prev => [newLink, ...prev]);
-    };
-
-    const handleRemoveBufferLink = (id: string) => {
-        setAllLinksBuffer(prev => prev.filter(item => item.id !== id));
-    };
-
-    const handleCreateCategoryFromManager = async () => {
-        if (!newCatInManager.trim()) return;
-        const catName = newCatInManager.trim();
-        if (!categoriesList.find(c => c.name === catName)) {
-            const newList = [...categoriesList, { id: `cat_${encodeURIComponent(catName)}`, name: catName }];
-            setCategoriesList(newList);
-            await saveCategoriesOrder(newList.map(c => c.name));
-            showToast(`📁 Раздел "${catName}" создан`);
-        }
-        setNewCatInManager('');
-    };
-
-    const handleSaveAllLinks = async () => {
-        setIsSavingLink(true);
-        try {
-            await saveLinksOrder(allLinksBuffer);
-            setLinks(allLinksBuffer);
-            setIsAllLinksModalOpen(false);
-            showToast('✅ Все ссылки и разделы обновлены!');
-            await fetchLinks(true, true);
-        } catch (error) {
-            console.error('Error saving all links:', error);
-            showToast('❌ Ошибка сохранения данных');
-        } finally {
-            setIsSavingLink(false);
-        }
-    };
-
+    
     const getFaviconHtml = (link: LinkItem) => {
         if (link.custom_favicon) {
             return <img src={`/${link.custom_favicon}`} className="w-10 h-10 rounded-xl object-cover" alt="" />;
@@ -546,12 +381,15 @@ export default function LinksPage() {
 
     const groupedLinks = getGroupedLinks();
 
-    if (isLoading) {
+    if (isAuthChecking || isLoading) {
         return (
             <div className="flex flex-col min-h-screen bg-[#f8fafc]">
                 <Header isAdmin={true} username="Администратор" />
-                <div className="max-w-[1400px] w-full mx-auto px-6 py-12 flex-grow">
-                    <div className="text-center py-12 text-slate-400">⏳ Загрузка плиток...</div>
+                <div className="max-w-[1400px] w-full mx-auto px-6 py-12 flex-grow flex items-center justify-center">
+                    <div className="text-center py-12 text-slate-400 font-medium flex items-center gap-2">
+                        <i className="bi bi-shield-lock text-xl text-indigo-500 animate-pulse"></i>
+                        <span>{isAuthChecking ? 'Проверка прав доступа...' : 'Загрузка быстрых ссылок...'}</span>
+                    </div>
                 </div>
                 <Footer />
             </div>
@@ -571,8 +409,7 @@ export default function LinksPage() {
         if (!isEditMode) {
             return categoriesList.map((catItem) => {
                 const catName = catItem.name;
-                const catLinks = (groupedLinks[catName] || []).filter(link => link !== null && link !== undefined);
-                
+                const catLinks = groupedLinks[catName] || [];
                 if (catLinks.length === 0) return null;
                 
                 return (
@@ -627,7 +464,7 @@ export default function LinksPage() {
             >
                 {categoriesList.map((catItem) => {
                     const catName = catItem.name;
-                    const catLinks = (groupedLinks[catName] || []).filter(link => link !== null && link !== undefined);
+                    const catLinks = groupedLinks[catName] || [];
                     
                     return (
                         <div key={catItem.id} className="category-section p-6 category-section-edit" data-category={catName}>
@@ -636,9 +473,7 @@ export default function LinksPage() {
                                     <div className="drag-handle">
                                         <i className="bi bi-grip-vertical text-sm"></i>
                                     </div>
-                                    
                                     <i className="bi bi-folder2-open category-title-icon"></i>
-                                    
                                     {editingCategoryName === catName ? (
                                         <div className="flex items-center gap-2 flex-1 no-drag">
                                             <input
@@ -745,22 +580,18 @@ export default function LinksPage() {
         );
     };
 
-    const filteredBufferLinks = allLinksBuffer.filter(l => 
-        selectedCategoryFilter === 'ALL' ? true : l.category === selectedCategoryFilter
-    );
-
     return (
         <div className="flex flex-col min-h-screen bg-[#f8fafc] relative">
-            
             <Header isAdmin={true} username="Администратор" />
 
-            {toastMessage && (
-                <div className="fixed top-6 left-1/2 -translate-x-1/2 z-[10000] animate-bounce pointer-events-none">
-                    <div className="bg-slate-900/90 backdrop-blur-md text-white text-xs font-bold px-6 py-3.5 rounded-2xl shadow-2xl border border-slate-700/50 flex items-center gap-2">
-                        <span>{toastMessage}</span>
+            <div className={`fixed bottom-6 right-6 z-[100000] pointer-events-none transition-all duration-300 transform ${toastMessage ? 'opacity-100 translate-y-0 scale-100' : 'opacity-0 translate-y-3 scale-95'}`}>
+                <div className="bg-slate-900/95 backdrop-blur-xl text-white px-4 py-3 rounded-2xl shadow-[0_10px_30px_rgba(0,0,0,0.18)] border border-slate-700/40 flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                        <i className="bi bi-check-lg text-sm"></i>
                     </div>
+                    <span className="text-xs font-semibold text-slate-100 tracking-wide">{toastMessage}</span>
                 </div>
-            )}
+            </div>
 
             <div className="max-w-[1400px] w-full mx-auto px-6 py-12 flex-grow">
                 <header className="flex flex-col md:flex-row md:items-center md:justify-between pb-6 gap-4">
@@ -785,79 +616,43 @@ export default function LinksPage() {
 
             <Footer />
 
-            {/* Иконка переключения режима админки */}
             <div className={`ap-trigger group ${isEditMode ? 'active' : ''}`} onClick={handleToggleEditMode} title="Режим редактирования">
                 <i className="bi bi-pencil-square transition-transform duration-300 group-hover:rotate-12"></i>
             </div>
 
-            <div className={`ap-panel p-4 bg-white/90 backdrop-blur-md border border-slate-200/90 rounded-[24px] shadow-[0_12px_40px_rgba(15,23,42,0.12)] space-y-3 min-w-[230px] transition-all duration-300 ${isEditMode ? 'active' : ''}`}>
-    {/* Строка 1: Состояние режима */}
-    <div className="flex items-center justify-between px-1 text-[10px] font-black tracking-widest text-slate-400 uppercase select-none">
-        <div className="flex items-center gap-2">
-            <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-            </span>
-            <span className="text-slate-600 font-bold">Режим правки</span>
-        </div>
-        <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-200/60 uppercase tracking-wider">
-            Активен
-        </span>
-    </div>
+            <div className={`ap-panel p-4 bg-white/90 backdrop-blur-md border border-slate-200/90 rounded-[24px] shadow-[0_12px_40px_rgba(15,23,42,0.12)] space-y-3 min-w-[200px] transition-all duration-300 ${isEditMode ? 'active' : ''}`}>
+                <div className="flex items-center justify-between px-1 text-[10px] font-black tracking-widest text-slate-400 uppercase select-none">
+                    <div className="flex items-center gap-2">
+                        <span className="relative flex h-2 w-2">
+                            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                            <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                        </span>
+                        <span className="text-slate-600 font-bold">Режим правки</span>
+                    </div>
+                    <span className="text-[9px] font-black px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-600 border border-emerald-200/60 uppercase tracking-wider">
+                        Активен
+                    </span>
+                </div>
+            </div>
 
-    {/* Строка 2: Кнопка "Редактор ссылок" */}
-    <button
-        type="button"
-        onClick={handleOpenAllLinksManager}
-        className="group relative w-full px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white rounded-xl text-xs font-extrabold transition-all duration-200 flex items-center justify-center gap-2 shadow-lg shadow-indigo-500/25 border border-indigo-400/20 cursor-pointer overflow-hidden"
-    >
-        {/* Анимация легкого блика при наведении */}
-        <div className="absolute inset-0 w-full h-full bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
-
-        <i className="bi bi-sliders text-sm transition-transform group-hover:rotate-180 duration-300"></i>
-        <span>Редактор ссылок</span>
-    </button>
-</div>
-
-            {/* Модалка одиночного редактирования/создания ссылки */}
             {isModalOpen && (
-                <div 
-                    className="fixed inset-0 z-[9999] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 md:p-6 transition-all" 
-                    onClick={() => setIsModalOpen(false)}
-                >
-                    <div 
-                        className="bg-white/95 backdrop-blur-2xl w-full max-w-2xl rounded-[32px] p-8 md:p-10 shadow-2xl space-y-6 border border-slate-100 my-auto transform transition-all max-h-[90vh] overflow-y-auto" 
-                        onClick={e => e.stopPropagation()}
-                    >
+                <div className="fixed inset-0 z-[9999] bg-slate-900/60 backdrop-blur-md flex items-center justify-center p-4 md:p-6 transition-all" onClick={() => setIsModalOpen(false)}>
+                    <div className="bg-white/95 backdrop-blur-2xl w-full max-w-2xl rounded-[32px] p-8 md:p-10 shadow-2xl space-y-6 border border-slate-100 my-auto transform transition-all max-h-[90vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
                         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
                             <div className="flex items-center gap-3">
                                 <div className="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
                                     <i className="bi bi-link-45deg text-2xl"></i>
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-black text-slate-800">
-                                        {formData.id ? 'Параметры ссылки' : 'Новая быстрая ссылка'}
-                                    </h3>
+                                    <h3 className="text-lg font-black text-slate-800">{formData.id ? 'Параметры ссылки' : 'Новая быстрая ссылка'}</h3>
                                     <p className="text-xs text-slate-400 font-medium">Редактирование адреса и флагов видимости</p>
                                 </div>
                             </div>
-                            <button 
-                                type="button" 
-                                onClick={() => setIsModalOpen(false)} 
-                                className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold text-sm transition-all flex items-center justify-center"
-                            >
-                                ✕
-                            </button>
+                            <button type="button" onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-500 font-bold text-sm transition-all flex items-center justify-center cursor-pointer">✕</button>
                         </div>
 
                         <form onSubmit={handleSaveLink} className="space-y-5">
-                            <div 
-                                onClick={() => {
-                                    setIsInternalDomain(!isInternalDomain);
-                                    setRawUrlInput('');
-                                }}
-                                className="flex items-center justify-between p-4 bg-slate-50 hover:bg-indigo-50/40 border border-slate-200/80 rounded-2xl cursor-pointer transition-all"
-                            >
+                            <div onClick={() => { setIsInternalDomain(!isInternalDomain); setRawUrlInput(''); }} className="flex items-center justify-between p-4 bg-slate-50 hover:bg-indigo-50/40 border border-slate-200/80 rounded-2xl cursor-pointer transition-all">
                                 <div className="flex items-center gap-3">
                                     <div className={`w-9 h-9 rounded-xl flex items-center justify-center text-sm ${isInternalDomain ? 'bg-indigo-600 text-white' : 'bg-slate-200 text-slate-400'}`}>
                                         <i className="bi bi-globe"></i>
@@ -867,62 +662,31 @@ export default function LinksPage() {
                                         <span className="text-[11px] text-slate-400 font-medium">Автоматически подставит {currentDomain || 'ntmbase.ru'}</span>
                                     </div>
                                 </div>
-
                                 <div className={`w-11 h-6 rounded-full p-1 transition-colors duration-200 ease-in-out ${isInternalDomain ? 'bg-indigo-600' : 'bg-slate-300'}`}>
                                     <div className={`w-4 h-4 rounded-full bg-white shadow-md transform transition-transform duration-200 ease-in-out ${isInternalDomain ? 'translate-x-5' : 'translate-x-0'}`} />
                                 </div>
                             </div>
 
                             <div>
-                                <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5 block">
-                                    Протокол и URL Адрес
-                                </label>
+                                <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5 block">Протокол и URL Адрес</label>
                                 <div className="flex items-center bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden focus-within:border-indigo-500 focus-within:bg-white transition-all">
-                                    <select
-                                        value={protocol}
-                                        onChange={(e) => setProtocol(e.target.value as 'http://' | 'https://')}
-                                        className="px-3 py-3 text-xs font-bold text-slate-700 bg-slate-100 border-r border-slate-200 focus:outline-none cursor-pointer"
-                                    >
+                                    <select value={protocol} onChange={(e) => setProtocol(e.target.value as 'http://' | 'https://')} className="px-3 py-3 text-xs font-bold text-slate-700 bg-slate-100 border-r border-slate-200 focus:outline-none cursor-pointer">
                                         <option value="https://">https://</option>
                                         <option value="http://">http://</option>
                                     </select>
-
-                                    {isInternalDomain && (
-                                        <span className="px-3 py-3 text-xs font-bold text-slate-400 bg-slate-100 border-r border-slate-200 select-none">
-                                            {currentDomain || 'ntmbase.ru'}/
-                                        </span>
-                                    )}
-
-                                    <input
-                                        required
-                                        type="text"
-                                        placeholder={isInternalDomain ? "voice" : "google.com"}
-                                        className="w-full px-4 py-3 text-xs font-semibold text-slate-800 bg-transparent focus:outline-none placeholder-slate-400"
-                                        value={rawUrlInput}
-                                        onChange={e => setRawUrlInput(e.target.value)}
-                                    />
+                                    {isInternalDomain && <span className="px-3 py-3 text-xs font-bold text-slate-400 bg-slate-100 border-r border-slate-200 select-none">{currentDomain || 'ntmbase.ru'}/</span>}
+                                    <input required type="text" placeholder={isInternalDomain ? "voice" : "google.com"} className="w-full px-4 py-3 text-xs font-semibold text-slate-800 bg-transparent focus:outline-none placeholder-slate-400" value={rawUrlInput} onChange={e => setRawUrlInput(e.target.value)} />
                                 </div>
                             </div>
 
                             <div>
                                 <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5 block">Название ссылки</label>
-                                <input 
-                                    required 
-                                    type="text" 
-                                    placeholder="Например: Анализатор звонков" 
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" 
-                                    value={formData.title} 
-                                    onChange={e => setFormData({...formData, title: e.target.value})} 
-                                />
+                                <input required type="text" placeholder="Например: Анализатор звонков" className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" value={formData.title} onChange={e => setFormData({...formData, title: e.target.value})} />
                             </div>
 
                             <div>
                                 <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider mb-1.5 block">Раздел плиток</label>
-                                <select 
-                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:bg-white transition-all" 
-                                    value={formData.category} 
-                                    onChange={e => setFormData({...formData, category: e.target.value})}
-                                >
+                                <select className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-2xl text-xs font-semibold focus:outline-none focus:border-indigo-500 focus:bg-white transition-all cursor-pointer" value={formData.category} onChange={e => setFormData({...formData, category: e.target.value})}>
                                     {categoriesList.map(cat => <option key={cat.id} value={cat.name}>{cat.name}</option>)}
                                 </select>
                             </div>
@@ -952,10 +716,8 @@ export default function LinksPage() {
                             </div>
 
                             <div className="flex justify-end gap-3 pt-3 border-t border-slate-100">
-                                <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-3 rounded-xl bg-slate-100 text-slate-600 font-bold text-xs hover:bg-slate-200 transition-all">
-                                    Отмена
-                                </button>
-                                <button type="submit" disabled={isSavingLink} className="px-8 py-3 rounded-xl bg-slate-900 hover:bg-indigo-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all disabled:opacity-50 flex items-center gap-2">
+                                <button type="button" onClick={() => setIsModalOpen(false)} className="px-6 py-3 rounded-xl bg-slate-100 text-slate-600 font-bold text-xs hover:bg-slate-200 transition-all cursor-pointer">Отмена</button>
+                                <button type="submit" disabled={isSavingLink} className="px-8 py-3 rounded-xl bg-slate-900 hover:bg-indigo-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all disabled:opacity-50 flex items-center gap-2 cursor-pointer">
                                     {isSavingLink ? <><i className="bi bi-arrow-repeat animate-spin"></i> Сохранение...</> : 'Сохранить'}
                                 </button>
                             </div>
@@ -964,195 +726,6 @@ export default function LinksPage() {
                 </div>
             )}
 
-            {/* Модалка массового редактирования всех ссылок и разделов */}
-            {isAllLinksModalOpen && (
-                <div 
-                    className="fixed inset-0 z-[9999] bg-slate-900/80 backdrop-blur-md flex items-center justify-center p-3 md:p-6 transition-all"
-                    onClick={() => setIsAllLinksModalOpen(false)}
-                >
-                    <div 
-                        className="bg-white w-full max-w-6xl h-[90vh] rounded-[28px] shadow-2xl border border-slate-100 flex flex-col overflow-hidden relative z-[10000]"
-                        onClick={e => e.stopPropagation()}
-                    >
-                        {/* Хедер модалки */}
-                        <div className="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 rounded-2xl bg-indigo-600 text-white flex items-center justify-center text-xl shadow-lg shadow-indigo-600/30">
-                                    <i className="bi bi-collection-fill"></i>
-                                </div>
-                                <div>
-                                    <h3 className="text-xl font-black text-slate-800">Редактор всех ссылок и разделов</h3>
-                                    <p className="text-xs text-slate-400 font-medium">Управление плитками, протоколами и категориями в одном окне</p>
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-3">
-                                <button 
-                                    type="button" 
-                                    onClick={handleAddBufferLink}
-                                    className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold shadow-md flex items-center gap-1.5 transition-all"
-                                >
-                                    <i className="bi bi-plus-lg"></i> Добавить ссылку
-                                </button>
-                                <button 
-                                    type="button" 
-                                    onClick={() => setIsAllLinksModalOpen(false)} 
-                                    className="w-10 h-10 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-600 font-bold text-sm transition-all flex items-center justify-center"
-                                >
-                                    ✕
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Фильтры и категории */}
-                        <div className="px-6 py-4 border-b border-slate-100 bg-white flex flex-wrap items-center justify-between gap-4">
-                            <div className="flex items-center gap-2 overflow-x-auto pb-1 max-w-full">
-                                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider mr-1">Раздел:</span>
-                                <button
-                                    onClick={() => setSelectedCategoryFilter('ALL')}
-                                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${selectedCategoryFilter === 'ALL' ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
-                                >
-                                    Все ({allLinksBuffer.length})
-                                </button>
-                                {categoriesList.map(cat => {
-                                    const count = allLinksBuffer.filter(l => l.category === cat.name).length;
-                                    return (
-                                        <button
-                                            key={cat.id}
-                                            onClick={() => setSelectedCategoryFilter(cat.name)}
-                                            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap ${selectedCategoryFilter === cat.name ? 'bg-indigo-600 text-white shadow-md' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'}`}
-                                        >
-                                            {cat.name} ({count})
-                                        </button>
-                                    );
-                                })}
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="text"
-                                    placeholder="Новый раздел..."
-                                    className="px-3 py-1.5 bg-slate-100 border border-slate-200 rounded-xl text-xs font-semibold focus:outline-none focus:bg-white focus:border-indigo-500 transition-all"
-                                    value={newCatInManager}
-                                    onChange={e => setNewCatInManager(e.target.value)}
-                                    onKeyDown={e => { if (e.key === 'Enter') handleCreateCategoryFromManager(); }}
-                                />
-                                <button
-                                    type="button"
-                                    onClick={handleCreateCategoryFromManager}
-                                    className="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-900 text-white text-xs font-bold transition-all"
-                                >
-                                    + Создать
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Список ссылок */}
-                        <div className="flex-1 overflow-y-auto p-6 space-y-3 bg-slate-50/50">
-                            {filteredBufferLinks.length === 0 ? (
-                                <div className="text-center py-16 text-slate-400">
-                                    <i className="bi bi-inbox text-4xl block mb-2 opacity-40"></i>
-                                    В этом разделе пока нет ссылок
-                                </div>
-                            ) : (
-                                filteredBufferLinks.map((item, idx) => (
-                                    <div key={item.id} className="p-4 bg-white border border-slate-200/80 rounded-2xl shadow-sm hover:border-indigo-300 transition-all flex flex-col md:flex-row items-stretch md:items-center gap-4">
-                                        <div className="text-xs font-bold text-slate-300 w-6 text-center select-none hidden md:block">
-                                            #{idx + 1}
-                                        </div>
-
-                                        <div className="flex-1 min-w-[180px]">
-                                            <label className="text-[10px] font-bold text-slate-400 block mb-1">Название</label>
-                                            <input
-                                                type="text"
-                                                value={item.title}
-                                                onChange={e => handleBufferLinkChange(item.id, 'title', e.target.value)}
-                                                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-800 focus:outline-none focus:border-indigo-500 focus:bg-white"
-                                            />
-                                        </div>
-
-                                        <div className="flex-[2] min-w-[280px]">
-                                            <label className="text-[10px] font-bold text-slate-400 block mb-1">Полный URL адрес (http:// или https://)</label>
-                                            <input
-                                                type="text"
-                                                value={item.url}
-                                                onChange={e => handleBufferLinkChange(item.id, 'url', e.target.value)}
-                                                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-mono font-medium text-indigo-900 focus:outline-none focus:border-indigo-500 focus:bg-white"
-                                            />
-                                        </div>
-
-                                        <div className="w-full md:w-44">
-                                            <label className="text-[10px] font-bold text-slate-400 block mb-1">Раздел</label>
-                                            <select
-                                                value={item.category}
-                                                onChange={e => handleBufferLinkChange(item.id, 'category', e.target.value)}
-                                                className="w-full px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-700 focus:outline-none focus:border-indigo-500"
-                                            >
-                                                {categoriesList.map(cat => (
-                                                    <option key={cat.id} value={cat.name}>{cat.name}</option>
-                                                ))}
-                                            </select>
-                                        </div>
-
-                                        <div className="flex items-center gap-2 pt-2 md:pt-4">
-                                            <button
-                                                type="button"
-                                                title={item.is_hidden ? "Плитка скрыта" : "Плитка видима"}
-                                                onClick={() => handleBufferLinkChange(item.id, 'is_hidden', !item.is_hidden)}
-                                                className={`p-2.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1 ${!item.is_hidden ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-slate-100 border-slate-200 text-slate-400'}`}
-                                            >
-                                                <i className={`bi ${!item.is_hidden ? 'bi-eye-fill' : 'bi-eye-slash-fill'}`}></i>
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                title={item.open_in_new_tab ? "Открывается в новой вкладке" : "Открывается в текущей"}
-                                                onClick={() => handleBufferLinkChange(item.id, 'open_in_new_tab', !item.open_in_new_tab)}
-                                                className={`p-2.5 rounded-xl border text-xs font-bold transition-all flex items-center gap-1 ${item.open_in_new_tab ? 'bg-indigo-50 border-indigo-200 text-indigo-700' : 'bg-slate-100 border-slate-200 text-slate-400'}`}
-                                            >
-                                                <i className="bi bi-box-arrow-up-right"></i>
-                                            </button>
-
-                                            <button
-                                                type="button"
-                                                title="Удалить ссылку"
-                                                onClick={() => handleRemoveBufferLink(item.id)}
-                                                className="p-2.5 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 hover:bg-rose-600 hover:text-white transition-all ml-auto"
-                                            >
-                                                <i className="bi bi-trash"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                ))
-                            )}
-                        </div>
-
-                        {/* Футер */}
-                        <div className="p-6 border-t border-slate-100 bg-white flex items-center justify-between">
-                            <span className="text-xs text-slate-400 font-medium">Всего в редакторе: {allLinksBuffer.length} шт.</span>
-                            <div className="flex items-center gap-3">
-                                <button
-                                    type="button"
-                                    onClick={() => setIsAllLinksModalOpen(false)}
-                                    className="px-6 py-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs transition-all"
-                                >
-                                    Отмена
-                                </button>
-                                <button
-                                    type="button"
-                                    disabled={isSavingLink}
-                                    onClick={handleSaveAllLinks}
-                                    className="px-8 py-3 rounded-xl bg-slate-900 hover:bg-indigo-600 text-white font-bold text-xs uppercase tracking-wider shadow-lg transition-all disabled:opacity-50 flex items-center gap-2"
-                                >
-                                    {isSavingLink ? <><i className="bi bi-arrow-repeat animate-spin"></i> Сохранение...</> : 'Сохранить все изменения'}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* Подтверждение удаления раздела */}
             <div className={`ap-modal-overlay ${isConfirmDeleteOpen ? 'active' : ''}`} style={{ zIndex: 9999 }} onClick={() => setIsConfirmDeleteOpen(false)}>
                 <div className="ap-modal-box confirm-del-box" onClick={e => e.stopPropagation()}>
                     <div className="confirm-del-icon"><i className="bi bi-exclamation-triangle"></i></div>
@@ -1164,7 +737,6 @@ export default function LinksPage() {
                     </div>
                 </div>
             </div>
-
         </div>
     );
 }

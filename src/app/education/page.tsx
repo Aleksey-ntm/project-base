@@ -169,6 +169,13 @@ function EducationPortalContent() {
   const [fileHtmlContent, setFileHtmlContent] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(true);
 
+  const [currentUser, setCurrentUser] = useState<{
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string;
+  role?: string;
+} | null>(null);
+
   const [anchors, setAnchors] = useState<{ id: string; title: string; isSub?: boolean; index: number }[]>([]);
   const [activeAnchorId, setActiveAnchorId] = useState<string>('');
 
@@ -213,6 +220,23 @@ function EducationPortalContent() {
       return () => clearTimeout(timer);
     }
   }, [toast.show]);
+
+  useEffect(() => {
+  const fetchAuthUser = async () => {
+    try {
+      const res = await fetch('/api/auth');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.authenticated && data.user) {
+          setCurrentUser(data.user);
+        }
+      }
+    } catch (e) {
+      console.error('Ошибка загрузки данных профиля:', e);
+    }
+  };
+  fetchAuthUser();
+}, []);
 
   useEffect(() => {
     const applyStorageSettings = () => {
@@ -856,14 +880,16 @@ useEffect(() => {
   return (
     <div className={containerClasses}>
       <HeaderSearch
-        userName="Администратор"
-        userRole="admin"
-        isEditMode={isEditMode}
-        isEditDisabled={loadedFromFile}
-        onToggleEditMode={handleToggleEditMode}
-        onOpenSettings={() => setIsSettingsOpen(true)}
-        isLeftCollapsed={leftCollapsed}
-      />
+      firstName={currentUser?.firstName}
+      lastName={currentUser?.lastName}
+      email={currentUser?.email}
+      userRole={currentUser?.role || 'manager'}
+      isEditMode={isEditMode}
+      isEditDisabled={loadedFromFile}
+      onToggleEditMode={handleToggleEditMode}
+      onOpenSettings={() => setIsSettingsOpen(true)}
+      isLeftCollapsed={leftCollapsed}
+    />
 
       <div className={styles.mainWrapper}>
         <div className={styles.navSidebarWrapper}>
@@ -1003,41 +1029,43 @@ useEffect(() => {
                 </h1>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px' }}>
-                <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '20px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                    <div>
-                      <div style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>Упрощенный вид источника БД</div>
-                      <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>
-                        Показывать компактный бейдж в шапке вместо большой панели
+              <div style={{ display: 'grid', gridTemplateColumns: currentUser?.role === 'admin' ? '1fr 1fr' : '1fr', gap: '20px' }}>
+                {currentUser?.role === 'admin' && (
+                  <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '20px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                      <div>
+                        <div style={{ fontSize: '15px', fontWeight: 700, color: '#0f172a' }}>Упрощенный вид источника БД</div>
+                        <div style={{ fontSize: '12px', color: '#64748b', marginTop: '2px' }}>
+                          Показывать компактный бейдж в шапке вместо большой панели
+                        </div>
                       </div>
-                    </div>
 
-                    <label style={{ position: 'relative', display: 'inline-block', width: '44px', height: '24px', flexShrink: 0, cursor: 'pointer' }}>
-                      <input
-                        type="checkbox"
-                        checked={dbStatusView === 'simple'}
-                        onChange={(e) => {
-                          const newView = e.target.checked ? 'simple' : 'full';
-                          setDbStatusView(newView);
-                          localStorage.setItem('uw_db_status_view', newView);
-                        }}
-                        style={{ opacity: 0, width: 0, height: 0 }}
-                      />
-                      <span style={{
-                        position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0,
-                        backgroundColor: dbStatusView === 'simple' ? '#0f172a' : '#cbd5e1',
-                        transition: '0.2s', borderRadius: '24px'
-                      }}>
+                      <label style={{ position: 'relative', display: 'inline-block', width: '44px', height: '24px', flexShrink: 0, cursor: 'pointer' }}>
+                        <input
+                          type="checkbox"
+                          checked={dbStatusView === 'simple'}
+                          onChange={(e) => {
+                            const newView = e.target.checked ? 'simple' : 'full';
+                            setDbStatusView(newView);
+                            localStorage.setItem('uw_db_status_view', newView);
+                          }}
+                          style={{ opacity: 0, width: 0, height: 0 }}
+                        />
                         <span style={{
-                          position: 'absolute', content: '""', height: '18px', width: '18px', left: '3px', bottom: '3px',
-                          backgroundColor: 'white', transition: '0.2s', borderRadius: '50%',
-                          transform: dbStatusView === 'simple' ? 'translateX(20px)' : 'translateX(0)'
-                        }} />
-                      </span>
-                    </label>
+                          position: 'absolute', cursor: 'pointer', top: 0, left: 0, right: 0, bottom: 0,
+                          backgroundColor: dbStatusView === 'simple' ? '#0f172a' : '#cbd5e1',
+                          transition: '0.2s', borderRadius: '24px'
+                        }}>
+                          <span style={{
+                            position: 'absolute', content: '""', height: '18px', width: '18px', left: '3px', bottom: '3px',
+                            backgroundColor: 'white', transition: '0.2s', borderRadius: '50%',
+                            transform: dbStatusView === 'simple' ? 'translateX(20px)' : 'translateX(0)'
+                          }} />
+                        </span>
+                      </label>
+                    </div>
                   </div>
-                </div>
+                )}
 
                 <div style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '20px' }}>
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
@@ -1073,12 +1101,12 @@ useEffect(() => {
                     </label>
                   </div>
                 </div>
-              </div>
-            </div>
+              </div>                            </div>
+
 
             {!isSettingsOpen && (
               <>
-                {dbStatusView === 'full' && (
+                {currentUser?.role === 'admin' && dbStatusView === 'full' && (
                   loadedFromFile ? (
                     <div 
                       style={{ 
@@ -1170,7 +1198,7 @@ useEffect(() => {
                     <div className={styles.eduBreadcrumb}>
                       {SECTIONS_CONFIG[activeTab]?.title || 'Обучение'}
                     </div>
-                    {dbStatusView === 'simple' && (
+                    {currentUser?.role === 'admin' && dbStatusView === 'simple' && (
                       <div>
                         {!loadedFromFile ? (
                           <button

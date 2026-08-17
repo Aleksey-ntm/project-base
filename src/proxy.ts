@@ -7,6 +7,7 @@ export async function proxy(req: NextRequest) {
 // Публичные маршруты (не требуют проверки)
 if (
   pathname.startsWith('/login') ||
+  pathname.startsWith('/simple-note') ||
   pathname.startsWith('/_next') ||
   pathname.startsWith('/favicon.ico') ||
   pathname.startsWith('/api/auth')

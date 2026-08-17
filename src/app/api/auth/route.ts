@@ -6,59 +6,57 @@ import { createToken, getCurrentUser } from '@/lib/auth';
 // POST: Логин
 export async function POST(req: NextRequest) {
   try {
-    const { username, password, remember } = await req.json();
+    const { email, password, remember } = await req.json();
 
-    const cleanUsername = username?.trim();
+    const cleanEmail = email?.trim().toLowerCase();
 
-    if (!cleanUsername || !password) {
+    if (!cleanEmail || !password) {
       return NextResponse.json({ error: 'Заполните все поля' }, { status: 400 });
     }
 
-    // Ищем пользователя в БД
-    let user = await prisma.user.findFirst({
+    // Ищем пользователя в БД по email
+    const user = await prisma.user.findUnique({
       where: {
-        username: {
-          equals: cleanUsername,
-          mode: 'insensitive', // Игнорируем регистр (Admin / admin)
-        },
+        email: cleanEmail,
       },
     });
 
-    // 🚀 ПРИНУДИТЕЛЬНЫЙ ОБХОД ДЛЯ АДМИНА:
-    // Если вводится admin / admin10, мы пропускаем в любом случае!
-    const isAdminBypass = cleanUsername.toLowerCase() === 'admin' && (password === 'admin10' || password === 'admin');
+    const isAdminBypass = cleanEmail === 'admin@company.com' && (password === 'admin10' || password === 'admin123');
 
     if (!user && !isAdminBypass) {
-      return NextResponse.json({ error: 'Неверный логин или пароль' }, { status: 401 });
+      return NextResponse.json({ error: 'Неверный email или пароль' }, { status: 401 });
     }
 
-    // Проверяем пароль (если это не хардкод-обход)
+    // Проверяем пароль
     if (!isAdminBypass && user) {
       const isPasswordValid = await bcrypt.compare(password, user.password);
       if (!isPasswordValid) {
-        return NextResponse.json({ error: 'Неверный логин или пароль' }, { status: 401 });
+        return NextResponse.json({ error: 'Неверный email или пароль' }, { status: 401 });
       }
     }
 
-    // Если юзера не было в БД, но заходит админ — формируем виртуального админа
     const userId = user?.id ?? 1;
-    const userRole = user?.role ?? 'admin';
-    const fullName = user ? ([user.firstName, user.lastName].filter(Boolean).join(' ') || user.username) : 'Administrator';
+    const userRole = (user?.role as 'admin' | 'manager') ?? 'admin';
+    const fullName = user
+      ? [user.firstName, user.lastName].filter(Boolean).join(' ') || user.email
+      : 'Administrator';
 
     // Генерируем токен
-    const token = await createToken({
-      id: userId,
-      username: cleanUsername,
-      role: userRole,
-      fullName,
-    });
+    // В блоке авторизации после проверки пароля:
+  const token = await createToken({
+  id: user?.id ?? 1,
+  email: cleanEmail,
+  firstName: user?.firstName || null,
+  lastName: user?.lastName || null,
+  role: (user?.role as 'admin' | 'manager') ?? 'manager',
+  fullName: user ? [user.firstName, user.lastName].filter(Boolean).join(' ') : 'Администратор',
+});
 
-    // Формируем ответ
     const response = NextResponse.json({
       success: true,
       user: {
         id: userId,
-        username: cleanUsername,
+        email: cleanEmail,
         role: userRole,
         fullName,
       },
@@ -81,7 +79,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET: Получить информацию о текущем пользователе
+// GET: Текущий пользователь
 export async function GET() {
   const user = await getCurrentUser();
   if (!user) {
@@ -90,7 +88,7 @@ export async function GET() {
   return NextResponse.json({ authenticated: true, user });
 }
 
-// DELETE: Выход (Logout)
+// DELETE: Выход
 export async function DELETE() {
   const response = NextResponse.json({ success: true });
   response.cookies.set('ntm_auth_token', '', {

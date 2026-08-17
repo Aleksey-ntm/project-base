@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 
 export default function LoginPage() {
   const router = useRouter();
-  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
@@ -21,7 +21,7 @@ export default function LoginPage() {
       const res = await fetch('/api/auth', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password, remember }),
+        body: JSON.stringify({ email, password, remember }),
       });
 
       const data = await res.json();
@@ -61,19 +61,19 @@ export default function LoginPage() {
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block text-[11px] font-black text-slate-500 uppercase tracking-wider mb-2">
-              Логин
+              Email
             </label>
             <div className="relative">
               <span className="absolute inset-y-0 left-0 flex items-center pl-4 text-slate-400">
-                <i className="bi bi-person text-base"></i>
+                <i className="bi bi-envelope text-base"></i>
               </span>
               <input
-                type="text"
+                type="email"
                 required
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 className="w-full h-12 pl-11 pr-4 bg-slate-50 border border-slate-200 text-sm font-semibold rounded-xl focus:outline-none focus:border-slate-900 focus:bg-white transition-all"
-                placeholder="admin"
+                placeholder="admin@company.com"
               />
             </div>
           </div>

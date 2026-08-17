@@ -1,10 +1,16 @@
 import { defineConfig } from '@prisma/config';
 import dotenv from 'dotenv';
+import path from 'path';
 
-dotenv.config();
+// Принудительно загружаем .env.local из корня проекта
+dotenv.config({ path: path.resolve(process.cwd(), '.env.local') });
+dotenv.config({ path: path.resolve(process.cwd(), '.env') });
+
+const connectionUrl = process.env.DIRECT_URL || process.env.DATABASE_URL;
 
 export default defineConfig({
+  schema: './prisma/schema.prisma',
   datasource: {
-    url: process.env.DATABASE_URL || "postgresql://r13@localhost:5432/ntm_base?schema=public",
+    url: connectionUrl,
   },
 });
