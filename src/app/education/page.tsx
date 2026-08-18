@@ -266,6 +266,36 @@ function EducationPortalContent() {
     }
   }, []);
 
+  // 🎯 Автоматический скролл правого меню за активным якорем с запасом
+useEffect(() => {
+  if (!activeAnchorId || isNoRightSidebar) return;
+
+  const sidebar = sidebarRightRef.current;
+  if (!sidebar) return;
+
+  // Находим контейнер списка скролла и активную ссылку
+  const listContainer = sidebar.querySelector(`.${styles.anchorList}`) as HTMLElement | null;
+  const activeElement = sidebar.querySelector(`a[href="#${activeAnchorId}"]`) as HTMLElement | null;
+
+  if (!listContainer || !activeElement) return;
+
+  const containerRect = listContainer.getBoundingClientRect();
+  const activeRect = activeElement.getBoundingClientRect();
+
+  const buffer = 120; // Запас расстояния сверху и снизу
+
+  // Если активный пункт подходит к нижнему краю контейнера
+  if (activeRect.bottom > containerRect.bottom - buffer) {
+    const scrollOffset = activeRect.bottom - (containerRect.bottom - buffer);
+    listContainer.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+  } 
+  // Если активный пункт подходит к верхнему краю контейнера
+  else if (activeRect.top < containerRect.top + buffer) {
+    const scrollOffset = activeRect.top - (containerRect.top + buffer);
+    listContainer.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+  }
+}, [activeAnchorId, isNoRightSidebar]);
+
   useEffect(() => {
     if (loading) return;
     const targetPos = resetScrollOnNav ? 0 : pageScrollPositions.current[currentLesson] || 0;

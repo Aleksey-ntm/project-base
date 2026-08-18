@@ -551,7 +551,8 @@
   flex: 1 1 auto !important; 
   overflow-y: auto !important; 
   overflow-x: hidden !important; 
-  padding-bottom: 60px !important;
+  padding-bottom: 180px !important; /* Большой запас снизу */
+  scroll-behavior: smooth;
   scrollbar-width: thin; 
   scrollbar-color: #cbd5e1 transparent;
   transition: border-color 0.3s ease, gap 0.35s cubic-bezier(0.2, 0, 0, 1); 
@@ -607,19 +608,18 @@
 
 .anchorItem .anchorLink.active {
   color: #0284c7 !important;
-  font-weight: 700 !important;
 }
 
 .anchorLink.levelH2 {
   padding-left: 12px;
-  font-weight: 700;
+  font-weight: 600; /* Стабильный вес шрифта */
   font-size: 13.5px;
   color: #0f172a;
 }
 
 .anchorLink.levelH3 {
   padding-left: 28px;
-  font-weight: 400;
+  font-weight: 500; /* Стабильный вес шрифта */
   font-size: 12.5px;
   color: #64748b;
   position: relative;
