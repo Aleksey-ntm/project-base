@@ -338,6 +338,111 @@ function EducationPortalContent() {
     }
   };
 
+  // 🎯 Фикс работы аккордеонов и оглавления для загружаемых HTML-файлов
+  useEffect(() => {
+    const container = contentAreaRef.current;
+    if (!container) return;
+
+    const handleAccordionClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      
+      // 1. Клик по заголовку карточки аккордеона
+      const header = target.closest('div[onclick*="toggleAccordion"]') as HTMLElement;
+      if (header && container.contains(header)) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const body = header.nextElementSibling as HTMLElement;
+        if (!body) return;
+
+        const arrow = header.querySelector('.acc-arrow') as SVGElement;
+        const badge = header.querySelector('.acc-badge') as HTMLElement;
+        const inner = body.querySelector('.spoiler-inner') as HTMLElement;
+
+        body.style.transitionDuration = '0.8s';
+        const isCurrentlyOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
+
+        if (isCurrentlyOpen) {
+          body.style.overflow = 'hidden';
+          body.style.maxHeight = `${inner ? inner.scrollHeight : body.scrollHeight}px`;
+          void body.offsetHeight;
+          body.style.maxHeight = '0px';
+          body.style.opacity = '0';
+          if (arrow) arrow.style.transform = 'rotate(0deg)';
+          if (badge) {
+            badge.style.background = '#f1f5f9';
+            badge.style.color = '#64748b';
+          }
+        } else {
+          body.style.maxHeight = `${inner ? inner.scrollHeight : body.scrollHeight}px`;
+          body.style.opacity = '1';
+          if (arrow) arrow.style.transform = 'rotate(180deg)';
+          if (badge) {
+            badge.style.background = '#e0f2fe';
+            badge.style.color = '#0284c7';
+          }
+          setTimeout(() => {
+            if (body.style.maxHeight !== '0px') body.style.overflow = 'visible';
+          }, 800);
+        }
+        return;
+      }
+
+      // 2. Клик по ссылкам быстрого перехода (openAndHighlightFaq)
+      const faqLink = target.closest('a[onclick*="openAndHighlightFaq"]') as HTMLAnchorElement;
+      if (faqLink && container.contains(faqLink)) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const href = faqLink.getAttribute('href') || '';
+        const targetId = href.replace('#', '');
+        const card = document.getElementById(targetId);
+        if (!card) return;
+
+        const cardHeader = card.querySelector('div[onclick*="toggleAccordion"]') as HTMLElement;
+        const cardBody = cardHeader?.nextElementSibling as HTMLElement;
+
+        if (cardHeader && cardBody) {
+          const arrow = cardHeader.querySelector('.acc-arrow') as SVGElement;
+          const badge = cardHeader.querySelector('.acc-badge') as HTMLElement;
+          const inner = cardBody.querySelector('.spoiler-inner') as HTMLElement;
+
+          cardBody.style.transitionDuration = '0.8s';
+          cardBody.style.maxHeight = `${inner ? inner.scrollHeight : cardBody.scrollHeight}px`;
+          cardBody.style.opacity = '1';
+          if (arrow) arrow.style.transform = 'rotate(180deg)';
+          if (badge) {
+            badge.style.background = '#e0f2fe';
+            badge.style.color = '#0284c7';
+          }
+          setTimeout(() => {
+            if (cardBody.style.maxHeight !== '0px') cardBody.style.overflow = 'visible';
+          }, 800);
+        }
+
+        // Подсветка карточки
+        card.style.borderColor = '#38bdf8';
+        card.style.boxShadow = '0 0 0 3px rgba(56, 189, 248, 0.25)';
+
+        // Плавный скролл к вопросу
+        const headerOffset = 132;
+        const elementTop = card.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: elementTop - headerOffset,
+          behavior: 'smooth',
+        });
+
+        setTimeout(() => {
+          card.style.borderColor = '#e2e8f0';
+          card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.02)';
+        }, 2000);
+      }
+    };
+
+    container.addEventListener('click', handleAccordionClick);
+    return () => container.removeEventListener('click', handleAccordionClick);
+  }, [currentLesson, fileHtmlContent, loadedFromFile]);
+
   // 🎯 Единый оптимизированный парсинг оглавления
   useEffect(() => {
     if (loading || isEditMode || isSettingsOpen || isNoRightSidebar) {

@@ -453,7 +453,7 @@ export default function CallStatsCalculator() {
               <div className="text-2xl font-bold text-gray-800 mt-1">{stats.totalWorkTimeStr}</div>
             </div>
             <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-200">
-              <span className="text-xs font-semibold uppercase text-gray-400">Ср. между началами</span>
+              <span className="text-xs font-semibold uppercase text-gray-400">Ср. между звонками</span>
               <div className="text-2xl font-bold text-gray-800 mt-1">{stats.avgStartInterval}</div>
             </div>
           </div>
