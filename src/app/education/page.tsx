@@ -210,9 +210,12 @@ function EducationPortalContent() {
   const [dbStatusView, setDbStatusView] = useState<'full' | 'simple'>('full');
   const [resetScrollOnNav, setResetScrollOnNav] = useState<boolean>(false);
 
-  // Состояния для модального окна предупреждения о разработке
+  // Модальное окно предупреждения о разработке
   const [isDevWarningOpen, setIsDevWarningOpen] = useState<boolean>(false);
   const [dontShowAgain3Days, setDontShowAgain3Days] = useState<boolean>(false);
+
+  // Просмотр увеличенных изображений (Lightbox)
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
 
   // Кэш страниц для мгновенного перехода
   const pageCache = useRef<Map<string, PageDataPayload>>(new Map());
@@ -246,36 +249,29 @@ function EducationPortalContent() {
     return () => clearTimeout(timer);
   }, [toast.show]);
 
+  // При первом заходе: перенаправление на welcome и проверка показа окна разработки
   useEffect(() => {
-  const hasVisited = sessionStorage.getItem('uw_session_welcomed');
+    const hasVisited = sessionStorage.getItem('uw_session_welcomed');
+    if (!hasVisited) {
+      sessionStorage.setItem('uw_session_welcomed', 'true');
+      const currentTabParam = searchParams.get('tab');
+      const currentLessonParam = searchParams.get('lesson');
 
-  if (!hasVisited) {
-    sessionStorage.setItem('uw_session_welcomed', 'true');
-
-    // Если в URL отсутствуют параметры или они ведут на другую страницу при старте
-    const currentTabParam = searchParams.get('tab');
-    const currentLessonParam = searchParams.get('lesson');
-
-    if (currentTabParam !== 'doc' || currentLessonParam !== 'welcome') {
-      localStorage.setItem('uw_active_tab', 'doc');
-      localStorage.setItem('uw_active_lesson', 'welcome');
-      router.replace('?tab=doc&lesson=welcome', { scroll: false });
+      if (currentTabParam !== 'doc' || currentLessonParam !== 'welcome') {
+        localStorage.setItem('uw_active_tab', 'doc');
+        localStorage.setItem('uw_active_lesson', 'welcome');
+        router.replace('?tab=doc&lesson=welcome', { scroll: false });
+      }
     }
-  }
-}, [router, searchParams]);
 
-  // Проверка показа модального окна при входе на платформу
-  useEffect(() => {
     const hideUntil = localStorage.getItem('uw_hide_dev_warning_until');
-    if (hideUntil && Date.now() < Number(hideUntil)) {
-      return;
+    if (!hideUntil || Date.now() >= Number(hideUntil)) {
+      const sessionShown = sessionStorage.getItem('uw_dev_warning_session_shown');
+      if (!sessionShown) {
+        setIsDevWarningOpen(true);
+      }
     }
-
-    const sessionShown = sessionStorage.getItem('uw_dev_warning_session_shown');
-    if (!sessionShown) {
-      setIsDevWarningOpen(true);
-    }
-  }, []);
+  }, [router, searchParams]);
 
   const handleCloseDevWarning = () => {
     sessionStorage.setItem('uw_dev_warning_session_shown', 'true');
@@ -285,6 +281,46 @@ function EducationPortalContent() {
     }
     setIsDevWarningOpen(false);
   };
+
+  // Перехват кликов по изображениям для Lightbox и закрытие на Escape
+  useEffect(() => {
+    const handleDocClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      const wrapper = target.closest('.img-preview-wrapper, [data-src]') as HTMLElement | null;
+      if (wrapper) {
+        const src = wrapper.getAttribute('data-src') || wrapper.querySelector('img')?.getAttribute('src');
+        if (src) {
+          setPreviewImage(src);
+        }
+      }
+    };
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setPreviewImage(null);
+      }
+    };
+
+    document.addEventListener('click', handleDocClick);
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('click', handleDocClick);
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  // Блокировка скролла фона при открытом Lightbox
+  useEffect(() => {
+    if (previewImage) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [previewImage]);
 
   useEffect(() => {
     fetch('/api/auth')
@@ -386,7 +422,6 @@ function EducationPortalContent() {
     setTimeout(() => contentAreaRef.current?.classList.remove(styles.sidebarReRendering), 300);
   };
 
-  // 🚀 Фоновая предзагрузка уроков в кэш браузера
   const prefetchLesson = useCallback(async (lessonKey: string, tabKey: string = activeTab) => {
     const cacheKey = `${tabKey}_${lessonKey}`;
     if (pageCache.current.has(cacheKey)) return;
@@ -424,16 +459,10 @@ function EducationPortalContent() {
 
     try {
       const res = await fetch(`/api/education?lesson=${currentLesson}&tab=${activeTab}`);
-      
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
       const data = await res.json();
-
-      if (requestId !== currentRequestId.current) {
-        return;
-      }
+      if (requestId !== currentRequestId.current) return;
 
       if (data.success) {
         const payload: PageDataPayload = {
@@ -444,7 +473,6 @@ function EducationPortalContent() {
         };
 
         pageCache.current.set(cacheKey, payload);
-
         setLessonMeta(payload.meta);
         setSections(payload.sections);
         setLoadedFromFile(payload.loadedFromFile);
@@ -567,7 +595,6 @@ function EducationPortalContent() {
 
       const arrow = accordion.querySelector('.v33-arrow, .acc-arrow') as HTMLElement | SVGElement | null;
       const badge = accordion.querySelector('.acc-badge') as HTMLElement | null;
-
       const isOpen = accordion.classList.contains('open') || body.classList.contains('is-open');
 
       if (isOpen && !forceOpen) {
@@ -1086,7 +1113,7 @@ function EducationPortalContent() {
             </div>
             <div className={styles.cmTitle}>Удалить страницу?</div>
             <div className={styles.cmDescription}>
-              Вы уверены, что хотите удалить страницу <b>"{lessonMeta.title}"</b> из базы данных?
+              Вы уверены, что хотите удалить страницу &laquo;{lessonMeta.title}&raquo; из базы данных?
             </div>
             <div className={styles.cmActions}>
               <button className={`${styles.cmBtn} ${styles.cmBtnCancel}`} onClick={() => setIsDeleteModalOpen(false)}>
@@ -1100,47 +1127,77 @@ function EducationPortalContent() {
         </div>
       )}
 
-      {/* Принудительное модальное окно: Предупреждение о стадии разработки */}
-{isDevWarningOpen && (
-  <div className={styles.customModalBackdrop}>
-    <div className={`${styles.customModalCard} ${styles.devModalCardWide}`}>
-      <button 
-        className={styles.modalCloseIconBtn} 
-        onClick={handleCloseDevWarning} 
-        title="Закрыть"
-        aria-label="Закрыть"
-      >
-        <i className="bi bi-x"></i>
-      </button>
+      {/* Модальное окно: Предупреждение о стадии разработки */}
+      {isDevWarningOpen && (
+        <div className={styles.customModalBackdrop}>
+          <div className={`${styles.customModalCard} ${styles.devModalCardWide}`}>
+            <button 
+              className={styles.modalCloseIconBtn} 
+              onClick={handleCloseDevWarning} 
+              title="Закрыть"
+              aria-label="Закрыть"
+            >
+              <i className="bi bi-x"></i>
+            </button>
 
-      <div className={styles.devModalIconWrapper}>
-        <i className="bi bi-tools"></i>
-      </div>
+            <div className={styles.devModalIconWrapper}>
+              <i className="bi bi-tools"></i>
+            </div>
 
-      <div className={styles.cmTitle}>Важно: платформа в разработке</div>
+            <div className={styles.cmTitle}>Важно: платформа в разработке</div>
 
-      <div className={styles.cmDescription} style={{ textAlign: 'left', lineHeight: 1.6, marginBottom: '20px' }}>
-        Важно: платформа находится на стадии разработки. Присутствуют не точности, часть функционала может работать некорректно. Ваша задача - пользоваться платформой, читать материал, тыкать на кнопки, которые можно тыкать и при возникновении проблем, опечаток, не работающих штук - сообщать об этом мне.
-      </div>
+            <div className={styles.cmDescription} style={{ textAlign: 'left', lineHeight: 1.6, marginBottom: '20px' }}>
+              Важно: платформа находится на стадии разработки. Присутствуют не точности, часть функционала может работать некорректно. Ваша задача - пользоваться платформой, читать материал, тыкать на кнопки, которые можно тыкать и при возникновении проблем, опечаток, не работающих штук - сообщать об этом мне.
+            </div>
 
-      <button className={styles.devModalPrimaryBtn} onClick={handleCloseDevWarning}>
-        Понятно
-      </button>
+            <button className={styles.devModalPrimaryBtn} onClick={handleCloseDevWarning}>
+              Понятно
+            </button>
 
-      <div className={styles.devModalCheckboxRowRight}>
-        <label className={styles.devModalCheckboxLabel}>
-          <input
-            type="checkbox"
-            checked={dontShowAgain3Days}
-            onChange={(e) => setDontShowAgain3Days(e.target.checked)}
-            className={styles.devModalCheckbox}
-          />
-          <span>Не показывать больше (3 дня)</span>
-        </label>
-      </div>
-    </div>
-  </div>
-)}
+            <div className={styles.devModalCheckboxRowRight}>
+              <label className={styles.devModalCheckboxLabel}>
+                <input
+                  type="checkbox"
+                  checked={dontShowAgain3Days}
+                  onChange={(e) => setDontShowAgain3Days(e.target.checked)}
+                  className={styles.devModalCheckbox}
+                />
+                <span>Не показывать больше (3 дня)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Премиальный Lightbox просмотр фото */}
+      {previewImage && (
+        <div 
+          className={styles.lightboxBackdrop} 
+          onClick={() => setPreviewImage(null)}
+        >
+          <button 
+            className={styles.lightboxCloseBtn} 
+            onClick={(e) => {
+              e.stopPropagation();
+              setPreviewImage(null);
+            }}
+            title="Закрыть (Esc)"
+            aria-label="Закрыть"
+          >
+            <i className="bi bi-x"></i>
+          </button>
+          <div 
+            className={styles.lightboxContentWrapper} 
+            onClick={(e) => e.stopPropagation()}
+          >
+            <img 
+              src={previewImage} 
+              alt="Увеличенное изображение" 
+              className={styles.lightboxImage} 
+            />
+          </div>
+        </div>
+      )}
 
       {toast.show && (
         <div className={`${styles.crmToast} ${styles[`crmToast${toast.type.charAt(0).toUpperCase() + toast.type.slice(1)}`]}`}>
