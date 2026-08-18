@@ -1322,3 +1322,107 @@
 .rightCollapsed .rightSidebarTitle {
   display: none !important;
 }
+
+/* ================================================================== */
+/* МОДАЛЬНОЕ ОКНО ПРЕДУПРЕЖДЕНИЯ О РАЗРАБОТКЕ                        */
+/* ================================================================== */
+
+.customModalCard {
+  position: relative;
+}
+
+.devModalCardWide {
+  max-width: 660px !important;
+  padding: 32px 36px !important;
+}
+
+.modalCloseIconBtn {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #94a3b8;
+  font-size: 20px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+.modalCloseIconBtn:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.devModalIconWrapper {
+  width: 52px;
+  height: 52px;
+  background: #fefce8;
+  color: #d97706;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  margin-bottom: 16px;
+  border: 1px solid #fef08a;
+}
+
+.devModalPrimaryBtn {
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 10px;
+  background: #0f172a;
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+}
+
+.devModalPrimaryBtn:hover {
+  background: #1e293b;
+}
+
+.devModalPrimaryBtn:active {
+  transform: scale(0.99);
+}
+
+.devModalCheckboxRowRight {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-top: 22px; /* Увеличен отступ сверху (было 14px) */
+  padding-right: 4px; /* Небольшой аккуратный зазор от правого края */
+}
+
+.devModalCheckboxLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: #64748b;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.15s ease;
+}
+
+.devModalCheckboxLabel:hover {
+  color: #0f172a;
+}
+
+.devModalCheckbox {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  accent-color: #0f172a;
+  cursor: pointer;
+}

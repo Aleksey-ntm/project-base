@@ -210,6 +210,10 @@ function EducationPortalContent() {
   const [dbStatusView, setDbStatusView] = useState<'full' | 'simple'>('full');
   const [resetScrollOnNav, setResetScrollOnNav] = useState<boolean>(false);
 
+  // Состояния для модального окна предупреждения о разработке
+  const [isDevWarningOpen, setIsDevWarningOpen] = useState<boolean>(false);
+  const [dontShowAgain3Days, setDontShowAgain3Days] = useState<boolean>(false);
+
   // Кэш страниц для мгновенного перехода
   const pageCache = useRef<Map<string, PageDataPayload>>(new Map());
   const currentRequestId = useRef<number>(0);
@@ -242,6 +246,28 @@ function EducationPortalContent() {
     return () => clearTimeout(timer);
   }, [toast.show]);
 
+  // Проверка показа модального окна при входе на платформу
+  useEffect(() => {
+    const hideUntil = localStorage.getItem('uw_hide_dev_warning_until');
+    if (hideUntil && Date.now() < Number(hideUntil)) {
+      return;
+    }
+
+    const sessionShown = sessionStorage.getItem('uw_dev_warning_session_shown');
+    if (!sessionShown) {
+      setIsDevWarningOpen(true);
+    }
+  }, []);
+
+  const handleCloseDevWarning = () => {
+    sessionStorage.setItem('uw_dev_warning_session_shown', 'true');
+    if (dontShowAgain3Days) {
+      const expiresAt = Date.now() + 3 * 24 * 60 * 60 * 1000;
+      localStorage.setItem('uw_hide_dev_warning_until', String(expiresAt));
+    }
+    setIsDevWarningOpen(false);
+  };
+
   useEffect(() => {
     fetch('/api/auth')
       .then((res) => (res.ok ? res.json() : null))
@@ -267,34 +293,30 @@ function EducationPortalContent() {
   }, []);
 
   // 🎯 Автоматический скролл правого меню за активным якорем с запасом
-useEffect(() => {
-  if (!activeAnchorId || isNoRightSidebar) return;
+  useEffect(() => {
+    if (!activeAnchorId || isNoRightSidebar) return;
 
-  const sidebar = sidebarRightRef.current;
-  if (!sidebar) return;
+    const sidebar = sidebarRightRef.current;
+    if (!sidebar) return;
 
-  // Находим контейнер списка скролла и активную ссылку
-  const listContainer = sidebar.querySelector(`.${styles.anchorList}`) as HTMLElement | null;
-  const activeElement = sidebar.querySelector(`a[href="#${activeAnchorId}"]`) as HTMLElement | null;
+    const listContainer = sidebar.querySelector(`.${styles.anchorList}`) as HTMLElement | null;
+    const activeElement = sidebar.querySelector(`a[href="#${activeAnchorId}"]`) as HTMLElement | null;
 
-  if (!listContainer || !activeElement) return;
+    if (!listContainer || !activeElement) return;
 
-  const containerRect = listContainer.getBoundingClientRect();
-  const activeRect = activeElement.getBoundingClientRect();
+    const containerRect = listContainer.getBoundingClientRect();
+    const activeRect = activeElement.getBoundingClientRect();
 
-  const buffer = 120; // Запас расстояния сверху и снизу
+    const buffer = 120;
 
-  // Если активный пункт подходит к нижнему краю контейнера
-  if (activeRect.bottom > containerRect.bottom - buffer) {
-    const scrollOffset = activeRect.bottom - (containerRect.bottom - buffer);
-    listContainer.scrollBy({ top: scrollOffset, behavior: 'smooth' });
-  } 
-  // Если активный пункт подходит к верхнему краю контейнера
-  else if (activeRect.top < containerRect.top + buffer) {
-    const scrollOffset = activeRect.top - (containerRect.top + buffer);
-    listContainer.scrollBy({ top: scrollOffset, behavior: 'smooth' });
-  }
-}, [activeAnchorId, isNoRightSidebar]);
+    if (activeRect.bottom > containerRect.bottom - buffer) {
+      const scrollOffset = activeRect.bottom - (containerRect.bottom - buffer);
+      listContainer.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+    } else if (activeRect.top < containerRect.top + buffer) {
+      const scrollOffset = activeRect.top - (containerRect.top + buffer);
+      listContainer.scrollBy({ top: scrollOffset, behavior: 'smooth' });
+    }
+  }, [activeAnchorId, isNoRightSidebar]);
 
   useEffect(() => {
     if (loading) return;
@@ -368,7 +390,6 @@ useEffect(() => {
   const fetchData = useCallback(async (ignoreCache = false) => {
     const cacheKey = `${activeTab}_${currentLesson}`;
     
-    // 1. Если страница есть в кэше — мгновенный рендер без спиннера
     if (!ignoreCache && pageCache.current.has(cacheKey)) {
       const cached = pageCache.current.get(cacheKey)!;
       setLessonMeta(cached.meta);
@@ -392,7 +413,6 @@ useEffect(() => {
 
       const data = await res.json();
 
-      // Защита от гонки запросов при быстром переключении вкладок
       if (requestId !== currentRequestId.current) {
         return;
       }
@@ -992,53 +1012,54 @@ useEffect(() => {
         </main>
 
         {!isNoRightSidebar && !isSettingsOpen && !loading && (
-  <div className={styles.rightSidebarWrapper}>
-    <button
-      className={styles.sidebarRightToggleBtn}
-      onClick={toggleRight}
-      title={rightCollapsed ? 'Развернуть меню' : 'Свернуть меню'}
-    >
-      <i className={`bi ${rightCollapsed ? 'bi-chevron-left' : 'bi-chevron-right'}`}></i>
-    </button>
+          <div className={styles.rightSidebarWrapper}>
+            <button
+              className={styles.sidebarRightToggleBtn}
+              onClick={toggleRight}
+              title={rightCollapsed ? 'Развернуть меню' : 'Свернуть меню'}
+            >
+              <i className={`bi ${rightCollapsed ? 'bi-chevron-left' : 'bi-chevron-right'}`}></i>
+            </button>
 
-    <aside className={styles.rightSidebar} id="sidebarRight" ref={sidebarRightRef}>
-      <div className={styles.rightSidebarTitle}>
-        <div className={styles.rstText}>
-          <i className="bi bi-list-nested"></i>
-          <span>На этой странице:</span>
-        </div>
-      </div>
+            <aside className={styles.rightSidebar} id="sidebarRight" ref={sidebarRightRef}>
+              <div className={styles.rightSidebarTitle}>
+                <div className={styles.rstText}>
+                  <i className="bi bi-list-nested"></i>
+                  <span>На этой странице:</span>
+                </div>
+              </div>
 
-      <ul className={styles.anchorList}>
-        {anchors.length > 0 &&
-          anchors.map((item, index) => (
-            <li key={`${item.id}-${index}`} className={styles.anchorItem}>
-              <a
-                href={`#${item.id}`}
-                className={`${styles.anchorLink} ${item.isSub ? styles.levelH3 : styles.levelH2} ${
-                  activeAnchorId === item.id ? styles.active : ''
-                }`}
-                data-depth={item.isSub ? '3' : '2'}
-                data-tooltip={item.title}
-                onClick={(e) => {
-                  e.preventDefault();
-                  scrollToAnchor(item.id, index);
-                }}
-              >
-                <span className={styles.anchorText}>{item.title}</span>
-              </a>
-            </li>
-          ))}
-      </ul>
-    </aside>
-  </div>
-)}
+              <ul className={styles.anchorList}>
+                {anchors.length > 0 &&
+                  anchors.map((item, index) => (
+                    <li key={`${item.id}-${index}`} className={styles.anchorItem}>
+                      <a
+                        href={`#${item.id}`}
+                        className={`${styles.anchorLink} ${item.isSub ? styles.levelH3 : styles.levelH2} ${
+                          activeAnchorId === item.id ? styles.active : ''
+                        }`}
+                        data-depth={item.isSub ? '3' : '2'}
+                        data-tooltip={item.title}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          scrollToAnchor(item.id, index);
+                        }}
+                      >
+                        <span className={styles.anchorText}>{item.title}</span>
+                      </a>
+                    </li>
+                  ))}
+              </ul>
+            </aside>
+          </div>
+        )}
       </div>
 
       <button className={`${styles.scrollToTopBtn} ${showScrollTop ? styles.show : ''}`} onClick={scrollToTop} title="Пролистать наверх">
         <i className="bi bi-arrow-up-short"></i>
       </button>
 
+      {/* Модальное окно подтверждения удаления */}
       {isDeleteModalOpen && (
         <div className={styles.customModalBackdrop}>
           <div className={styles.customModalCard}>
@@ -1060,6 +1081,48 @@ useEffect(() => {
           </div>
         </div>
       )}
+
+      {/* Принудительное модальное окно: Предупреждение о стадии разработки */}
+{isDevWarningOpen && (
+  <div className={styles.customModalBackdrop}>
+    <div className={`${styles.customModalCard} ${styles.devModalCardWide}`}>
+      <button 
+        className={styles.modalCloseIconBtn} 
+        onClick={handleCloseDevWarning} 
+        title="Закрыть"
+        aria-label="Закрыть"
+      >
+        <i className="bi bi-x"></i>
+      </button>
+
+      <div className={styles.devModalIconWrapper}>
+        <i className="bi bi-tools"></i>
+      </div>
+
+      <div className={styles.cmTitle}>Важно: платформа в разработке</div>
+
+      <div className={styles.cmDescription} style={{ textAlign: 'left', lineHeight: 1.6, marginBottom: '20px' }}>
+        Важно: платформа находится на стадии разработки. Присутствуют не точности, часть функционала может работать некорректно. Ваша задача - пользоваться платформой, читать материал, тыкать на кнопки, которые можно тыкать и при возникновении проблем, опечаток, не работающих штук - сообщать об этом мне.
+      </div>
+
+      <button className={styles.devModalPrimaryBtn} onClick={handleCloseDevWarning}>
+        Понятно
+      </button>
+
+      <div className={styles.devModalCheckboxRowRight}>
+        <label className={styles.devModalCheckboxLabel}>
+          <input
+            type="checkbox"
+            checked={dontShowAgain3Days}
+            onChange={(e) => setDontShowAgain3Days(e.target.checked)}
+            className={styles.devModalCheckbox}
+          />
+          <span>Не показывать больше (3 дня)</span>
+        </label>
+      </div>
+    </div>
+  </div>
+)}
 
       {toast.show && (
         <div className={`${styles.crmToast} ${styles[`crmToast${toast.type.charAt(0).toUpperCase() + toast.type.slice(1)}`]}`}>
