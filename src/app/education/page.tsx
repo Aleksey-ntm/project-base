@@ -170,7 +170,7 @@ function EducationPortalContent() {
   const router = useRouter();
 
   const activeTab = searchParams.get('tab') || 'doc';
-  const currentLesson = searchParams.get('lesson') || 'seo';
+  const currentLesson = searchParams.get('lesson') || 'welcome';
 
   const currentLessonConfig = useMemo(() => {
     const tabConfig = SECTIONS_CONFIG[activeTab];
@@ -245,6 +245,24 @@ function EducationPortalContent() {
     const timer = setTimeout(() => setToast((prev) => ({ ...prev, show: false })), 3500);
     return () => clearTimeout(timer);
   }, [toast.show]);
+
+  useEffect(() => {
+  const hasVisited = sessionStorage.getItem('uw_session_welcomed');
+
+  if (!hasVisited) {
+    sessionStorage.setItem('uw_session_welcomed', 'true');
+
+    // Если в URL отсутствуют параметры или они ведут на другую страницу при старте
+    const currentTabParam = searchParams.get('tab');
+    const currentLessonParam = searchParams.get('lesson');
+
+    if (currentTabParam !== 'doc' || currentLessonParam !== 'welcome') {
+      localStorage.setItem('uw_active_tab', 'doc');
+      localStorage.setItem('uw_active_lesson', 'welcome');
+      router.replace('?tab=doc&lesson=welcome', { scroll: false });
+    }
+  }
+}, [router, searchParams]);
 
   // Проверка показа модального окна при входе на платформу
   useEffect(() => {
