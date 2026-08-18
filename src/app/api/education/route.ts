@@ -2,9 +2,17 @@ import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import fs from 'fs';
 import path from 'path';
+import { serverLessonCache } from '@/lib/education-cache';
+
+// 🛡️ Запрещаем браузеру намертво кэшировать API на клиенте (чтобы правки были видны сразу)
+const NO_CACHE_HEADERS = {
+  'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate',
+  'Pragma': 'no-cache',
+  'Expires': '0',
+};
 
 // ==================================================================
-// GET: Получение данных урока (из БД или из файла в /lessons)
+// GET: Получение данных урока
 // ==================================================================
 export async function GET(request: Request) {
   try {
@@ -12,6 +20,23 @@ export async function GET(request: Request) {
     const lessonKey = String(searchParams.get('lesson') || 'marketing');
     const tab = String(searchParams.get('tab') || 'doc');
 
+    const cacheKey = `${tab}_${lessonKey}`;
+
+    // Проверяем пути к локальным файлам
+    const htmlPath = path.join(process.cwd(), 'lessons', `${lessonKey}.html`);
+    const phpPath = path.join(process.cwd(), 'lessons', `${lessonKey}.php`);
+    const targetPath = fs.existsSync(htmlPath) ? htmlPath : (fs.existsSync(phpPath) ? phpPath : null);
+
+    // Узнаем реальное время последнего изменения файла на диске
+    const fileMtime = targetPath ? fs.statSync(targetPath).mtimeMs : 0;
+
+    // 1. Проверяем наличие в in-memory кэше (сверяем с mtime файла)
+    const cached = serverLessonCache.get(cacheKey);
+    if (cached && (!cached.data.loadedFromFile || cached.timestamp >= fileMtime)) {
+      return NextResponse.json(cached.data, { headers: NO_CACHE_HEADERS });
+    }
+
+    // 2. Ищем в базе данных
     let meta: any = await prisma.lessonMeta.findFirst({
       where: {
         lessonKey,
@@ -27,51 +52,49 @@ export async function GET(request: Request) {
       orderBy: { sortOrder: 'asc' },
     });
 
-    // Определяем, пуста ли база по этому уроку
     const loadedFromFile = !meta && sections.length === 0;
     let fileHtmlContent = '';
 
-    // Если в БД пусто — читаем локальный файл черновика из папки /lessons
-    if (loadedFromFile) {
-      const htmlPath = path.join(process.cwd(), 'lessons', `${lessonKey}.html`);
-      const phpPath = path.join(process.cwd(), 'lessons', `${lessonKey}.php`);
+    // 3. Если в БД пусто — читаем локальный файл черновика
+    if (loadedFromFile && targetPath) {
+      fileHtmlContent = fs.readFileSync(targetPath, 'utf-8');
 
-      const targetPath = fs.existsSync(htmlPath) ? htmlPath : (fs.existsSync(phpPath) ? phpPath : null);
+      const titleMatch = fileHtmlContent.match(/<h1[^>]*>(.*?)<\/h1>/is);
+      const introMatch = fileHtmlContent.match(/<p class="edu-intro[^>]*>(.*?)<\/p>/is);
 
-      if (targetPath) {
-        fileHtmlContent = fs.readFileSync(targetPath, 'utf-8');
+      meta = {
+        lessonKey,
+        tab,
+        title: titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : lessonKey,
+        intro: introMatch ? introMatch[1].replace(/<[^>]+>/g, '').trim() : '',
+      };
 
-        // Вытаскиваем Title из <h1> и Intro из <p class="edu-intro">
-        const titleMatch = fileHtmlContent.match(/<h1[^>]*>(.*?)<\/h1>/is);
-        const introMatch = fileHtmlContent.match(/<p class="edu-intro[^>]*>(.*?)<\/p>/is);
-
-        meta = {
-          lessonKey,
-          tab,
-          title: titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : lessonKey,
-          intro: introMatch ? introMatch[1].replace(/<[^>]+>/g, '').trim() : '',
-        };
-
-        // Вырезаем шапку из контента, чтобы H1 и intro не дублировались
-        fileHtmlContent = fileHtmlContent
-          .replace(/<div class="edu-header"[^>]*>.*?<\/div>/is, '')
-          .replace(/<h1[^>]*>.*?<\/h1>/is, '')
-          .replace(/<p class="edu-intro"[^>]*>.*?<\/p>/is, '');
-      }
+      fileHtmlContent = fileHtmlContent
+        .replace(/<div class="edu-header"[^>]*>.*?<\/div>/is, '')
+        .replace(/<h1[^>]*>.*?<\/h1>/is, '')
+        .replace(/<p class="edu-intro"[^>]*>.*?<\/p>/is, '');
     }
 
-    return NextResponse.json({
+    const responsePayload = {
       success: true,
       meta: meta || { title: '', intro: '' },
       sections: sections || [],
       loadedFromFile,
       fileHtmlContent,
+    };
+
+    // 4. Сохраняем в кэш с отметкой времени
+    serverLessonCache.set(cacheKey, {
+      data: responsePayload,
+      timestamp: Date.now(),
     });
+
+    return NextResponse.json(responsePayload, { headers: NO_CACHE_HEADERS });
   } catch (error: any) {
     console.error('Prisma GET Error:', error);
     return NextResponse.json(
       { success: false, error: error?.message || 'Server Error' },
-      { status: 500 }
+      { status: 500, headers: NO_CACHE_HEADERS }
     );
   }
 }
@@ -87,6 +110,9 @@ export async function POST(request: Request) {
     let meta = body.meta || {};
     let sections = body.sections || [];
 
+    // Сбрасываем кэш
+    serverLessonCache.delete(`${tab}_${lessonKey}`);
+
     if (body.isImport) {
       const htmlPath = path.join(process.cwd(), 'lessons', `${lessonKey}.html`);
       const phpPath = path.join(process.cwd(), 'lessons', `${lessonKey}.php`);
@@ -95,13 +121,12 @@ export async function POST(request: Request) {
       if (targetPath) {
         let rawHtml = fs.readFileSync(targetPath, 'utf-8');
 
-        // Вытаскиваем Title и Intro из файла
         const titleMatch = rawHtml.match(/<h1[^>]*>(.*?)<\/h1>/is);
         const introMatch = rawHtml.match(/<p class="edu-intro[^>]*>(.*?)<\/p>/is);
 
         const pageTitle = meta.title && meta.title !== lessonKey 
           ? meta.title 
-        : (titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : lessonKey);
+          : (titleMatch ? titleMatch[1].replace(/<[^>]+>/g, '').trim() : lessonKey);
 
         meta = {
           lessonKey,
@@ -110,13 +135,11 @@ export async function POST(request: Request) {
           intro: introMatch ? introMatch[1].replace(/<[^>]+>/g, '').trim() : (meta.intro || ''),
         };
 
-        // Очищаем дублирующуюся шапку H1/Intro (НО НЕ СТИЛИ <style>)
         rawHtml = rawHtml
           .replace(/<div class="edu-header"[^>]*>.*?<\/div>/is, '')
           .replace(/<h1[^>]*>.*?<\/h1>/is, '')
           .replace(/<p class="edu-intro"[^>]*>.*?<\/p>/is, '');
 
-        // Ищем все H2
         const h2Regex = /<h2[^>]*>([\s\S]*?)<\/h2>/gi;
         const parsedSections = [];
         const matches = [];
@@ -131,18 +154,15 @@ export async function POST(request: Request) {
         }
 
         if (matches.length > 0) {
-          // 1. ЗАХВАТЫВАЕМ ВЕСЬ ТЕКСТ/СТИЛИ ДО ПЕРВОГО H2!
-          // Именно там лежали <style> и первая подсказка.
           const leadContent = rawHtml.substring(0, matches[0].index).trim();
           if (leadContent) {
             parsedSections.push({
               sectionId: `section-lead`,
-              title: '', // Без заголовка, это вводная часть c подсказками
+              title: '',
               text: leadContent,
             });
           }
 
-          // 2. Разбираем остальные секции H2
           for (let i = 0; i < matches.length; i++) {
             const current = matches[i];
             const next = matches[i + 1];
@@ -169,7 +189,6 @@ export async function POST(request: Request) {
     const titleText = meta.title ? String(meta.title).trim() : 'Раздел без названия';
     const introText = meta.intro ? String(meta.intro).trim() : '';
 
-    // 1. Обновляем или создаем мета-запись по составному ключу lessonKey_tab
     const existingMeta = await prisma.lessonMeta.findFirst({
       where: { lessonKey, tab },
     });
@@ -198,12 +217,10 @@ export async function POST(request: Request) {
       });
     }
 
-    // 2. Удаляем старые блоки
     await prisma.lessonSection.deleteMany({
       where: { lessonKey, tab },
     });
 
-    // 3. Создаем новые блоки
     if (Array.isArray(sections) && sections.length > 0) {
       const formattedSections = sections.map((sec: any, idx: number) => ({
         lessonKey,
@@ -222,7 +239,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // 4. Обновляем индекс поиска
     try {
       const fullText = `${titleText} ${introText} ${sections.map((s: any) => `${s.title} ${s.text}`).join(' ')}`
         .replace(/<[^>]+>/g, ' ')
@@ -250,7 +266,7 @@ export async function POST(request: Request) {
 }
 
 // ==================================================================
-// DELETE: Удаление урока ИЗ БАЗЫ ДАННЫХ (Файлы в /lessons не трогаем!)
+// DELETE: Удаление урока ИЗ БАЗЫ ДАННЫХ
 // ==================================================================
 export async function DELETE(request: Request) {
   try {
@@ -265,17 +281,16 @@ export async function DELETE(request: Request) {
       );
     }
 
-    // 1. Удаляем блоки урока
+    serverLessonCache.delete(`${tab}_${lessonKey}`);
+
     await prisma.lessonSection.deleteMany({
       where: { lessonKey, tab },
     });
 
-    // 2. Удаляем мета-данные урока
     await prisma.lessonMeta.deleteMany({
       where: { lessonKey, tab },
     });
 
-    // 3. Удаляем из индекса поиска
     try {
       await prisma.$executeRaw`
         DELETE FROM search_index 

@@ -97,7 +97,7 @@
       280px 
       1fr 
       280px 
-      max(20px, calc((100vw - 1600px) / 2)); 
+      16px;
   width: 100%; 
   margin-top: 0 !important;
   align-items: start !important; 
@@ -119,15 +119,15 @@
 }
 
 .leftCollapsed .mainWrapper {
-  grid-template-columns: max(20px, calc((100vw - 1600px) / 2)) 68px 1fr 280px max(20px, calc((100vw - 1600px) / 2));
+  grid-template-columns: max(20px, calc((100vw - 1600px) / 2)) 68px 1fr 280px 16px;
 }
 
 .rightCollapsed .mainWrapper {
-  grid-template-columns: max(20px, calc((100vw - 1600px) / 2)) 280px 1fr 48px max(20px, calc((100vw - 1600px) / 2));
+  grid-template-columns: max(20px, calc((100vw - 1600px) / 2)) 280px 1fr 48px 16px;
 }
 
 .leftCollapsed.rightCollapsed .mainWrapper {
-  grid-template-columns: max(20px, calc((100vw - 1600px) / 2)) 68px 1fr 48px max(20px, calc((100vw - 1600px) / 2));
+  grid-template-columns: max(20px, calc((100vw - 1600px) / 2)) 68px 1fr 48px 16px;
 }
 
 .navSidebarWrapper,
@@ -163,17 +163,17 @@
               padding 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-.rightSidebar { 
+.rightSidebar {
   position: fixed !important;
   top: 0px !important;
   right: 0 !important;
-  width: calc(max(20px, calc((100vw - 1600px) / 2)) + 280px) !important; 
+  width: 280px !important;
   height: 100vh !important;
-  overflow: visible !important; 
+  overflow: visible !important;
   display: flex !important;
   flex-direction: column !important;
-  padding: 15px max(20px, calc((100vw - 1600px) / 2)) 40px 16px !important;
-  border-left: none !important;
+  padding: 15px 16px 40px 24px !important;
+  border-left: 1px solid #e2e8f0 !important; /* Добавлена граница, как у левого меню */
   background: #ffffff !important;
   z-index: 90 !important;
   transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1),
@@ -194,6 +194,14 @@
   width: calc(max(20px, calc((100vw - 1600px) / 2)) + 68px) !important;
   padding-left: max(20px, calc((100vw - 1600px) / 2)) !important;
   padding-right: 0 !important;
+}
+
+.rightCollapsed .rightSidebar {
+  width: 52px !important;
+  padding: 15px 0 40px 0 !important;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 }
 
 .contentContainer { 
@@ -253,7 +261,7 @@
   background: transparent; 
   border: none; 
   cursor: pointer;
-  overflow: visible !important; /* 👈 Было hidden, меняем на visible */
+  overflow: visible !important;
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 
@@ -389,7 +397,7 @@
 }
 
 /* ================================================================== */
-/* ПРАВЫЙ ЗАГОЛОВОК И ВСТРОЕННАЯ ПРАВАЯ СТРЕЛКА                       */
+/* ПРАВЫЙ ЗАГОЛОВОК И ВСТРОЕННАЯ ПРАВАЯ СТРЕЛКА СВЕРХУ                */
 /* ================================================================== */
 
 .rightSidebarTitle { 
@@ -400,9 +408,9 @@
   letter-spacing: 0.05em; 
   display: flex !important; 
   align-items: center !important; 
-  justify-content: space-between !important;
+  justify-content: flex-start !important;
+  gap: 10px !important;
   margin-bottom: 16px; 
-  padding-right: 4px;
   width: 100%;
 }
 
@@ -410,26 +418,32 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  width: 190px;
+  min-width: 190px;
   white-space: nowrap;
-  overflow: hidden;
-  transition: opacity 0.3s ease, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  opacity: 1;
+  transform: translateX(0);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease !important;
 }
 
 .inlineToggleBtnRight {
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
   border-radius: 8px;
   background: #f1f5f9;
   border: 1px solid #cbd5e1;
   color: #475569;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   font-size: 12px;
   cursor: pointer;
-  flex-shrink: 0;
+  flex-shrink: 0 !important;
+  margin: 0 !important;
   transition: all 0.2s ease;
+  z-index: 100 !important;
 }
 
 .inlineToggleBtnRight:hover {
@@ -438,21 +452,15 @@
   color: #ffffff;
 }
 
-/* СВЁРНУТЫЙ ПРАВЫЙ САЙДБАР С ТОЧКАМИ-ЯКОРЯМИ */
-.rightCollapsed .rightSidebar {
-  width: calc(max(20px, calc((100vw - 1600px) / 2)) + 52px) !important;
-  padding: 20px 8px !important;
-  box-sizing: border-box !important;
-  overflow: visible !important;
-}
-
+/* СВЁРНУТЫЙ ПРАВЫЙ САЙДБАР */
 .rightCollapsed .rightSidebarTitle {
   display: flex !important;
   justify-content: center !important;
   align-items: center !important;
   width: 100% !important;
   padding: 0 !important;
-  margin-bottom: 20px !important;
+  margin: 0 0 16px 0 !important;
+  flex-shrink: 0 !important;
 }
 
 .rightCollapsed .rstText {
@@ -461,49 +469,49 @@
 
 .rightCollapsed .inlineToggleBtnRight {
   margin: 0 auto !important;
-  width: 28px !important;
-  height: 28px !important;
-  min-width: 28px !important;
-  border-radius: 8px !important;
-  background: #f1f5f9 !important;
-  border: 1px solid #cbd5e1 !important;
-  color: #475569 !important;
-  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
-  z-index: 100 !important;
-}
-
-.rightCollapsed .inlineToggleBtnRight:hover {
-  background: #0284c7;
-  color: #ffffff;
-  border-color: #0284c7;
 }
 
 .rightCollapsed .anchorList {
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
-  gap: 12px !important;
-  padding: 0 !important;
+  gap: 14px !important;
+  padding: 8px 0 30px 0 !important;
   margin: 0 !important;
+  overflow-x: hidden !important;
 }
 
 .rightCollapsed .anchorItem {
   width: auto !important;
   margin: 0 !important;
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
 }
 
 .rightCollapsed .anchorLink {
   padding: 0 !important;
   width: 10px !important;
   height: 10px !important;
+  min-width: 10px !important;
+  min-height: 10px !important;
   border-radius: 50% !important;
   background: #cbd5e1;
   display: block !important;
   position: relative !important;
-  transition: all 0.2s ease !important;
+  overflow: visible !important;
+  transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease !important;
 }
 
 .rightCollapsed .anchorText {
+  opacity: 0 !important;
+  transform: translateX(30px) !important;
+  pointer-events: none !important;
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.3s ease !important;
+}
+
+.rightCollapsed .anchorLink.levelH3::before {
   display: none !important;
 }
 
@@ -521,7 +529,7 @@
 .rightCollapsed .anchorLink[data-tooltip]:hover::after {
   content: attr(data-tooltip);
   position: fixed !important;
-  right: calc(max(20px, calc((100vw - 1600px) / 2)) + 60px);
+  right: 60px;
   background: #0f172a;
   color: #ffffff;
   padding: 5px 10px;
@@ -536,9 +544,16 @@
 }
 
 .anchorList { 
-  list-style: none; padding: 0; margin: 0; border-left: none !important;
-  flex: 1 1 auto !important; overflow-y: auto !important; overflow-x: hidden !important; padding-bottom: 60px !important;
-  scrollbar-width: thin; scrollbar-color: #cbd5e1 transparent;
+  list-style: none; 
+  padding: 0; 
+  margin: 0; 
+  border-left: none !important;
+  flex: 1 1 auto !important; 
+  overflow-y: auto !important; 
+  overflow-x: hidden !important; 
+  padding-bottom: 60px !important;
+  scrollbar-width: thin; 
+  scrollbar-color: #cbd5e1 transparent;
   transition: border-color 0.3s ease, gap 0.35s cubic-bezier(0.2, 0, 0, 1); 
 }
 
@@ -547,25 +562,43 @@
 .anchorList::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 20px; }
 .anchorList::-webkit-scrollbar-thumb:hover { background-color: #94a3b8; }
 
-.anchorItem { margin-bottom: 4px; display: block; width: 100%; transition: all 0.35s cubic-bezier(0.2, 0, 0, 1); }
+.anchorItem { 
+  margin-bottom: 4px; 
+  display: block; 
+  width: 100%; 
+  transition: all 0.35s cubic-bezier(0.2, 0, 0, 1); 
+}
 
 .anchorLink { 
-  position: relative; display: flex; align-items: flex-start; padding: 8px 0 8px 16px; color: #64748b; 
-  text-decoration: none; font-size: 13px; font-weight: 500; cursor: pointer; width: 100%; overflow: hidden;
-  transition: padding 0.35s cubic-bezier(0.2, 0, 0, 1), margin 0.35s cubic-bezier(0.2, 0, 0, 1), color 0.2s ease;
+  position: relative; 
+  display: flex; 
+  align-items: flex-start; 
+  padding: 8px 0 8px 16px; 
+  color: #64748b; 
+  text-decoration: none; 
+  font-size: 13px; 
+  font-weight: 500; 
+  cursor: pointer; 
+  width: 100%; 
+  overflow: hidden !important;
+  transition: padding 0.35s cubic-bezier(0.2, 0, 0, 1), 
+              margin 0.35s cubic-bezier(0.2, 0, 0, 1), 
+              color 0.2s ease;
 }
 .anchorLink:hover { color: #0f172a; }
 
 .anchorText {
-  width: 210px; 
-  min-width: 210px; 
-  flex-shrink: 0; 
-  white-space: normal; 
+  display: block;
+  width: 190px !important;
+  min-width: 190px !important;
+  white-space: normal;
   word-break: break-word;
-  line-height: 1.35; 
-  opacity: 1; 
+  line-height: 1.35;
+  padding-right: 8px;
+  opacity: 1;
   transform: translateX(0);
-  transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1), transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.4s ease !important;
 }
 
 /* ================================================================== */
@@ -594,7 +627,6 @@
   align-items: center;
 }
 
-/* Маркер-точка перед каждым H3 */
 .anchorLink.levelH3::before {
   content: '';
   position: absolute;
@@ -608,19 +640,10 @@
   transition: background-color 0.2s ease, transform 0.2s ease;
 }
 
-.anchorLink.levelH3:hover::before {
-  background-color: #0284c7;
-  transform: translateY(-50%) scale(1.25);
-}
-
+.anchorLink.levelH3:hover::before,
 .anchorLink.levelH3.active::before {
   background-color: #0284c7;
   transform: translateY(-50%) scale(1.25);
-}
-
-.anchorLink.levelH3 .anchorText {
-  width: 194px;
-  min-width: 194px;
 }
 
 .anchorLink.levelH3:hover {
@@ -648,7 +671,7 @@
 
 .scrollToTopBtn {
   position: fixed; 
-  right: calc(max(20px, calc((100vw - 1600px) / 2)) + 257px) !important;
+  right: calc(max(20px, calc((100vw - 1600px) / 2)) + 220px) !important;
   bottom: 32px; 
   width: 50px; 
   height: 50px; 
@@ -846,7 +869,6 @@
   border-color: #fde047;
 }
 
-/* 🎯 Сам тултип: позиционируется слева от иконки или прямо над ней */
 .newUpdateWrapper[data-update-tooltip]:hover::after,
 .devIconWrapper[data-update-tooltip]:hover::after {
   content: attr(data-update-tooltip);
@@ -868,7 +890,6 @@
   animation: tooltipFadeIn 0.15s ease-out;
 }
 
-/* 🎯 Стрелочка тултипа */
 .newUpdateWrapper[data-update-tooltip]:hover::before,
 .devIconWrapper[data-update-tooltip]:hover::before {
   content: '';
@@ -895,29 +916,29 @@
 /* ================================================================== */
 
 .contentInner { 
-  max-width: 1000px; 
+  max-width: 1160px; /* Было 1000px — центральный блок стал просторнее */
   margin: 0 auto; 
   transition: max-width 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .leftCollapsed .contentInner,
 .rightCollapsed .contentInner {
-  max-width: 1280px !important;
+  max-width: 1320px !important; /* Было 1280px */
 }
 
 .leftCollapsed.rightCollapsed .contentInner {
-  max-width: 1440px !important;
+  max-width: 1480px !important; /* Было 1440px */
 }
 
 .noRightSidebar .contentInner,
 .settingsOpen .contentInner {
-  max-width: 1280px !important;
+  max-width: 1320px !important; /* Было 1280px */
   width: 100% !important;
 }
 
 .noRightSidebar.leftCollapsed .contentInner,
 .settingsOpen.leftCollapsed .contentInner {
-  max-width: 1440px !important;
+  max-width: 1480px !important; /* Было 1440px */
   width: 100% !important;
 }
 
@@ -941,7 +962,6 @@
       max(20px, calc((100vw - 1600px) / 2)) !important;
 }
 
-/* МИКРО-ФЕЙД ДЛЯ СГЛАЖИВАНИЯ МГНОВЕННОГО РЕНДЕРА КОНТЕНТА */
 .sidebarReRendering {
   opacity: 0.15;
   pointer-events: none;
@@ -1039,7 +1059,6 @@
   margin-top: 2px;
 }
 
-/* Переключатели (Toggle switches) */
 .switchLabel {
   position: relative;
   display: inline-block;
@@ -1087,7 +1106,6 @@
   transform: translateX(20px);
 }
 
-/* Панели источника БД */
 .dbStatusBanner {
   display: flex;
   justify-content: space-between;
@@ -1180,7 +1198,6 @@
   margin-bottom: 28px;
 }
 
-/* Полупрозрачный вид для пунктов в разработке */
 .navLink.devItem {
   opacity: 0.5;
   transition: opacity 0.2s ease, background-color 0.2s ease, color 0.2s ease;
@@ -1188,4 +1205,120 @@
 
 .navLink.devItem:hover {
   opacity: 0.85;
+}
+
+:global(.spoiler-body.is-open),
+:global(.acc-body.is-open) {
+  max-height: none !important;
+  opacity: 1 !important;
+  overflow: visible !important;
+  display: block !important;
+}
+
+/* ================================================================== */
+/* ЦЕНТРАЛЬНЫЙ СПИННЕР ЗАГРУЗКИ                                       */
+/* ================================================================== */
+
+@keyframes spinnerRotate {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeInContent {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.spinnerWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;
+  gap: 16px;
+  width: 100%;
+}
+
+.spinnerCircle {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e2e8f0;
+  border-top-color: #0f172a;
+  border-radius: 50%;
+  animation: spinnerRotate 0.8s linear infinite;
+}
+
+.spinnerText {
+  font-size: 14px;
+  font-weight: 500;
+  color: #64748b;
+  letter-spacing: -0.01em;
+}
+
+.fadeInLoaded {
+  animation: fadeInContent 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* ================================================================== */
+/* ВЕРХНЯЯ КНОПКА НА ГРАНИЦЕ ПРАВОГО САЙДБАРА                         */
+/* ================================================================== */
+
+.sidebarRightToggleBtn {
+  position: fixed !important;
+  top: 15px; /* Находится сверху, на одной высоте с заголовком */
+  right: 266px; /* 280px ширина - 14px (половина кнопки) = точно по центру линии */
+  width: 28px !important;
+  height: 28px !important;
+  min-width: 28px !important;
+  border-radius: 8px !important;
+  background: #f1f5f9 !important;
+  border: 1px solid #cbd5e1 !important;
+  color: #475569 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-size: 12px !important;
+  cursor: pointer !important;
+  z-index: 1000 !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.08) !important;
+  transition: right 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+              background-color 0.2s ease, 
+              border-color 0.2s ease, 
+              color 0.2s ease !important;
+}
+
+.rightCollapsed .sidebarRightToggleBtn {
+  right: 38px !important; /* 52px ширина - 14px = точно по центру линии в свернутом виде */
+  width: 28px !important;
+  height: 28px !important;
+}
+
+.sidebarRightToggleBtn:hover {
+  background: #0284c7 !important;
+  border-color: #0284c7 !important;
+  color: #ffffff !important;
+}
+
+.rightSidebarTitle { 
+  font-size: 12px; 
+  font-weight: 700; 
+  color: #94a3b8; 
+  text-transform: uppercase; 
+  letter-spacing: 0.05em; 
+  display: flex !important; 
+  align-items: center !important; 
+  margin-bottom: 16px; 
+  min-height: 28px;
+  width: 100%;
+}
+
+.rightCollapsed .rightSidebarTitle {
+  display: none !important;
 }

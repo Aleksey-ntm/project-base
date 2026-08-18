@@ -1,15 +1,16 @@
 'use client';
 
-import React, { useState, useEffect, useMemo, useRef, Suspense } from 'react';
+import React, { useState, useEffect, useMemo, useRef, Suspense, memo, useCallback } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import HeaderSearch from '@/components/HeaderSearch';
 import styles from './styles.module.css';
+import './lessons.css';
 
 interface LessonConfig {
   title: string;
   icon: string;
   badge?: string;
-  noSidebar?: boolean; // 👈 Теперь просто ставим true там, где правый сайдбар не нужен
+  noSidebar?: boolean;
 }
 
 const SECTIONS_CONFIG: Record<string, { title: string; groups: Record<string, { title: string; icon: string; lessons: Record<string, LessonConfig> }> }> = {
@@ -118,6 +119,52 @@ interface LessonSection {
   text: string;
 }
 
+interface PageDataPayload {
+  meta: { title: string; intro?: string };
+  sections: LessonSection[];
+  loadedFromFile: boolean;
+  fileHtmlContent: string;
+}
+
+// 🎯 Изолированный компонент: не ререндерится при скролле и смене активных якорей
+const LessonBody = memo(function LessonBody({
+  loadedFromFile,
+  fileHtmlContent,
+  sections,
+}: {
+  loadedFromFile: boolean;
+  fileHtmlContent: string;
+  sections: LessonSection[];
+}) {
+  if (loadedFromFile) {
+    return <div id="legacy-file-content" dangerouslySetInnerHTML={{ __html: fileHtmlContent || '' }} />;
+  }
+
+  return (
+    <div className="seo-lecture">
+      {sections.map((sec, idx) => (
+        <div key={sec.id || sec.db_id || sec.section_id || idx} style={{ marginBottom: '28px' }}>
+          {sec.title && (
+            <h2
+              id={`section-${idx}`}
+              style={{
+                fontSize: '22px',
+                fontWeight: 700,
+                margin: '28px 0 14px 0',
+                textTransform: 'none',
+                borderBottom: 'none',
+              }}
+            >
+              {sec.title}
+            </h2>
+          )}
+          {sec.text && <div dangerouslySetInnerHTML={{ __html: sec.text }} />}
+        </div>
+      ))}
+    </div>
+  );
+});
+
 function EducationPortalContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -125,7 +172,6 @@ function EducationPortalContent() {
   const activeTab = searchParams.get('tab') || 'doc';
   const currentLesson = searchParams.get('lesson') || 'seo';
 
-  // 🎯 Получаем конфигурацию текущего урока прямо из SECTIONS_CONFIG
   const currentLessonConfig = useMemo(() => {
     const tabConfig = SECTIONS_CONFIG[activeTab];
     if (!tabConfig) return null;
@@ -160,11 +206,13 @@ function EducationPortalContent() {
   const [leftCollapsed, setLeftCollapsed] = useState<boolean>(false);
   const [rightCollapsed, setRightCollapsed] = useState<boolean>(false);
   
-  const [activeLightboxSrc, setActiveLightboxSrc] = useState<string | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState<boolean>(false);
-
   const [dbStatusView, setDbStatusView] = useState<'full' | 'simple'>('full');
   const [resetScrollOnNav, setResetScrollOnNav] = useState<boolean>(false);
+
+  // Кэш страниц для мгновенного перехода
+  const pageCache = useRef<Map<string, PageDataPayload>>(new Map());
+  const currentRequestId = useRef<number>(0);
 
   const pageScrollPositions = useRef<Record<string, number>>({});
   const sidebarLeftRef = useRef<HTMLDivElement>(null);
@@ -173,6 +221,7 @@ function EducationPortalContent() {
   
   const isScrollingToAnchor = useRef<boolean>(false);
   const scrollSpyTimeout = useRef<NodeJS.Timeout | null>(null);
+  const scrollRafId = useRef<number | null>(null);
 
   const [showScrollTop, setShowScrollTop] = useState<boolean>(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
@@ -183,9 +232,9 @@ function EducationPortalContent() {
     type: 'success',
   });
 
-  const showToast = (message: string, type: 'success' | 'info' | 'error' = 'success') => {
+  const showToast = useCallback((message: string, type: 'success' | 'info' | 'error' = 'success') => {
     setToast({ show: true, message, type });
-  };
+  }, []);
 
   useEffect(() => {
     if (!toast.show) return;
@@ -195,7 +244,7 @@ function EducationPortalContent() {
 
   useEffect(() => {
     fetch('/api/auth')
-      .then((res) => res.ok ? res.json() : null)
+      .then((res) => (res.ok ? res.json() : null))
       .then((data) => {
         if (data?.authenticated && data.user) setCurrentUser(data.user);
       })
@@ -219,11 +268,8 @@ function EducationPortalContent() {
 
   useEffect(() => {
     if (loading) return;
-    const targetPos = resetScrollOnNav ? 0 : (pageScrollPositions.current[currentLesson] || 0);
-    const rafId = requestAnimationFrame(() => {
-      setTimeout(() => window.scrollTo({ top: targetPos, behavior: 'instant' as ScrollBehavior }), 30);
-    });
-    return () => cancelAnimationFrame(rafId);
+    const targetPos = resetScrollOnNav ? 0 : pageScrollPositions.current[currentLesson] || 0;
+    window.scrollTo({ top: targetPos, behavior: 'instant' as ScrollBehavior });
   }, [currentLesson, loading, resetScrollOnNav]);
 
   const handleSelectLesson = (lessonKey: string, tabKey?: string) => {
@@ -261,6 +307,7 @@ function EducationPortalContent() {
   };
 
   const toggleRight = () => {
+    if (isNoRightSidebar) return;
     if (contentAreaRef.current) contentAreaRef.current.classList.add(styles.sidebarReRendering);
     const state = !rightCollapsed;
     setRightCollapsed(state);
@@ -269,28 +316,87 @@ function EducationPortalContent() {
     setTimeout(() => contentAreaRef.current?.classList.remove(styles.sidebarReRendering), 300);
   };
 
-  const fetchData = async () => {
-    setLoading(true);
+  // 🚀 Фоновая предзагрузка уроков в кэш браузера
+  const prefetchLesson = useCallback(async (lessonKey: string, tabKey: string = activeTab) => {
+    const cacheKey = `${tabKey}_${lessonKey}`;
+    if (pageCache.current.has(cacheKey)) return;
+
     try {
-      const res = await fetch(`/api/education?lesson=${currentLesson}&tab=${activeTab}`);
+      const res = await fetch(`/api/education?lesson=${lessonKey}&tab=${tabKey}`);
       const data = await res.json();
       if (res.ok && data.success) {
-        setLessonMeta(data.meta || { title: 'Новая страница', intro: 'Контент еще не заведен.' });
-        setSections(data.sections || []);
-        setLoadedFromFile(Boolean(data.loadedFromFile));
-        setFileHtmlContent(data.fileHtmlContent || '');
+        pageCache.current.set(cacheKey, {
+          meta: data.meta || { title: 'Новая страница', intro: 'Контент еще не заведен.' },
+          sections: data.sections || [],
+          loadedFromFile: Boolean(data.loadedFromFile),
+          fileHtmlContent: data.fileHtmlContent || '',
+        });
+      }
+    } catch (_) {}
+  }, [activeTab]);
+
+  const fetchData = useCallback(async (ignoreCache = false) => {
+    const cacheKey = `${activeTab}_${currentLesson}`;
+    
+    // 1. Если страница есть в кэше — мгновенный рендер без спиннера
+    if (!ignoreCache && pageCache.current.has(cacheKey)) {
+      const cached = pageCache.current.get(cacheKey)!;
+      setLessonMeta(cached.meta);
+      setSections(cached.sections);
+      setLoadedFromFile(cached.loadedFromFile);
+      setFileHtmlContent(cached.fileHtmlContent);
+      setIsEditMode(false);
+      setLoading(false);
+      return;
+    }
+
+    const requestId = ++currentRequestId.current;
+    setLoading(true);
+
+    try {
+      const res = await fetch(`/api/education?lesson=${currentLesson}&tab=${activeTab}`);
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const data = await res.json();
+
+      // Защита от гонки запросов при быстром переключении вкладок
+      if (requestId !== currentRequestId.current) {
+        return;
+      }
+
+      if (data.success) {
+        const payload: PageDataPayload = {
+          meta: data.meta || { title: 'Новая страница', intro: 'Контент еще не заведен.' },
+          sections: data.sections || [],
+          loadedFromFile: Boolean(data.loadedFromFile),
+          fileHtmlContent: data.fileHtmlContent || '',
+        };
+
+        pageCache.current.set(cacheKey, payload);
+
+        setLessonMeta(payload.meta);
+        setSections(payload.sections);
+        setLoadedFromFile(payload.loadedFromFile);
+        setFileHtmlContent(payload.fileHtmlContent);
         setIsEditMode(false);
       }
     } catch (e: any) {
-      console.error(e);
+      if (requestId === currentRequestId.current) {
+        console.error('Ошибка загрузки данных урока:', e);
+      }
     } finally {
-      setLoading(false);
+      if (requestId === currentRequestId.current) {
+        setLoading(false);
+      }
     }
-  };
+  }, [currentLesson, activeTab]);
 
   useEffect(() => {
     fetchData();
-  }, [currentLesson, activeTab]);
+  }, [fetchData]);
 
   const handleSavePage = async (isImport = false) => {
     setSaving(true);
@@ -308,9 +414,10 @@ function EducationPortalContent() {
       });
       const data = await res.json();
       if (data.success) {
+        pageCache.current.delete(`${activeTab}_${currentLesson}`);
         showToast(isImport ? 'Файл успешно импортирован в PostgreSQL!' : 'Изменения сохранены!', 'success');
         setIsEditMode(false);
-        fetchData();
+        fetchData(true);
       } else {
         showToast(`Ошибка сохранения: ${data.error}`, 'error');
       }
@@ -326,10 +433,11 @@ function EducationPortalContent() {
       const res = await fetch(`/api/education?lesson=${currentLesson}&tab=${activeTab}`, { method: 'DELETE' });
       const data = await res.json();
       if (data.success) {
+        pageCache.current.delete(`${activeTab}_${currentLesson}`);
         showToast('Страница удалена из БД! Загружена локальная версия.', 'info');
         setIsDeleteModalOpen(false);
         setIsEditMode(false);
-        fetchData();
+        fetchData(true);
       } else {
         showToast(`Ошибка удаления: ${data.error}`, 'error');
       }
@@ -338,115 +446,10 @@ function EducationPortalContent() {
     }
   };
 
-  // 🎯 Фикс работы аккордеонов и оглавления для загружаемых HTML-файлов
   useEffect(() => {
-    const container = contentAreaRef.current;
-    if (!container) return;
-
-    const handleAccordionClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      
-      // 1. Клик по заголовку карточки аккордеона
-      const header = target.closest('div[onclick*="toggleAccordion"]') as HTMLElement;
-      if (header && container.contains(header)) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const body = header.nextElementSibling as HTMLElement;
-        if (!body) return;
-
-        const arrow = header.querySelector('.acc-arrow') as SVGElement;
-        const badge = header.querySelector('.acc-badge') as HTMLElement;
-        const inner = body.querySelector('.spoiler-inner') as HTMLElement;
-
-        body.style.transitionDuration = '0.8s';
-        const isCurrentlyOpen = body.style.maxHeight && body.style.maxHeight !== '0px';
-
-        if (isCurrentlyOpen) {
-          body.style.overflow = 'hidden';
-          body.style.maxHeight = `${inner ? inner.scrollHeight : body.scrollHeight}px`;
-          void body.offsetHeight;
-          body.style.maxHeight = '0px';
-          body.style.opacity = '0';
-          if (arrow) arrow.style.transform = 'rotate(0deg)';
-          if (badge) {
-            badge.style.background = '#f1f5f9';
-            badge.style.color = '#64748b';
-          }
-        } else {
-          body.style.maxHeight = `${inner ? inner.scrollHeight : body.scrollHeight}px`;
-          body.style.opacity = '1';
-          if (arrow) arrow.style.transform = 'rotate(180deg)';
-          if (badge) {
-            badge.style.background = '#e0f2fe';
-            badge.style.color = '#0284c7';
-          }
-          setTimeout(() => {
-            if (body.style.maxHeight !== '0px') body.style.overflow = 'visible';
-          }, 800);
-        }
-        return;
-      }
-
-      // 2. Клик по ссылкам быстрого перехода (openAndHighlightFaq)
-      const faqLink = target.closest('a[onclick*="openAndHighlightFaq"]') as HTMLAnchorElement;
-      if (faqLink && container.contains(faqLink)) {
-        e.preventDefault();
-        e.stopPropagation();
-
-        const href = faqLink.getAttribute('href') || '';
-        const targetId = href.replace('#', '');
-        const card = document.getElementById(targetId);
-        if (!card) return;
-
-        const cardHeader = card.querySelector('div[onclick*="toggleAccordion"]') as HTMLElement;
-        const cardBody = cardHeader?.nextElementSibling as HTMLElement;
-
-        if (cardHeader && cardBody) {
-          const arrow = cardHeader.querySelector('.acc-arrow') as SVGElement;
-          const badge = cardHeader.querySelector('.acc-badge') as HTMLElement;
-          const inner = cardBody.querySelector('.spoiler-inner') as HTMLElement;
-
-          cardBody.style.transitionDuration = '0.8s';
-          cardBody.style.maxHeight = `${inner ? inner.scrollHeight : cardBody.scrollHeight}px`;
-          cardBody.style.opacity = '1';
-          if (arrow) arrow.style.transform = 'rotate(180deg)';
-          if (badge) {
-            badge.style.background = '#e0f2fe';
-            badge.style.color = '#0284c7';
-          }
-          setTimeout(() => {
-            if (cardBody.style.maxHeight !== '0px') cardBody.style.overflow = 'visible';
-          }, 800);
-        }
-
-        // Подсветка карточки
-        card.style.borderColor = '#38bdf8';
-        card.style.boxShadow = '0 0 0 3px rgba(56, 189, 248, 0.25)';
-
-        // Плавный скролл к вопросу
-        const headerOffset = 132;
-        const elementTop = card.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({
-          top: elementTop - headerOffset,
-          behavior: 'smooth',
-        });
-
-        setTimeout(() => {
-          card.style.borderColor = '#e2e8f0';
-          card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.02)';
-        }, 2000);
-      }
-    };
-
-    container.addEventListener('click', handleAccordionClick);
-    return () => container.removeEventListener('click', handleAccordionClick);
-  }, [currentLesson, fileHtmlContent, loadedFromFile]);
-
-  // 🎯 Единый оптимизированный парсинг оглавления
-  useEffect(() => {
-    if (loading || isEditMode || isSettingsOpen || isNoRightSidebar) {
+    if (isNoRightSidebar || loading || isEditMode || isSettingsOpen) {
       setAnchors([]);
+      setActiveAnchorId('');
       return;
     }
 
@@ -459,75 +462,178 @@ function EducationPortalContent() {
         (h) => !h.classList.contains(styles.eduTitle)
       );
 
-      const list = headings.map((heading, idx) => {
-        const text = heading.textContent?.trim() || '';
-        const anchorId = heading.getAttribute('id') || `nav-heading-${idx}`;
-        heading.setAttribute('id', anchorId);
-        return {
-          id: anchorId,
-          title: text,
-          isSub: heading.tagName.toLowerCase() === 'h3',
-          index: idx,
-        };
-      }).filter((item) => item.title !== '');
+      const list = headings
+        .map((heading, idx) => {
+          const text = heading.textContent?.trim() || '';
+          const anchorId = heading.getAttribute('id') || `nav-heading-${idx}`;
+          if (!heading.getAttribute('id')) {
+            heading.setAttribute('id', anchorId);
+          }
+          return {
+            id: anchorId,
+            title: text,
+            isSub: heading.tagName.toLowerCase() === 'h3',
+            index: idx,
+          };
+        })
+        .filter((item) => item.title !== '');
 
       setAnchors(list);
-      if (list.length > 0 && !activeAnchorId) {
-        setActiveAnchorId(list[0].id);
+      if (list.length > 0) {
+        setActiveAnchorId((prev) => (prev ? prev : list[0].id));
       }
-    }, 100);
+    }, 20);
 
     return () => clearTimeout(timer);
   }, [loading, loadedFromFile, fileHtmlContent, sections, isEditMode, currentLesson, isSettingsOpen, isNoRightSidebar]);
 
-  // 🎯 Единый оптимизированный слушатель Scroll
   useEffect(() => {
-    const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setShowScrollTop(scrollY > 300);
-      
-      if (!resetScrollOnNav && currentLesson && !loading) {
-        pageScrollPositions.current[currentLesson] = Math.max(0, scrollY);
-      }
+    const handleAccordionToggle = function (header: HTMLElement, forceOpen?: boolean) {
+      if (!header) return;
 
-      if (anchors.length === 0 || isSettingsOpen || isNoRightSidebar || isScrollingToAnchor.current) return;
+      const accordion = header.closest('.v33-accordion') || header.parentElement;
+      if (!accordion) return;
 
-      const container = contentAreaRef.current;
-      if (!container) return;
+      const body = (accordion.querySelector('.v33-content-wrapper') || header.nextElementSibling) as HTMLElement | null;
+      if (!body) return;
 
-      const headingSelector = currentLesson === 'motivation' ? 'h2' : 'h2, h3';
-      const DOMHeadings = Array.from(container.querySelectorAll(headingSelector));
-      if (DOMHeadings.length === 0) return;
+      const arrow = accordion.querySelector('.v33-arrow, .acc-arrow') as HTMLElement | SVGElement | null;
+      const badge = accordion.querySelector('.acc-badge') as HTMLElement | null;
 
-      const windowHeight = window.innerHeight;
-      const scrollPosition = scrollY + windowHeight;
-      const totalHeight = document.documentElement.scrollHeight;
+      const isOpen = accordion.classList.contains('open') || body.classList.contains('is-open');
 
-      if (totalHeight - scrollPosition <= 20) {
-        setActiveAnchorId(anchors[anchors.length - 1].id);
-        return;
-      }
+      if (isOpen && !forceOpen) {
+        accordion.classList.remove('open');
+        body.classList.remove('is-open');
+        body.style.maxHeight = `${body.scrollHeight}px`;
+        void body.offsetHeight;
+        body.style.maxHeight = '0px';
+        body.style.opacity = '0';
 
-      let bestIndex = 0;
-      for (let i = 0; i < DOMHeadings.length; i++) {
-        const rect = DOMHeadings[i].getBoundingClientRect();
-        if (rect.top <= 170) {
-          bestIndex = i;
-        } else {
-          break;
+        if (arrow) arrow.style.transform = 'rotate(0deg)';
+        if (badge) {
+          badge.style.background = '#f1f5f9';
+          badge.style.color = '#64748b';
         }
-      }
+      } else {
+        accordion.classList.add('open');
+        body.classList.add('is-open');
+        body.style.maxHeight = `${body.scrollHeight}px`;      
+        body.style.opacity = '1';
 
-      if (anchors[bestIndex]) {
-        setActiveAnchorId((prev) => (prev !== anchors[bestIndex].id ? anchors[bestIndex].id : prev));
+        if (arrow) arrow.style.transform = 'rotate(180deg)';
+        if (badge) {
+          badge.style.background = '#e0f2fe';
+          badge.style.color = '#0284c7';
+        }
+
+        setTimeout(() => {
+          if (accordion.classList.contains('open')) {
+            body.style.maxHeight = 'none';
+          }
+        }, 1100);
       }
     };
 
+    (window as any).toggleSmoothAccordion = handleAccordionToggle;
+    (window as any).toggleAccordion = handleAccordionToggle;
+
+    (window as any).openAndHighlightFaq = function (id: string) {
+      const card = document.getElementById(id);
+      if (!card) return;
+
+      const header = (card.querySelector('.v33-summary, div[onclick]') || card.firstElementChild) as HTMLElement | null;
+      if (header && (window as any).toggleSmoothAccordion) {
+        (window as any).toggleSmoothAccordion(header, true);
+      }
+
+      card.style.borderColor = '#38bdf8';
+      card.style.boxShadow = '0 0 0 3px rgba(56, 189, 248, 0.25)';
+
+      const headerOffset = 132;
+      const elementTop = card.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: elementTop - headerOffset,
+        behavior: 'smooth',
+      });
+
+      setTimeout(() => {
+        card.style.borderColor = '#e2e8f0';
+        card.style.boxShadow = '0 1px 3px rgba(0, 0, 0, 0.02)';
+      }, 2000);
+    };
+
+    return () => {
+      delete (window as any).toggleSmoothAccordion;
+      delete (window as any).toggleAccordion;
+      delete (window as any).openAndHighlightFaq;
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (scrollRafId.current !== null) return;
+
+      scrollRafId.current = requestAnimationFrame(() => {
+        scrollRafId.current = null;
+        const scrollY = window.scrollY;
+
+        setShowScrollTop((prev) => {
+          const shouldShow = scrollY > 300;
+          return prev !== shouldShow ? shouldShow : prev;
+        });
+
+        if (!resetScrollOnNav && currentLesson && !loading) {
+          pageScrollPositions.current[currentLesson] = Math.max(0, scrollY);
+        }
+
+        if (isNoRightSidebar || anchors.length === 0 || isSettingsOpen || isScrollingToAnchor.current) {
+          return;
+        }
+
+        const container = contentAreaRef.current;
+        if (!container) return;
+
+        const headingSelector = currentLesson === 'motivation' ? 'h2' : 'h2, h3';
+        const DOMHeadings = container.querySelectorAll(headingSelector);
+        if (DOMHeadings.length === 0) return;
+
+        const windowHeight = window.innerHeight;
+        const scrollPosition = scrollY + windowHeight;
+        const totalHeight = document.documentElement.scrollHeight;
+
+        if (totalHeight - scrollPosition <= 20) {
+          setActiveAnchorId(anchors[anchors.length - 1].id);
+          return;
+        }
+
+        let bestIndex = 0;
+        for (let i = 0; i < DOMHeadings.length; i++) {
+          const rect = DOMHeadings[i].getBoundingClientRect();
+          if (rect.top <= 170) {
+            bestIndex = i;
+          } else {
+            break;
+          }
+        }
+
+        if (anchors[bestIndex]) {
+          setActiveAnchorId((prev) => (prev !== anchors[bestIndex].id ? anchors[bestIndex].id : prev));
+        }
+      });
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (scrollRafId.current !== null) {
+        cancelAnimationFrame(scrollRafId.current);
+      }
+    };
   }, [anchors, isSettingsOpen, currentLesson, isNoRightSidebar, resetScrollOnNav, loading]);
 
   const scrollToAnchor = (id: string, index: number) => {
+    if (isNoRightSidebar) return;
     const container = contentAreaRef.current;
     const headingSelector = currentLesson === 'motivation' ? 'h2' : 'h2, h3';
     const target = document.getElementById(id) || container?.querySelectorAll(headingSelector)[index];
@@ -571,10 +677,12 @@ function EducationPortalContent() {
   const containerClasses = [
     styles.educationPortalContainer,
     leftCollapsed ? styles.leftCollapsed : '',
-    (!isNoRightSidebar && rightCollapsed) ? styles.rightCollapsed : '',
+    !isNoRightSidebar && rightCollapsed ? styles.rightCollapsed : '',
     isNoRightSidebar ? styles.noRightSidebar : '',
     isSettingsOpen ? styles.settingsOpen : '',
-  ].filter(Boolean).join(' ');
+  ]
+    .filter(Boolean)
+    .join(' ');
 
   return (
     <div className={containerClasses}>
@@ -585,7 +693,9 @@ function EducationPortalContent() {
         userRole={currentUser?.role || 'manager'}
         isEditMode={isEditMode}
         isEditDisabled={loadedFromFile}
-        onToggleEditMode={() => loadedFromFile ? showToast('Сначала импортируйте страницу в БД', 'info') : setIsEditMode((p) => !p)}
+        onToggleEditMode={() =>
+          loadedFromFile ? showToast('Сначала импортируйте страницу в БД', 'info') : setIsEditMode((p) => !p)
+        }
         onOpenSettings={() => setIsSettingsOpen(true)}
         isLeftCollapsed={leftCollapsed}
       />
@@ -594,21 +704,26 @@ function EducationPortalContent() {
         <div className={styles.navSidebarWrapper}>
           <nav className={styles.navSidebar} id="sidebarLeft" ref={sidebarLeftRef}>
             <div className={styles.tabSwitcher}>
-              {Object.entries(SECTIONS_CONFIG).map(([tabId, tabData]) => (
-                <button
-                  key={tabId}
-                  title={tabData.title}
-                  onClick={() => {
-                    const firstGroup = Object.values(tabData.groups)[0];
-                    const firstLessonKey = Object.keys(firstGroup.lessons)[0];
-                    handleSelectLesson(firstLessonKey, tabId);
-                  }}
-                  className={`${styles.tabSwitchBtn} ${activeTab === tabId && !isSettingsOpen ? styles.active : ''}`}
-                >
-                  <i className={`bi ${tabId === 'doc' ? 'bi-journal-text' : tabId === 'practice' ? 'bi-briefcase' : 'bi-grid-1x2'} ${styles.tabBtnIcon}`}></i>
-                  <span className={styles.tabBtnText}>{tabData.title}</span>
-                </button>
-              ))}
+              {Object.entries(SECTIONS_CONFIG).map(([tabId, tabData]) => {
+                const firstGroup = Object.values(tabData.groups)[0];
+                const firstLessonKey = Object.keys(firstGroup.lessons)[0];
+                return (
+                  <button
+                    key={tabId}
+                    title={tabData.title}
+                    onClick={() => handleSelectLesson(firstLessonKey, tabId)}
+                    onMouseEnter={() => prefetchLesson(firstLessonKey, tabId)}
+                    className={`${styles.tabSwitchBtn} ${activeTab === tabId && !isSettingsOpen ? styles.active : ''}`}
+                  >
+                    <i
+                      className={`bi ${
+                        tabId === 'doc' ? 'bi-journal-text' : tabId === 'practice' ? 'bi-briefcase' : 'bi-grid-1x2'
+                      } ${styles.tabBtnIcon}`}
+                    ></i>
+                    <span className={styles.tabBtnText}>{tabData.title}</span>
+                  </button>
+                );
+              })}
             </div>
 
             {Object.entries(currentTabConfig.groups).map(([groupKey, group]) => (
@@ -617,32 +732,37 @@ function EducationPortalContent() {
                 <ul className={styles.navList}>
                   {Object.entries(group.lessons).map(([lessonKey, lesson]) => (
                     <li key={lessonKey} className={styles.navItem}>
-                    <button
-                      onClick={() => handleSelectLesson(lessonKey)}
-                      className={`${styles.navLink} ${currentLesson === lessonKey && !isSettingsOpen ? styles.active : ''} ${lesson.badge === 'В разработке' ? styles.devItem : ''}`}
-                      data-tooltip={lesson.title}
-                    >
-                      <i className={`bi bi-${lesson.icon} ${styles.navIconFa}`}></i>
-                      <span className={styles.navItemText}>{lesson.title}</span>
-                      {lesson.badge && (
-                        <div 
-                          className={lesson.badge !== 'В разработке' ? styles.newUpdateWrapper : styles.devIconWrapper}
-                          data-update-tooltip={lesson.badge !== 'В разработке' ? `Обновлено: ${lesson.badge}` : 'Раздел в разработке'}
-                        >
-                          <i className={`bi ${lesson.badge !== 'В разработке' ? 'bi-stars' : 'bi-tools'}`}></i>
-                        </div>
-                      )}
-                    </button>
-                  </li>
+                      <button
+                        onClick={() => handleSelectLesson(lessonKey)}
+                        onMouseEnter={() => prefetchLesson(lessonKey, activeTab)}
+                        className={`${styles.navLink} ${
+                          currentLesson === lessonKey && !isSettingsOpen ? styles.active : ''
+                        } ${lesson.badge === 'В разработке' ? styles.devItem : ''}`}
+                        data-tooltip={lesson.title}
+                      >
+                        <i className={`bi bi-${lesson.icon} ${styles.navIconFa}`}></i>
+                        <span className={styles.navItemText}>{lesson.title}</span>
+                        {lesson.badge && (
+                          <div
+                            className={lesson.badge !== 'В разработке' ? styles.newUpdateWrapper : styles.devIconWrapper}
+                            data-update-tooltip={
+                              lesson.badge !== 'В разработке' ? `Обновлено: ${lesson.badge}` : 'Раздел в разработке'
+                            }
+                          >
+                            <i className={`bi ${lesson.badge !== 'В разработке' ? 'bi-stars' : 'bi-tools'}`}></i>
+                          </div>
+                        )}
+                      </button>
+                    </li>
                   ))}
                 </ul>
               </React.Fragment>
             ))}
           </nav>
 
-          <button 
+          <button
             className={styles.sidebarBottomToggleBtn}
-            onClick={toggleLeft} 
+            onClick={toggleLeft}
             title={leftCollapsed ? 'Развернуть меню' : 'Свернуть меню'}
           >
             <i className={`bi ${leftCollapsed ? 'bi-chevron-right' : 'bi-chevron-left'}`}></i>
@@ -650,10 +770,7 @@ function EducationPortalContent() {
         </div>
 
         <main className={styles.contentContainer}>
-          <div 
-            ref={contentAreaRef} 
-            className={`${styles.contentInner} ${loading ? styles.contentLoadingState : ''}`}
-          >
+          <div ref={contentAreaRef} className={styles.contentInner}>
             {/* ЭКРАН НАСТРОЕК */}
             <div className={`${styles.settingsModalScreen} ${isSettingsOpen ? styles.active : ''}`}>
               <div className={styles.settingsHeaderRow}>
@@ -718,174 +835,197 @@ function EducationPortalContent() {
 
             {!isSettingsOpen && (
               <>
-                {currentUser?.role === 'admin' && dbStatusView === 'full' && (
-                  <div className={styles.dbStatusBanner}>
-                    <div className={styles.dbStatusTextGroup}>
-                      <i className={`bi ${loadedFromFile ? 'bi-file-earmark-code' : 'bi-database-check'}`}></i>
-                      <span>{loadedFromFile ? `Страница загружена из локального файла (${currentLesson}.html).` : 'Страница загружена из PostgreSQL'}</span>
-                    </div>
-                    <button
-                      onClick={() => loadedFromFile ? handleSavePage(true) : setIsDeleteModalOpen(true)}
-                      className={loadedFromFile ? styles.dbSaveBtn : styles.dbDeleteBtn}
-                      disabled={saving}
-                    >
-                      <i className={`bi ${loadedFromFile ? 'bi-database-add' : 'bi-trash'}`}></i>
-                      {loadedFromFile ? (saving ? 'Загрузка...' : 'Загрузить в БД') : 'Удалить из БД'}
-                    </button>
+                {loading ? (
+                  <div className={styles.spinnerWrapper}>
+                    <div className={styles.spinnerCircle} />
+                    <span className={styles.spinnerText}>Загрузка страницы...</span>
                   </div>
-                )}
-
-                <div className={styles.eduHeader}>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <div className={styles.eduBreadcrumb}>{SECTIONS_CONFIG[activeTab]?.title || 'Обучение'}</div>
-                    {currentUser?.role === 'admin' && dbStatusView === 'simple' && (
-                      <button
-                        onClick={() => loadedFromFile ? handleSavePage(true) : setIsDeleteModalOpen(true)}
-                        className={loadedFromFile ? styles.dbBadgeDraft : styles.dbBadgeDb}
-                        disabled={saving}
-                      >
-                        <i className={`bi ${loadedFromFile ? 'bi-exclamation-circle-fill' : 'bi-check-circle-fill'}`}></i>
-                        <span>{loadedFromFile ? 'Черновик' : 'В БД'}</span>
-                      </button>
-                    )}
-                  </div>
-
-                  <div className={styles.eduHeaderMain}>
-                    {isEditMode ? (
-                      <div style={{ marginBottom: '20px', width: '100%' }}>
-                        <input
-                          type="text"
-                          value={lessonMeta.title}
-                          onChange={(e) => setLessonMeta({ ...lessonMeta, title: e.target.value })}
-                          style={{ fontSize: '20px', fontWeight: 700, margin: '6px 0 12px 0', width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
-                        />
-                        <textarea
-                          value={lessonMeta.intro || ''}
-                          onChange={(e) => setLessonMeta({ ...lessonMeta, intro: e.target.value })}
-                          style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
-                          rows={2}
-                        />
-                      </div>
-                    ) : (
-                      <>
-                        <h1 className={styles.eduTitle}>{currentLessonConfig?.title || lessonMeta.title}</h1>
-                        {lessonMeta.intro && <p className={styles.eduIntro}>{lessonMeta.intro}</p>}
-                      </>
-                    )}
-                  </div>
-                </div>
-
-                {loadedFromFile ? (
-                  <div id="legacy-file-content" dangerouslySetInnerHTML={{ __html: fileHtmlContent || '' }} />
                 ) : (
-                  <div className="seo-lecture">
-                    {sections.map((sec, idx) => (
-                      <div key={idx} style={{ marginBottom: '28px' }}>
-                        {sec.title && (
-                          <h2 id={`section-${idx}`} style={{ fontSize: '22px', fontWeight: 700, margin: '28px 0 14px 0', textTransform: 'none', borderBottom: 'none' }}>
-                            {sec.title}
-                          </h2>
-                        )}
-                        {sec.text && <div dangerouslySetInnerHTML={{ __html: sec.text }} />}
+                  <div className={styles.fadeInLoaded}>
+                    {currentUser?.role === 'admin' && dbStatusView === 'full' && (
+                      <div className={styles.dbStatusBanner}>
+                        <div className={styles.dbStatusTextGroup}>
+                          <i className={`bi ${loadedFromFile ? 'bi-file-earmark-code' : 'bi-database-check'}`}></i>
+                          <span>
+                            {loadedFromFile
+                              ? `Страница загружена из локального файла (${currentLesson}.html).`
+                              : 'Страница загружена из PostgreSQL'}
+                          </span>
+                        </div>
+                        <button
+                          onClick={() => (loadedFromFile ? handleSavePage(true) : setIsDeleteModalOpen(true))}
+                          className={loadedFromFile ? styles.dbSaveBtn : styles.dbDeleteBtn}
+                          disabled={saving}
+                        >
+                          <i className={`bi ${loadedFromFile ? 'bi-database-add' : 'bi-trash'}`}></i>
+                          {loadedFromFile ? (saving ? 'Загрузка...' : 'Загрузить в БД') : 'Удалить из БД'}
+                        </button>
                       </div>
-                    ))}
+                    )}
+
+                    <div className={styles.eduHeader}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                        <div className={styles.eduBreadcrumb}>{SECTIONS_CONFIG[activeTab]?.title || 'Обучение'}</div>
+                        {currentUser?.role === 'admin' && dbStatusView === 'simple' && (
+                          <button
+                            onClick={() => (loadedFromFile ? handleSavePage(true) : setIsDeleteModalOpen(true))}
+                            className={loadedFromFile ? styles.dbBadgeDraft : styles.dbBadgeDb}
+                            disabled={saving}
+                          >
+                            <i className={`bi ${loadedFromFile ? 'bi-exclamation-circle-fill' : 'bi-check-circle-fill'}`}></i>
+                            <span>{loadedFromFile ? 'Черновик' : 'В БД'}</span>
+                          </button>
+                        )}
+                      </div>
+
+                      <div className={styles.eduHeaderMain}>
+                        {isEditMode ? (
+                          <div style={{ marginBottom: '20px', width: '100%' }}>
+                            <input
+                              type="text"
+                              value={lessonMeta.title}
+                              onChange={(e) => setLessonMeta({ ...lessonMeta, title: e.target.value })}
+                              style={{
+                                fontSize: '20px',
+                                fontWeight: 700,
+                                margin: '6px 0 12px 0',
+                                width: '100%',
+                                padding: '8px 12px',
+                                borderRadius: '8px',
+                                border: '1px solid #cbd5e1',
+                              }}
+                            />
+                            <textarea
+                              value={lessonMeta.intro || ''}
+                              onChange={(e) => setLessonMeta({ ...lessonMeta, intro: e.target.value })}
+                              style={{ width: '100%', padding: '8px 12px', borderRadius: '8px', border: '1px solid #cbd5e1' }}
+                              rows={2}
+                            />
+                          </div>
+                        ) : (
+                          <>
+                            <h1 className={styles.eduTitle}>{currentLessonConfig?.title || lessonMeta.title}</h1>
+                            {lessonMeta.intro && <p className={styles.eduIntro}>{lessonMeta.intro}</p>}
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Рендер тела урока */}
+                    <LessonBody
+                      loadedFromFile={loadedFromFile}
+                      fileHtmlContent={fileHtmlContent}
+                      sections={sections}
+                    />
+
+                    {/* Навигация вперед/назад */}
+                    <div className={styles.eduNextPrevPanel}>
+                      <div className={styles.enppContainer}>
+                        {prevLesson ? (
+                          <button 
+                            className={`${styles.enppBtn} ${styles.enppBtnPrev}`} 
+                            onClick={() => handleSelectLesson(prevLesson.key)}
+                            onMouseEnter={() => prefetchLesson(prevLesson.key, activeTab)}
+                          >
+                            <i className="bi bi-arrow-left"></i>
+                            <div className={styles.enppBtnText}>
+                              <span>Предыдущая страница</span>
+                              <div className={styles.enppBtnTitle}>{prevLesson.title}</div>
+                            </div>
+                          </button>
+                        ) : (
+                          <div style={{ flex: 1 }} />
+                        )}
+
+                        {nextLesson ? (
+                          <button 
+                            className={`${styles.enppBtn} ${styles.enppBtnNext}`} 
+                            onClick={() => handleSelectLesson(nextLesson.key)}
+                            onMouseEnter={() => prefetchLesson(nextLesson.key, activeTab)}
+                          >
+                            <div className={styles.enppBtnText}>
+                              <span>Следующая страница</span>
+                              <div className={styles.enppBtnTitle}>{nextLesson.title}</div>
+                            </div>
+                            <i className="bi bi-arrow-right"></i>
+                          </button>
+                        ) : (
+                          <div style={{ flex: 1 }} />
+                        )}
+                      </div>
+                    </div>
                   </div>
                 )}
               </>
             )}
           </div>
-
-<div className={styles.eduNextPrevPanel}>
-                  <div className={styles.enppContainer}>
-                    {prevLesson ? (
-                      <button className={`${styles.enppBtn} ${styles.enppBtnPrev}`} onClick={() => handleSelectLesson(prevLesson.key)}>
-                        <i className="bi bi-arrow-left"></i>
-                        <div className={styles.enppBtnText}>
-                          <span>Предыдущая страница</span>
-                          <div className={styles.enppBtnTitle}>{prevLesson.title}</div>
-                        </div>
-                      </button>
-                    ) : (
-                      <div style={{ flex: 1 }} />
-                    )}
-
-                    {nextLesson ? (
-                      <button className={`${styles.enppBtn} ${styles.enppBtnNext}`} onClick={() => handleSelectLesson(nextLesson.key)}>
-                        <div className={styles.enppBtnText}>
-                          <span>Следующая страница</span>
-                          <div className={styles.enppBtnTitle}>{nextLesson.title}</div>
-                        </div>
-                        <i className="bi bi-arrow-right"></i>
-                      </button>
-                    ) : (
-                      <div style={{ flex: 1 }} />
-                    )}
-                  </div>
-                </div>
-
         </main>
 
-        {!isNoRightSidebar && !isSettingsOpen && (
-          <div className={styles.rightSidebarWrapper}>
-            <aside className={styles.rightSidebar} id="sidebarRight" ref={sidebarRightRef}>
-              <div className={styles.rightSidebarTitle}>
-                <div className={styles.rstText}>
-                  <i className="bi bi-list-nested"></i>
-                  <span>На этой странице:</span>
-                </div>
-                <button 
-                  className={styles.inlineToggleBtnRight}
-                  onClick={toggleRight} 
-                  title={rightCollapsed ? 'Развернуть меню' : 'Свернуть меню'}
-                >
-                  <i className={`bi ${rightCollapsed ? 'bi-chevron-left' : 'bi-chevron-right'}`}></i>
-                </button>
-              </div>
+        {!isNoRightSidebar && !isSettingsOpen && !loading && (
+  <div className={styles.rightSidebarWrapper}>
+    <button
+      className={styles.sidebarRightToggleBtn}
+      onClick={toggleRight}
+      title={rightCollapsed ? 'Развернуть меню' : 'Свернуть меню'}
+    >
+      <i className={`bi ${rightCollapsed ? 'bi-chevron-left' : 'bi-chevron-right'}`}></i>
+    </button>
 
-              <ul className={styles.anchorList}>
-                {anchors.length > 0 && (
-                  anchors.map((item, index) => (
-                    <li key={`${item.id}-${index}`} className={styles.anchorItem}>
-                      <a
-                        href={`#${item.id}`}
-                        className={`${styles.anchorLink} ${item.isSub ? styles.levelH3 : styles.levelH2} ${activeAnchorId === item.id ? styles.active : ''}`}
-                        data-depth={item.isSub ? '3' : '2'}
-                        data-tooltip={item.title}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          scrollToAnchor(item.id, index);
-                        }}
-                      >
-                        <span className={styles.anchorText}>{item.title}</span>
-                      </a>
-                    </li>
-                  ))
-                )}
-              </ul>
-            </aside>
-          </div>
-        )}
+    <aside className={styles.rightSidebar} id="sidebarRight" ref={sidebarRightRef}>
+      <div className={styles.rightSidebarTitle}>
+        <div className={styles.rstText}>
+          <i className="bi bi-list-nested"></i>
+          <span>На этой странице:</span>
+        </div>
       </div>
 
-      <button
-        className={`${styles.scrollToTopBtn} ${showScrollTop ? styles.show : ''}`}
-        onClick={scrollToTop}
-        title="Пролистать наверх"
-      >
+      <ul className={styles.anchorList}>
+        {anchors.length > 0 &&
+          anchors.map((item, index) => (
+            <li key={`${item.id}-${index}`} className={styles.anchorItem}>
+              <a
+                href={`#${item.id}`}
+                className={`${styles.anchorLink} ${item.isSub ? styles.levelH3 : styles.levelH2} ${
+                  activeAnchorId === item.id ? styles.active : ''
+                }`}
+                data-depth={item.isSub ? '3' : '2'}
+                data-tooltip={item.title}
+                onClick={(e) => {
+                  e.preventDefault();
+                  scrollToAnchor(item.id, index);
+                }}
+              >
+                <span className={styles.anchorText}>{item.title}</span>
+              </a>
+            </li>
+          ))}
+      </ul>
+    </aside>
+  </div>
+)}
+      </div>
+
+      <button className={`${styles.scrollToTopBtn} ${showScrollTop ? styles.show : ''}`} onClick={scrollToTop} title="Пролистать наверх">
         <i className="bi bi-arrow-up-short"></i>
       </button>
 
       {isDeleteModalOpen && (
         <div className={styles.customModalBackdrop}>
           <div className={styles.customModalCard}>
-            <div className={styles.cmIconDanger}><i className="bi bi-exclamation-triangle"></i></div>
+            <div className={styles.cmIconDanger}>
+              <i className="bi bi-exclamation-triangle"></i>
+            </div>
             <div className={styles.cmTitle}>Удалить страницу?</div>
             <div className={styles.cmDescription}>
               Вы уверены, что хотите удалить страницу <b>"{lessonMeta.title}"</b> из базы данных?
             </div>
             <div className={styles.cmActions}>
-              <button className={`${styles.cmBtn} ${styles.cmBtnCancel}`} onClick={() => setIsDeleteModalOpen(false)}>Отмена</button>
-              <button className={`${styles.cmBtn} ${styles.cmBtnDanger}`} onClick={handleDeletePage}>Да, удалить</button>
+              <button className={`${styles.cmBtn} ${styles.cmBtnCancel}`} onClick={() => setIsDeleteModalOpen(false)}>
+                Отмена
+              </button>
+              <button className={`${styles.cmBtn} ${styles.cmBtnDanger}`} onClick={handleDeletePage}>
+                Да, удалить
+              </button>
             </div>
           </div>
         </div>
