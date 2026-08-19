@@ -1306,13 +1306,13 @@ export default function LinksPage() {
                                         Отмена
                                     </button>
                                     <button
-                                        type="submit"
-                                        disabled={isSavingLink}
-                                        className="px-8 py-3.5 rounded-2xl bg-stone-850 hover:bg-stone-800 text-white font-extrabold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer"
-                                    >
-                                        {isSavingLink ? 'Сохранение...' : 'Сохранить'}
-                                    </button>
-                                </div>
+                                    type="submit"
+                                    disabled={isSavingLink}
+                                    className="px-8 py-3.5 rounded-2xl bg-stone-900 hover:bg-stone-800 text-white font-extrabold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer"
+                                >
+                                    {isSavingLink ? 'Сохранение...' : 'Сохранить'}
+                                </button>
+                                                                </div>
                             </form>
                         </motion.div>
                     </div>
