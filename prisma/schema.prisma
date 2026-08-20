@@ -145,6 +145,7 @@ model SearchIndex {
 model QuickCategory {
   id        Int      @id @default(autoincrement())
   name      String   @unique @db.VarChar(255)
+  icon      String?  @default("Folder") @db.VarChar(255)
   position  Int      @default(0)
   createdAt DateTime @default(now()) @map("created_at")
 

@@ -257,10 +257,13 @@ function EducationPortalContent() {
       const currentTabParam = searchParams.get('tab');
       const currentLessonParam = searchParams.get('lesson');
 
-      if (currentTabParam !== 'doc' || currentLessonParam !== 'welcome') {
+      if (!currentTabParam || !currentLessonParam) {
         localStorage.setItem('uw_active_tab', 'doc');
         localStorage.setItem('uw_active_lesson', 'welcome');
         router.replace('?tab=doc&lesson=welcome', { scroll: false });
+      } else {
+        localStorage.setItem('uw_active_tab', currentTabParam);
+        localStorage.setItem('uw_active_lesson', currentLessonParam);
       }
     }
 

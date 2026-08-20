@@ -47,6 +47,7 @@ interface LinkItem {
 interface CategoryItem {
     id: string;
     name: string;
+    icon?: string;
     position?: number;
 }
 
@@ -167,6 +168,15 @@ function renderIconVisual(iconValue?: string) {
     );
 }
 
+function renderCategoryIcon(iconValue?: string) {
+    const MatchedIcon = iconValue && (Icons as any)[iconValue] ? (Icons as any)[iconValue] : Icons.Folder;
+    return (
+        <div className="w-8 h-8 rounded-xl bg-stone-100/90 border border-stone-200/80 shadow-xs flex items-center justify-center shrink-0">
+            <MatchedIcon className="w-4 h-4 text-stone-700" />
+        </div>
+    );
+}
+
 function SortableLinkItem({
     link,
     onEdit,
@@ -204,21 +214,19 @@ function SortableLinkItem({
         >
             <div className={`luxury-tile ${link.is_hidden ? 'opacity-40 grayscale' : ''}`}>
                 <div className="flex items-center gap-4">
-    {renderIconVisual(link.custom_favicon)}
-    <div className="overflow-hidden flex-1 pr-6">
-        <div className="font-extrabold text-[15px] text-slate-900 tracking-tight truncate group-hover:text-slate-700 transition-colors flex items-center justify-between">
-            <span className="truncate">{link.title || 'Без названия'}</span>
-            <Icons.ArrowUpRight className="w-4 h-4 text-slate-400 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0 ml-2" />
-        </div>
-        {!link.hide_url && (
-            <div className="mt-1">
-                <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-slate-100 text-[10px] font-bold text-slate-500 tracking-tight">
-                    {link.url ? link.url.replace(/^https?:\/\/(www\.)?/, '') : 'Без URL'}
-                </span>
-            </div>
-        )}
-    </div>
-</div>
+                    {renderIconVisual(link.custom_favicon)}
+                    <div className="overflow-hidden flex-1 pr-14">
+                        <div className="font-extrabold text-[15px] text-stone-900 tracking-tight truncate">
+                            {link.title || 'Без названия'}
+                        </div>
+                        {!link.hide_url && (
+                            <div className="text-[11px] font-semibold text-stone-400 truncate mt-0.5 tracking-tight flex items-center gap-1">
+                                {link.open_in_new_tab && <Icons.ExternalLink className="w-3 h-3 text-stone-400 shrink-0" />}
+                                <span>{link.url ? link.url.replace(/^https?:\/\/(www\.)?/, '') : 'Без URL'}</span>
+                            </div>
+                        )}
+                    </div>
+                </div>
             </div>
 
             <div className="absolute top-4 right-4 z-50 flex items-center gap-1.5 pointer-events-auto">
@@ -249,6 +257,7 @@ function SortableCategoryContainer({
     setNewCategoryName,
     setEditingCategoryName,
     onRenameCategory,
+    onOpenCategoryIconModal,
     onDeleteCategoryClick,
     onAddLinkClick,
     onEditLink,
@@ -261,6 +270,7 @@ function SortableCategoryContainer({
     setNewCategoryName: (val: string) => void;
     setEditingCategoryName: (val: string | null) => void;
     onRenameCategory: (oldName: string, newName: string) => void;
+    onOpenCategoryIconModal: (category: CategoryItem) => void;
     onDeleteCategoryClick: (name: string) => void;
     onAddLinkClick: (categoryName: string) => void;
     onEditLink: (link: LinkItem) => void;
@@ -305,7 +315,14 @@ function SortableCategoryContainer({
                         <Icons.GripVertical className="w-4 h-4" />
                     </div>
 
-                    <div className="w-2 h-2 rounded-full bg-amber-600/70" />
+                    <button
+                        type="button"
+                        onClick={() => onOpenCategoryIconModal(category)}
+                        title="Изменить иконку раздела"
+                        className="cursor-pointer hover:scale-105 transition-transform"
+                    >
+                        {renderCategoryIcon(category.icon)}
+                    </button>
 
                     {editingCategoryName === category.name ? (
                         <div className="flex items-center gap-2">
@@ -375,7 +392,7 @@ function SortableCategoryContainer({
 
                         <div
                             onClick={() => onAddLinkClick(category.name)}
-                            className="min-h-[88px] rounded-[26px] border-2 border-dashed border-stone-300/80 hover:border-stone-400 bg-stone-50/60 hover:bg-white flex flex-col items-center justify-center gap-1 text-stone-600 hover:text-stone-900 font-extrabold text-xs transition-all cursor-pointer select-none"
+                            className="min-h-[88px] rounded-[24px] border-2 border-dashed border-stone-300/80 hover:border-stone-400 bg-stone-50/60 hover:bg-white flex flex-col items-center justify-center gap-1 text-stone-600 hover:text-stone-900 font-extrabold text-xs transition-all cursor-pointer select-none"
                         >
                             <Icons.Plus className="w-5 h-5" />
                             <span>Добавить плитку</span>
@@ -408,8 +425,15 @@ export default function LinksPage() {
     const [editingCategoryName, setEditingCategoryName] = useState<string | null>(null);
     const [newCategoryName, setNewCategoryName] = useState('');
 
-    const [activeDragItem, setActiveDragItem] = useState<LinkItem | null>(null);
+    // Модальное окно смены иконки раздела
+    const [categoryForIconChange, setCategoryForIconChange] = useState<CategoryItem | null>(null);
+    const [isCategoryIconModalOpen, setIsCategoryIconModalOpen] = useState(false);
+
+    const [activeDragItem, setActiveDragItem] = useState<{ type: 'link' | 'category'; data: any } | null>(null);
     const [iconSearchQuery, setIconSearchQuery] = useState('');
+
+    const [isFloatingButtonVisible, setIsFloatingButtonVisible] = useState(false);
+    const topButtonRef = useRef<HTMLButtonElement | null>(null);
 
     const [rawUrlInput, setRawUrlInput] = useState('');
     const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -449,6 +473,21 @@ export default function LinksPage() {
             colors: ['#78716c', '#a8a29e', '#d97706', '#059669'],
         });
     };
+
+    useEffect(() => {
+        const target = topButtonRef.current;
+        if (!target) return;
+
+        const observer = new IntersectionObserver(
+            ([entry]) => {
+                setIsFloatingButtonVisible(!entry.isIntersecting);
+            },
+            { threshold: 0.05 }
+        );
+
+        observer.observe(target);
+        return () => observer.disconnect();
+    }, [isLoading]);
 
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
@@ -495,6 +534,7 @@ export default function LinksPage() {
                     .map((cat) => ({
                         id: String(cat.id || cat.name),
                         name: String(cat.name),
+                        icon: cat.icon || 'Folder',
                         position: cat.position,
                     }));
                 setCategoriesList(sortedCats);
@@ -504,7 +544,7 @@ export default function LinksPage() {
                 setCategoriesList(
                     Array.from(categoriesFromLinks)
                         .sort()
-                        .map((name, idx) => ({ id: `cat_${idx}`, name, position: idx }))
+                        .map((name, idx) => ({ id: `cat_${idx}`, name, icon: 'Folder', position: idx }))
                 );
             }
         } catch (error) {
@@ -565,7 +605,11 @@ export default function LinksPage() {
     const saveCategoriesOrder = async (newCats: CategoryItem[]) => {
         setSyncStatus('saving');
         try {
-            const payload = newCats.map((cat, index) => ({ name: cat.name, position: index }));
+            const payload = newCats.map((cat, index) => ({ 
+                name: cat.name, 
+                icon: cat.icon || 'Folder',
+                position: index 
+            }));
             const res = await fetch('/api/links', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -587,7 +631,9 @@ export default function LinksPage() {
         const { active } = event;
         const activeData = active.data.current;
         if (activeData?.type === 'link') {
-            setActiveDragItem(activeData.link);
+            setActiveDragItem({ type: 'link', data: activeData.link });
+        } else if (activeData?.type === 'category') {
+            setActiveDragItem({ type: 'category', data: activeData.category });
         }
     };
 
@@ -650,34 +696,35 @@ export default function LinksPage() {
     const handleDragEnd = (event: DragEndEvent) => {
         setActiveDragItem(null);
         const { active, over } = event;
+        if (!over) return;
+
+        const activeId = String(active.id);
+        const overId = String(over.id);
 
         if (active.data.current?.type === 'category') {
-            if (over && String(active.id) !== String(over.id)) {
-                const oldIndex = categoriesList.findIndex((c) => `cat_${c.name}` === String(active.id));
-                const newIndex = categoriesList.findIndex((c) => `cat_${c.name}` === String(over.id));
-                if (oldIndex !== -1 && newIndex !== -1) {
-                    const newCats = arrayMove(categoriesList, oldIndex, newIndex);
-                    setCategoriesList(newCats);
-                    saveCategoriesOrder(newCats);
-                }
+            if (activeId !== overId) {
+                setCategoriesList((prevCats) => {
+                    const oldIndex = prevCats.findIndex((c) => `cat_${c.name}` === activeId);
+                    const newIndex = prevCats.findIndex((c) => `cat_${c.name}` === overId);
+                    if (oldIndex !== -1 && newIndex !== -1) {
+                        const newCats = arrayMove(prevCats, oldIndex, newIndex);
+                        saveCategoriesOrder(newCats);
+                        return newCats;
+                    }
+                    return prevCats;
+                });
             }
             return;
         }
 
         if (active.data.current?.type === 'link') {
-            const activeId = String(active.id);
-            const overId = over ? String(over.id) : null;
-
             setLinks((prev) => {
                 let updated = [...prev];
+                const activeIndex = updated.findIndex((l) => l.id === activeId);
+                const overIndex = updated.findIndex((l) => l.id === overId);
 
-                if (overId) {
-                    const activeIndex = updated.findIndex((l) => l.id === activeId);
-                    const overIndex = updated.findIndex((l) => l.id === overId);
-
-                    if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
-                        updated = arrayMove(updated, activeIndex, overIndex);
-                    }
+                if (activeIndex !== -1 && overIndex !== -1 && activeIndex !== overIndex) {
+                    updated = arrayMove(updated, activeIndex, overIndex);
                 }
 
                 const finalLinks = updated.map((item, index) => ({ ...item, position: index }));
@@ -769,7 +816,7 @@ export default function LinksPage() {
                     payload: {
                         categories: [
                             ...categoriesList,
-                            { name: catName.trim(), position: categoriesList.length },
+                            { name: catName.trim(), icon: 'Folder', position: categoriesList.length },
                         ],
                     },
                 }),
@@ -797,6 +844,17 @@ export default function LinksPage() {
             showToast('Раздел переименован');
             await fetchLinks();
         } catch {}
+    };
+
+    const updateCategoryIcon = async (catName: string, iconName: string) => {
+        const updatedCats = categoriesList.map((c) => 
+            c.name === catName ? { ...c, icon: iconName } : c
+        );
+        setCategoriesList(updatedCats);
+        setIsCategoryIconModalOpen(false);
+        setCategoryForIconChange(null);
+        await saveCategoriesOrder(updatedCats);
+        showToast('Иконка раздела обновлена');
     };
 
     const query = searchQuery.trim().toLowerCase();
@@ -843,7 +901,7 @@ export default function LinksPage() {
     }
 
     return (
-        <div className="flex flex-col min-h-screen bg-[#fbfbf9] text-stone-850 relative selection:bg-stone-800 selection:text-white">
+        <div className="flex flex-col min-h-screen bg-[#fbfbf9] text-stone-800 relative selection:bg-stone-800 selection:text-white">
             <AnimatePresence>
                 {toastMessage && (
                     <motion.div
@@ -864,6 +922,7 @@ export default function LinksPage() {
                 )}
             </AnimatePresence>
 
+            {/* Статус автосохранения */}
             <AnimatePresence>
                 {syncStatus !== 'idle' && (
                     <motion.div
@@ -871,7 +930,7 @@ export default function LinksPage() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.9 }}
                         transition={{ duration: 0.2 }}
-                        className="fixed bottom-8 right-8 z-[100001] pointer-events-none"
+                        className={`fixed bottom-8 ${isFloatingButtonVisible ? 'right-44' : 'right-8'} z-[100001] pointer-events-none transition-all duration-200`}
                     >
                         <div className="px-4 py-2.5 rounded-2xl bg-white border border-stone-200 shadow-xl flex items-center gap-2.5 text-stone-800">
                             {syncStatus === 'saving' ? (
@@ -888,6 +947,38 @@ export default function LinksPage() {
                                 </>
                             )}
                         </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Плавающая кнопка «Настроить / Готово» в правом нижнем углу при скролле */}
+            <AnimatePresence>
+                {isFloatingButtonVisible && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20, scale: 0.85 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: 20, scale: 0.85 }}
+                        transition={{ duration: 0.2 }}
+                        className="fixed bottom-8 right-8 z-[100000]"
+                    >
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            type="button"
+                            onClick={() => setIsEditMode((prev) => !prev)}
+                            className={`px-6 py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2.5 shadow-xl cursor-pointer border ${
+                                isEditMode
+                                    ? 'bg-stone-900 text-white border-stone-800'
+                                    : 'bg-white text-stone-800 border-stone-200 hover:bg-stone-50'
+                            }`}
+                        >
+                            {isEditMode ? (
+                                <Icons.Check className="w-4 h-4" />
+                            ) : (
+                                <Icons.SlidersHorizontal className="w-4 h-4 text-stone-700" />
+                            )}
+                            <span>{isEditMode ? 'Готово' : 'Настроить'}</span>
+                        </motion.button>
                     </motion.div>
                 )}
             </AnimatePresence>
@@ -928,14 +1019,16 @@ export default function LinksPage() {
                             </div>
                         </div>
 
+                        {/* Основная кнопка в шапке */}
                         <motion.button
+                            ref={topButtonRef}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             type="button"
                             onClick={() => setIsEditMode((prev) => !prev)}
                             className={`px-7 py-3.5 rounded-2xl text-xs font-black uppercase tracking-wider flex items-center gap-2.5 transition-all shadow-xs cursor-pointer ${
                                 isEditMode
-                                    ? 'bg-stone-850 text-white'
+                                    ? 'bg-stone-900 text-white'
                                     : 'bg-white text-stone-800 border border-stone-200 hover:bg-stone-50'
                             }`}
                         >
@@ -978,6 +1071,11 @@ export default function LinksPage() {
                                             setNewCategoryName={setNewCategoryName}
                                             setEditingCategoryName={setEditingCategoryName}
                                             onRenameCategory={renameCategory}
+                                            onOpenCategoryIconModal={(cat) => {
+                                                setCategoryForIconChange(cat);
+                                                setIconSearchQuery('');
+                                                setIsCategoryIconModalOpen(true);
+                                            }}
                                             onDeleteCategoryClick={(name) => {
                                                 setCategoryToDelete(name);
                                                 setIsConfirmDeleteOpen(true);
@@ -1012,16 +1110,27 @@ export default function LinksPage() {
 
                         <DragOverlay>
                             {activeDragItem ? (
-                                <div className="luxury-tile shadow-2xl scale-105 opacity-95 border border-stone-300 bg-white">
-                                    <div className="flex items-center gap-4">
-                                        {renderIconVisual(activeDragItem.custom_favicon)}
-                                        <div className="overflow-hidden flex-1">
-                                            <div className="font-extrabold text-[15px] text-stone-900">
-                                                {activeDragItem.title}
+                                activeDragItem.type === 'link' ? (
+                                    <div className="luxury-tile shadow-2xl scale-105 opacity-95 border border-stone-300 bg-white">
+                                        <div className="flex items-center gap-4">
+                                            {renderIconVisual(activeDragItem.data.custom_favicon)}
+                                            <div className="overflow-hidden flex-1">
+                                                <div className="font-extrabold text-[15px] text-stone-900">
+                                                    {activeDragItem.data.title}
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                ) : (
+                                    <div className="luxury-section p-6 rounded-[36px] border border-stone-300 bg-white shadow-2xl scale-102 opacity-95">
+                                        <div className="flex items-center gap-3">
+                                            {renderCategoryIcon(activeDragItem.data.icon)}
+                                            <h2 className="text-sm font-black uppercase tracking-widest text-stone-800">
+                                                {activeDragItem.data.name}
+                                            </h2>
+                                        </div>
+                                    </div>
+                                )
                             ) : null}
                         </DragOverlay>
                     </DndContext>
@@ -1035,7 +1144,7 @@ export default function LinksPage() {
                                 <div key={catItem.id} className="luxury-section p-8 rounded-[36px] border border-stone-200 bg-white/90">
                                     <div className="flex items-center justify-between mb-8 select-none">
                                         <div className="flex items-center gap-3">
-                                            <div className="w-2 h-2 rounded-full bg-amber-600/70" />
+                                            {renderCategoryIcon(catItem.icon)}
                                             <h2 className="text-sm font-black uppercase tracking-widest text-stone-700">
                                                 {catItem.name}
                                             </h2>
@@ -1055,13 +1164,15 @@ export default function LinksPage() {
                                                     <div className="flex items-center gap-4">
                                                         {renderIconVisual(link.custom_favicon)}
                                                         <div className="overflow-hidden flex-1 pr-6">
-                                                            <div className="font-extrabold text-[15px] text-stone-900 tracking-tight truncate group-hover:text-stone-700 transition-colors">
-                                                                {link.title || 'Без названия'}
+                                                            <div className="font-extrabold text-[15px] text-stone-900 tracking-tight truncate group-hover:text-stone-700 transition-colors flex items-center justify-between">
+                                                                <span className="truncate">{link.title || 'Без названия'}</span>
+                                                                <Icons.ArrowUpRight className="w-4 h-4 text-stone-400 opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all shrink-0 ml-2" />
                                                             </div>
                                                             {!link.hide_url && (
-                                                                <div className="text-[11px] font-semibold text-stone-400 truncate mt-0.5 tracking-tight flex items-center gap-1">
-                                                                    {link.open_in_new_tab && <Icons.ExternalLink className="w-3 h-3 text-stone-400 shrink-0" />}
-                                                                    <span>{link.url ? link.url.replace(/^https?:\/\/(www\.)?/, '') : 'Без URL'}</span>
+                                                                <div className="mt-1">
+                                                                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md bg-stone-100 text-[10px] font-bold text-stone-500 tracking-tight">
+                                                                        {link.url ? link.url.replace(/^https?:\/\/(www\.)?/, '') : 'Без URL'}
+                                                                    </span>
                                                                 </div>
                                                             )}
                                                         </div>
@@ -1091,6 +1202,7 @@ export default function LinksPage() {
 
             <Footer />
 
+            {/* Модальное окно ссылки */}
             <AnimatePresence>
                 {isModalOpen && (
                     <div className="fixed inset-0 z-[9999] bg-stone-900/30 backdrop-blur-xs flex items-center justify-center p-4">
@@ -1205,7 +1317,7 @@ export default function LinksPage() {
                                                                     }
                                                                     className={`h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer border ${
                                                                         isSelected
-                                                                            ? 'bg-stone-850 text-white border-stone-850 shadow-xs'
+                                                                            ? 'bg-stone-900 text-white border-stone-900 shadow-xs'
                                                                             : 'bg-white text-stone-700 border-stone-200 hover:bg-stone-100'
                                                                     }`}
                                                                 >
@@ -1306,14 +1418,92 @@ export default function LinksPage() {
                                         Отмена
                                     </button>
                                     <button
-                                    type="submit"
-                                    disabled={isSavingLink}
-                                    className="px-8 py-3.5 rounded-2xl bg-stone-900 hover:bg-stone-800 text-white font-extrabold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer"
-                                >
-                                    {isSavingLink ? 'Сохранение...' : 'Сохранить'}
-                                </button>
-                                                                </div>
+                                        type="submit"
+                                        disabled={isSavingLink}
+                                        className="px-8 py-3.5 rounded-2xl bg-stone-900 hover:bg-stone-800 text-white font-extrabold text-xs uppercase tracking-wider shadow-md transition-all cursor-pointer"
+                                    >
+                                        {isSavingLink ? 'Сохранение...' : 'Сохранить'}
+                                    </button>
+                                </div>
                             </form>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
+
+            {/* Модальное окно выбора иконки раздела */}
+            <AnimatePresence>
+                {isCategoryIconModalOpen && categoryForIconChange && (
+                    <div className="fixed inset-0 z-[9999] bg-stone-900/30 backdrop-blur-xs flex items-center justify-center p-4">
+                        <motion.div
+                            initial={{ scale: 0.96, opacity: 0, y: 10 }}
+                            animate={{ scale: 1, opacity: 1, y: 0 }}
+                            exit={{ scale: 0.96, opacity: 0, y: 10 }}
+                            className="bg-white w-full max-w-lg rounded-[32px] p-7 shadow-2xl border border-stone-200 space-y-5 max-h-[85vh] overflow-y-auto"
+                        >
+                            <div className="flex items-center justify-between pb-3 border-b border-stone-100">
+                                <div>
+                                    <h3 className="text-base font-black text-stone-900">
+                                        Иконка раздела «{categoryForIconChange.name}»
+                                    </h3>
+                                    <p className="text-xs text-stone-400 font-semibold mt-0.5">
+                                        Выберите значок для заголовка раздела
+                                    </p>
+                                </div>
+                                <button
+                                    onClick={() => {
+                                        setIsCategoryIconModalOpen(false);
+                                        setCategoryForIconChange(null);
+                                    }}
+                                    className="w-8 h-8 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-600 font-bold flex items-center justify-center cursor-pointer transition-colors"
+                                >
+                                    <Icons.X className="w-4 h-4" />
+                                </button>
+                            </div>
+
+                            <div className="relative">
+                                <Icons.Search className="w-3.5 h-3.5 text-stone-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                                <input 
+                                    type="text"
+                                    placeholder="Поиск по иконкам..."
+                                    value={iconSearchQuery}
+                                    onChange={(e) => setIconSearchQuery(e.target.value)}
+                                    className="w-full pl-9 pr-3 py-2 bg-stone-50 border border-stone-200 rounded-xl text-[11px] font-bold text-stone-700 placeholder-stone-400 outline-none focus:border-stone-400 focus:bg-white"
+                                />
+                            </div>
+
+                            <div className="space-y-3 max-h-64 overflow-y-auto pr-1">
+                                {filteredIconCategories.map((group) => (
+                                    <div key={group.title} className="space-y-1.5">
+                                        <div className="text-[10px] font-black uppercase tracking-wider text-stone-400 px-1">
+                                            {group.title}
+                                        </div>
+                                        <div className="grid grid-cols-7 gap-1.5">
+                                            {group.icons.map((item) => {
+                                                const IconComp = (Icons as any)[item.name];
+                                                if (!IconComp) return null;
+                                                const isSelected = categoryForIconChange.icon === item.name;
+
+                                                return (
+                                                    <button
+                                                        key={item.name}
+                                                        type="button"
+                                                        title={item.label}
+                                                        onClick={() => updateCategoryIcon(categoryForIconChange.name, item.name)}
+                                                        className={`h-9 rounded-xl flex items-center justify-center transition-all cursor-pointer border ${
+                                                            isSelected
+                                                                ? 'bg-stone-900 text-white border-stone-900 shadow-xs'
+                                                                : 'bg-white text-stone-700 border-stone-200 hover:bg-stone-100'
+                                                        }`}
+                                                    >
+                                                        <IconComp className="w-4 h-4" />
+                                                    </button>
+                                                );
+                                            })}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
                         </motion.div>
                     </div>
                 )}

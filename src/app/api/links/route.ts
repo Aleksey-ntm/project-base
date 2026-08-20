@@ -3,6 +3,25 @@ import { prisma } from '@/lib/prisma';
 
 export const dynamic = 'force-dynamic';
 
+interface IncomingLink {
+  id?: string | number;
+  title?: string;
+  url?: string;
+  category?: string;
+  is_hidden?: boolean;
+  hide_url?: boolean;
+  open_in_new_tab?: boolean;
+  custom_favicon?: string;
+  position?: number;
+}
+
+interface IncomingCategory {
+  id?: string | number;
+  name?: string;
+  icon?: string;
+  position?: number;
+}
+
 export async function GET() {
   try {
     const [links, categories] = await Promise.all([
@@ -29,12 +48,13 @@ export async function GET() {
     const formattedCategories = (categories || []).map((c) => ({
       id: String(c.id || c.name),
       name: String(c.name),
+      icon: String(c.icon || 'Folder'),
       position: typeof c.position === 'number' ? c.position : 0,
     }));
 
     return NextResponse.json({ links: formattedLinks, categories: formattedCategories });
   } catch (error: any) {
-    console.error('[API GET] Ошибка:', error);
+    console.error('[API GET /api/links] Ошибка:', error);
     return NextResponse.json({ error: error.message || 'Ошибка базы данных' }, { status: 500 });
   }
 }
@@ -44,10 +64,10 @@ export async function POST(req: Request) {
     const body = await req.json();
     const { action, payload } = body;
 
-    // --- СОХРАНЕНИЕ / РЕДАКТИРОВАНИЕ ОДНОЙ ССЫЛКИ ---
+    // --- СОХРАНЕНИЕ / ОБНОВЛЕНИЕ ОДНОЙ ССЫЛКИ ---
     if (action === 'save_link') {
-      const link = payload;
-      const linkId = String(link.id);
+      const link: IncomingLink = payload || {};
+      const linkId = String(link.id || '');
       const dataToSave = {
         title: String(link.title || '').trim(),
         url: String(link.url || '').trim(),
@@ -74,66 +94,65 @@ export async function POST(req: Request) {
     // --- УДАЛЕНИЕ ССЫЛКИ ---
     if (action === 'delete_link') {
       await prisma.quickButton.deleteMany({
-        where: { id: String(payload.id) },
+        where: { id: String(payload?.id || '') },
       });
       return NextResponse.json({ success: true });
     }
 
-    // --- СОХРАНЕНИЕ ПОРЯДКА ССЫЛОК ---
+    // --- ПАКЕТНОЕ СОХРАНЕНИЕ ПОРЯДКА ССЫЛОК ---
     if (action === 'save_links_order') {
-      const incomingLinks = Array.isArray(payload?.links) ? payload.links : [];
+      const incomingLinks: IncomingLink[] = Array.isArray(payload?.links) ? payload.links : [];
 
       if (incomingLinks.length > 0) {
-        await prisma.$transaction(
-          async (tx) => {
-            for (let i = 0; i < incomingLinks.length; i++) {
-              const link = incomingLinks[i];
-              if (!link?.id) continue;
-              await tx.quickButton.updateMany({
-                where: { id: String(link.id) },
-                data: {
-                  category: String(link.category || 'Разное'),
-                  position: i,
-                },
-              });
-            }
-          },
-          {
-            timeout: 10000,
-          }
-        );
+        const operations = incomingLinks
+          .filter((link: IncomingLink) => link && link.id)
+          .map((link: IncomingLink, index: number) =>
+            prisma.quickButton.updateMany({
+              where: { id: String(link.id) },
+              data: {
+                category: String(link.category || 'Разное'),
+                position: index,
+              },
+            })
+          );
+
+        await prisma.$transaction(operations);
       }
 
       return NextResponse.json({ success: true });
     }
 
-    // --- СОХРАНЕНИЕ ПОРЯДКА РАЗДЕЛОВ ---
+    // --- СОХРАНЕНИЕ ПОРЯДКА И ИКОНОК РАЗДЕЛОВ ---
     if (action === 'save_categories') {
-      const cats = Array.isArray(payload?.categories) ? payload.categories : [];
+      const cats: IncomingCategory[] = Array.isArray(payload?.categories) ? payload.categories : [];
+
       if (cats.length > 0) {
-        await prisma.$transaction(
-          async (tx) => {
-            for (let i = 0; i < cats.length; i++) {
-              const cat = cats[i];
-              if (!cat?.name) continue;
-              await tx.quickCategory.upsert({
-                where: { name: String(cat.name) },
-                update: { position: i },
-                create: { name: String(cat.name), position: i },
-              });
-            }
-          },
-          {
-            timeout: 10000,
-          }
-        );
+        const operations = cats
+          .filter((cat: IncomingCategory) => cat && cat.name)
+          .map((cat: IncomingCategory, index: number) =>
+            prisma.quickCategory.upsert({
+              where: { name: String(cat.name) },
+              update: { 
+                position: index,
+                ...(cat.icon ? { icon: String(cat.icon) } : {}),
+              },
+              create: { 
+                name: String(cat.name), 
+                position: index,
+                icon: String(cat.icon || 'Folder'),
+              },
+            })
+          );
+
+        await prisma.$transaction(operations);
       }
+
       return NextResponse.json({ success: true });
     }
 
     // --- УДАЛЕНИЕ РАЗДЕЛА ---
     if (action === 'delete_category') {
-      const catName = String(payload.category);
+      const catName = String(payload?.category || '');
       await prisma.$transaction([
         prisma.quickButton.deleteMany({ where: { category: catName } }),
         prisma.quickCategory.deleteMany({ where: { name: catName } }),
@@ -143,15 +162,21 @@ export async function POST(req: Request) {
 
     // --- ПЕРЕИМЕНОВАНИЕ РАЗДЕЛА ---
     if (action === 'edit_category') {
-      const { old_category, new_category } = payload;
+      const oldCategory = String(payload?.old_category || '');
+      const newCategory = String(payload?.new_category || '');
+      const newIcon = payload?.icon ? String(payload.icon) : undefined;
+
       await prisma.$transaction([
         prisma.quickCategory.update({
-          where: { name: String(old_category) },
-          data: { name: String(new_category) },
+          where: { name: oldCategory },
+          data: { 
+            name: newCategory,
+            ...(newIcon ? { icon: newIcon } : {}),
+          },
         }),
         prisma.quickButton.updateMany({
-          where: { category: String(old_category) },
-          data: { category: String(new_category) },
+          where: { category: oldCategory },
+          data: { category: newCategory },
         }),
       ]);
       return NextResponse.json({ success: true });
